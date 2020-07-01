@@ -5,6 +5,11 @@ import { useField } from '../hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+
+// Project components
+import PasswordField from '../components/PasswordField'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,17 +28,22 @@ const Login = () => {
     const passwordConfirm = useField('confirm password', 'password')
     const email = useField('email', 'email')
 
+
+    console.log(password.attributes)
     const classes = useStyles()
     return (
         <>
+            <Typography component='h1'>
+                Register
+            </Typography>
             <form className={classes.root} autoComplete='off'>
                 <div>
-                    <TextField {...username.attributes} variant='outlined' required />
-                    <TextField {...email.attributes} variant='outlined' autoComplete='email' required />
+                    <TextField {...username.attributes} required margin='normal' />
+                    <TextField {...email.attributes} autoComplete='email' margin='normal' required />
                 </div>
                 <div>
-                    <TextField {...password.attributes} variant='outlined' required />
-                    <TextField {...passwordConfirm.attributes} variant='outlined' required />
+                    <PasswordField props={password.attributes} />
+                    <PasswordField props={passwordConfirm.attributes} />
                 </div>
                 <Button color='primary' variant='contained'>
                     Register
