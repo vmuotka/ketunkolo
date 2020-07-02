@@ -18,7 +18,6 @@ export const logout = () => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LOGIN':
-      console.log('logging in')
       return action.data.loginInfo
     case 'LOGOUT':
       return initialState

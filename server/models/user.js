@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Username required'],
     unique: true
   },
+  username_lower: {
+    type: String,
+    required: true
+  },
   passwordHash: {
     type: String,
     required: [true, 'Password required']
@@ -28,6 +32,7 @@ userSchema.set('toJSON', {
     delete returnedObject._id
     delete returnedObject.__v
     delete returnedObject.passwordHash
+    delete returnedObject.username_lower
   }
 })
 

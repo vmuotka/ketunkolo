@@ -16,14 +16,11 @@ usersRouter.post('/register', async (req, res) => {
     return res.status(400).json({ error: 'password too short' })
   }
 
-  // if (body.username === undefined) {
-  //   return res.status(400).json({ error: 'username required' })
-  // }
-
   const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
   const user = new User({
     username: body.username,
+    username_lower: body.username.toLowerCase(),
     passwordHash: passwordHash,
     email: body.email
   })
@@ -36,7 +33,7 @@ usersRouter.post('/register', async (req, res) => {
 
 usersRouter.post('/login', async (req, res) => {
   const body = req.body
-  const user = await User.findOne({ username: body.username })
+  const user = await User.findOne({ username_lower: body.username.toLowerCase() })
   const passwordCorrect = user === null
     ? false
     : await bcrypt.compare(body.password, user.passwordHash)

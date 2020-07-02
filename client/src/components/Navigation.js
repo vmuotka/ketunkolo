@@ -19,8 +19,9 @@ import { makeStyles, useTheme, styled } from '@material-ui/core/styles'
 import HomeIcon from '@material-ui/icons/Home'
 import LoginIcon from '@material-ui/icons/LockOpen'
 import LogoutIcon from '@material-ui/icons/Lock'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import BallotIcon from '@material-ui/icons/Ballot'
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 import { Link as RouterLink } from 'react-router-dom'
 import { connect, useDispatch } from 'react-redux'
@@ -77,13 +78,13 @@ const mainNavs = [
   },
   {
     name: 'INITracker',
-    icon: null,
+    icon: <BallotIcon />,
     route: '/initracker'
   },
   {
-    name: 'Placeholder',
-    icon: null,
-    route: '/placeholder'
+    name: 'Characters',
+    icon: <RecentActorsIcon />,
+    route: '/characters'
   }
 ]
 
@@ -126,7 +127,7 @@ const Navigation = (props) => {
   const userNavs = [
     {
       name: props.user === null ? null : props.user.username,
-      icon: <AccountCircleIcon />,
+      icon: <AccountBoxIcon />,
       route: '#'
     }
   ]
