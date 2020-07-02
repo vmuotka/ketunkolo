@@ -12,13 +12,13 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme, styled } from '@material-ui/core/styles'
 
 // icons
 import HomeIcon from '@material-ui/icons/Home'
 import LoginIcon from '@material-ui/icons/LockOpen'
 
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 
 const drawerWidth = 240
 
@@ -57,22 +57,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const Link = styled(RouterLink)({
+  textDecoration: 'none',
+  color: 'inherit'
+})
+
 const navTitle = 'Ketunkolo'
-const mainLinks = [
-  'INITracker',
-  'Placeholder'
+const mainNavs = [
+  {
+    name: 'Home',
+    icon: <HomeIcon />,
+    route: '/'
+  },
+  {
+    name: 'INITracker',
+    icon: null,
+    route: '/initracker'
+  },
+  {
+    name: 'Placeholder',
+    icon: null,
+    route: '/placeholder'
+  }
 ]
-const mainIcons = [
-  null,
-  null
-]
-const userLinks = [
-  'Login',
-  'Register'
-]
-const userIcons = [
-  <LoginIcon />,
-  null
+
+const userNavs = [
+  {
+    name: 'Log in',
+    icon: <LoginIcon />,
+    route: '/login'
+  },
+  {
+    name: 'Register',
+    icon: null,
+    route: '/register'
+  }
 ]
 
 const Navigation = (props) => {
@@ -90,26 +109,28 @@ const Navigation = (props) => {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        <ListItem button>
-          <ListItemIcon><HomeIcon /></ListItemIcon>
-          <ListItemText primary='Home' />
-        </ListItem>
-
-        {mainLinks.map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{mainIcons[index]}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
+        {mainNavs.map((nav, index) => (
+          <Link to={nav.route} key={nav.name}>
+            <ListItem button key={nav.name}>
+              <ListItemIcon>{nav.icon}</ListItemIcon>
+              <ListItemText primary={nav.name} />
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider />
       <List>
-        {userLinks.map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{userIcons[index]}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        {props.user === null ?
+          userNavs.map((nav, index) => (
+            <Link to={nav.route} key={nav.name}>
+              <ListItem button key={nav.name}>
+                <ListItemIcon>{nav.icon}</ListItemIcon>
+                <ListItemText primary={nav.name} />
+              </ListItem>
+            </Link>
+          ))
+          : props.user.username
+        }
       </List>
     </div>
   )

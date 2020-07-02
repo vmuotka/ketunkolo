@@ -1,5 +1,6 @@
 import React from 'react'
 import { useField } from '../hooks'
+import userService from '../services/userService'
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles'
@@ -22,21 +23,44 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const Login = () => {
+const Register = () => {
     const username = useField('username', 'text')
     const password = useField('password', 'password')
     const passwordConfirm = useField('confirm password', 'password')
     const email = useField('email', 'email')
 
-
-    console.log(password.attributes)
     const classes = useStyles()
+
+    const handleRegister = async event => {
+        event.preventDefault()
+        if (password.attributes.value.trim() === passwordConfirm.attributes.value.trim()) {
+            try {
+                const registerUser = {
+                    username: username.attributes.value.trim(),
+                    password: password.attributes.value.trim(),
+                    email: email.attributes.value.trim()
+                }
+                const res = await userService.register(registerUser)
+                // TODO: handle after registeration
+                console.log(res)
+            } catch (exception) {
+                console.error(exception)
+            }
+        } else {
+            console.log('passut')
+        }
+    }
+
+    const passwordNotMatch = () => {
+
+    }
+
     return (
         <>
             <Typography component='h1'>
                 Register
             </Typography>
-            <form className={classes.root} autoComplete='off'>
+            <form className={classes.root} autoComplete='off' onSubmit={handleRegister}>
                 <div>
                     <TextField {...username.attributes} required margin='normal' />
                     <TextField {...email.attributes} autoComplete='email' margin='normal' required />
@@ -45,7 +69,7 @@ const Login = () => {
                     <PasswordField props={password.attributes} />
                     <PasswordField props={passwordConfirm.attributes} />
                 </div>
-                <Button color='primary' variant='contained'>
+                <Button color='primary' type='submit' variant='contained'>
                     Register
                 </Button>
             </form>
@@ -53,4 +77,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Register

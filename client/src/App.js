@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   useRouteMatch,
   Switch, Route, useHistory
@@ -6,6 +6,7 @@ import {
 
 // pages and components
 import Register from './pages/Register'
+import Login from './pages/Login'
 import Navigation from './components/Navigation'
 
 // Material UI
@@ -20,15 +21,28 @@ const useStyles = makeStyles((theme) => ({
 
 
 const App = () => {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const userObject = JSON.parse(loggedUserJSON)
+      setUser(userObject)
+    }
+  }, [])
+
   const classes = useStyles()
   return (
     <>
       <CssBaseline />
-      <Navigation>
+      <Navigation user={user}>
         <Container maxWidth='lg' className={classes.root}>
           <Switch>
             <Route path='/register'>
               <Register />
+            </Route>
+            <Route path='/login'>
+              <Login />
             </Route>
             <Route path='/'>
               <h1>Home</h1>

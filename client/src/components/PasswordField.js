@@ -39,8 +39,6 @@ const PasswordField = ({ props }) => {
     event.preventDefault()
   }
 
-  console.log(props)
-
   return (
     <FormControl className={clsx(classes.margin, classes.textField)}>
       <InputLabel htmlFor="standard-adornment-password">{props.label}</InputLabel>
@@ -56,6 +54,7 @@ const PasswordField = ({ props }) => {
               aria-label="toggle password visibility"
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
+              tabIndex='-1'
             >
               {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
