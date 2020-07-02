@@ -5,10 +5,10 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 const ThemedApp = (props) => {
   let colorTheme = 'dark'
-  if (props.theme.dark) {
-    colorTheme = 'dark'
-  } else {
+  if (!props.theme.dark && props.theme.dark !== undefined) {
     colorTheme = 'light'
+  } else {
+    colorTheme = 'dark'
   }
   const theme = createMuiTheme({
     palette: {

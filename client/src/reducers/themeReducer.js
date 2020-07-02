@@ -1,4 +1,4 @@
-const initialState = JSON.parse(window.localStorage.getItem('theme'))
+const initialState = JSON.parse(window.localStorage.getItem('theme')) !== null ? JSON.parse(window.localStorage.getItem('theme')) : 'dark'
 
 export const setTheme = (theme) => {
   return {

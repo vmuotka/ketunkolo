@@ -28,7 +28,7 @@ const UserSettings = (props) => {
       <Divider />
       <Container>
         <FormControlLabel
-          checked={props.theme.dark}
+          checked={props.theme.dark !== undefined ? props.theme.dark : true}
           labelPlacement='start'
           label='Dark Theme'
           control={<Switch onChange={handleThemeChange} name='theme' />}
