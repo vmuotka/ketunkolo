@@ -34,9 +34,6 @@ const UserSettings = (props) => {
           control={<Switch onChange={handleThemeChange} name='theme' />}
         />
       </Container>
-
-
-
     </>
   )
 }
