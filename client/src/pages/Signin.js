@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Login = () => {
+const Signin = () => {
   const username = useField('username', 'text')
   const password = useField('password', 'password')
 
@@ -78,7 +78,7 @@ const Login = () => {
   return (
     <>
       <Typography component='h1'>
-        Log In
+        Sign In
       </Typography>
       {alert ? <Alert severity="error">Wrong credentials!</Alert> : null}
       <form className={classes.root} noValidate onSubmit={handleLogin}>
@@ -96,4 +96,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Signin

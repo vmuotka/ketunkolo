@@ -90,14 +90,14 @@ const mainNavs = [
 
 const loggedOutNavs = [
   {
-    name: 'Log in',
+    name: 'Sign in',
     icon: <LoginIcon />,
-    route: '/login'
+    route: '/signin'
   },
   {
-    name: 'Register',
+    name: 'Sign up',
     icon: null,
-    route: '/register'
+    route: '/signup'
   }
 ]
 

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const Register = () => {
+const Signup = () => {
     const username = useField('username', 'text')
     const password = useField('password', 'password')
     const passwordConfirm = useField('confirm password', 'password')
@@ -89,7 +89,7 @@ const Register = () => {
     return (
         <>
             <Typography component='h1'>
-                Register
+                Sign Up
             </Typography>
             <form className={classes.root} autoComplete='off' noValidate onSubmit={handleRegister}>
                 <div>
@@ -108,4 +108,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default Signup

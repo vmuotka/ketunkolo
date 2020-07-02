@@ -6,8 +6,8 @@ import { login } from './reducers/userReducer'
 import { useDispatch, connect } from 'react-redux'
 
 // pages and components
-import Register from './pages/Register'
-import Login from './pages/Login'
+import Register from './pages/Signup'
+import SignIn from './pages/Signin'
 import Navigation from './components/Navigation'
 
 // Material UI
@@ -44,11 +44,11 @@ const App = (props) => {
       <Navigation>
         <Container maxWidth='lg' className={classes.root}>
           <Switch>
-            <Route path='/register' render={() =>
+            <Route path='/signup' render={() =>
               props.user ? <Redirect to='/' /> : <Register />
             } />
-            <Route path='/login' render={() =>
-              props.user ? <Redirect to='/' /> : <Login />
+            <Route path='/signin' render={() =>
+              props.user ? <Redirect to='/' /> : <SignIn />
             } />
             <Route path='/'>
               <h1>Home</h1>
