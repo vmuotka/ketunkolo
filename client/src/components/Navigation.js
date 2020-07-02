@@ -128,7 +128,7 @@ const Navigation = (props) => {
     {
       name: props.user === null ? null : props.user.username,
       icon: <AccountBoxIcon />,
-      route: '#'
+      route: '/user_settings'
     }
   ]
 

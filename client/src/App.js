@@ -5,9 +5,13 @@ import {
 import { login } from './reducers/userReducer'
 import { useDispatch, connect } from 'react-redux'
 
-// pages and components
+// pages
 import Register from './pages/Signup'
 import SignIn from './pages/Signin'
+import IniTracker from './pages/IniTracker'
+import UserSettings from './pages/UserSettings'
+
+// components
 import Navigation from './components/Navigation'
 
 // Material UI
@@ -44,11 +48,16 @@ const App = (props) => {
       <Navigation>
         <Container maxWidth='lg' className={classes.root}>
           <Switch>
+            <Route path='/initracker'>
+              <IniTracker />
+            </Route>
+            <Route path='/user_settings' render={() =>
+              props.user === null ? <Redirect to='/signin' /> : <UserSettings />} />
             <Route path='/signup' render={() =>
-              props.user ? <Redirect to='/' /> : <Register />
+              props.user !== null ? <Redirect to='/' /> : <Register />
             } />
             <Route path='/signin' render={() =>
-              props.user ? <Redirect to='/' /> : <SignIn />
+              props.user !== null ? <Redirect to='/' /> : <SignIn />
             } />
             <Route path='/'>
               <h1>Home</h1>
