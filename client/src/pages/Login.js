@@ -12,6 +12,10 @@ import Typography from '@material-ui/core/Typography'
 import PasswordField from '../components/PasswordField'
 import userService from '../services/userService'
 
+// reducer functions
+import { useDispatch } from 'react-redux'
+import { login } from '../reducers/userReducer'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: 'auto',
@@ -30,6 +34,7 @@ const Login = () => {
   const classes = useStyles()
 
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -42,6 +47,7 @@ const Login = () => {
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       )
+      dispatch(login(user))
       history.push('/')
     } catch (expection) {
       console.error(expection)

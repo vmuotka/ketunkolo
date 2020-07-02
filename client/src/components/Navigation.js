@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
@@ -17,8 +18,13 @@ import { makeStyles, useTheme, styled } from '@material-ui/core/styles'
 // icons
 import HomeIcon from '@material-ui/icons/Home'
 import LoginIcon from '@material-ui/icons/LockOpen'
+import LogoutIcon from '@material-ui/icons/Lock'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import AccountBoxIcon from '@material-ui/icons/AccountBox'
 
 import { Link as RouterLink } from 'react-router-dom'
+import { connect, useDispatch } from 'react-redux'
+import { logout } from '../reducers/userReducer'
 
 const drawerWidth = 240
 
@@ -81,7 +87,7 @@ const mainNavs = [
   }
 ]
 
-const userNavs = [
+const loggedOutNavs = [
   {
     name: 'Log in',
     icon: <LoginIcon />,
@@ -94,8 +100,12 @@ const userNavs = [
   }
 ]
 
+
+
+
+
 const Navigation = (props) => {
-  const { window } = props
+  const { windowVar } = props
   const classes = useStyles()
   const theme = useTheme()
   const [mobileOpen, setMobileOpen] = React.useState(false)
@@ -103,6 +113,40 @@ const Navigation = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
+
+  const history = useHistory()
+  const dispatch = useDispatch()
+
+  const handleLogout = (event) => {
+    window.localStorage.setItem('loggedUser', null)
+    dispatch(props.logout)
+    history.push('/')
+  }
+
+  const userNavs = [
+    {
+      name: props.user === null ? null : props.user.username,
+      icon: <AccountCircleIcon />,
+      route: '#'
+    }
+  ]
+
+  const loggedInDrawer = (
+    <>
+      {userNavs.map((nav, index) => (
+        <Link to={nav.route} key={nav.name}>
+          <ListItem button key={nav.name}>
+            <ListItemIcon>{nav.icon}</ListItemIcon>
+            <ListItemText primary={nav.name} />
+          </ListItem>
+        </Link>
+      ))}
+      < ListItem button key='logout' onClick={handleLogout} >
+        <ListItemIcon><LogoutIcon /></ListItemIcon>
+        <ListItemText primary='Log out' />
+      </ListItem >
+    </>
+  )
 
   const drawer = (
     <div>
@@ -121,7 +165,7 @@ const Navigation = (props) => {
       <Divider />
       <List>
         {props.user === null ?
-          userNavs.map((nav, index) => (
+          loggedOutNavs.map((nav, index) => (
             <Link to={nav.route} key={nav.name}>
               <ListItem button key={nav.name}>
                 <ListItemIcon>{nav.icon}</ListItemIcon>
@@ -129,13 +173,16 @@ const Navigation = (props) => {
               </ListItem>
             </Link>
           ))
-          : props.user.username
+          : loggedInDrawer
         }
+
       </List>
     </div>
   )
 
-  const container = window !== undefined ? () => window().document.body : undefined
+
+
+  const container = windowVar !== undefined ? () => window().document.body : undefined
 
   return (
     <div className={classes.root}>
@@ -195,4 +242,16 @@ const Navigation = (props) => {
   )
 }
 
-export default Navigation
+const mapDispatchToProps = {
+  logout
+}
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
+
+const connectedNavigation = connect(mapStateToProps, mapDispatchToProps)(Navigation)
+
+export default connectedNavigation
