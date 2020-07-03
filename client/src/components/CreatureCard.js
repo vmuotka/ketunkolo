@@ -35,7 +35,6 @@ const CreatureCard = (props) => {
   const classes = useStyles()
 
   const [init, setInit] = useState(props.initiative)
-  const index = props.index
 
   const [ac, setAc] = useState(props.ac)
 
@@ -46,14 +45,12 @@ const CreatureCard = (props) => {
   }
 
   const handleInitChange = event => {
-    const arr1 = combat.slice(0, index)
-    const arr2 = combat.slice(index + 1, combat.length)
-    let creature = combat[index]
+    let creature = combat.filter(c => c.id === props.id)[0]
     creature.initiative = Number(event.target.value)
-    const arr = [...arr1, creature, ...arr2]
-    props.setCombat(arr)
+    const newCombat = combat.map(c => c.id !== props.id ? c : creature)
+    props.setCombat(newCombat)
   }
-  const hpCounters = new Array(props.count).fill(props.maxHp)
+  // const hpCounters = new Array(props.count).fill(props.maxHp)
 
   return (
     <>
@@ -65,7 +62,7 @@ const CreatureCard = (props) => {
             <>
               <TextField label='AC' value={ac} onChange={(event) => { setAc(event.target.value) }} type='number' />
               <div>
-                {hpCounters.map((maxHp, index) => (<HpCounter maxHp={maxHp} key={index} label={props.name + ' ' + (index + 1)} />))}
+                {props.hp.map((maxHp, index) => (<HpCounter maxHp={maxHp} id={props.id} index={index} key={index} label={props.name + ' ' + (index + 1)} />))}
               </div>
             </>
           )

@@ -39,7 +39,12 @@ const useStyles = makeStyles((theme) => ({
       width: '15ch',
     }
   },
-
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap'
+  },
 }))
 
 const IniTracker = (props) => {
@@ -68,17 +73,32 @@ const IniTracker = (props) => {
     if (monsterModal) {
       newCard = {
         name: name.attributes.value,
-        initiative: initiative.attributes.value,
-        maxHp: maxHp.attributes.value,
-        count: count.attributes.value
+        initiative: Number(initiative.attributes.value),
+        hp: new Array(Number(count.attributes.value)).fill(Number(maxHp.attributes.value)),
+        count: Number(count.attributes.value),
+        ac: Number(ac.attributes.value),
+        id: Math.floor(Math.random() * 1000000)
       }
     } else {
       newCard = {
         name: name.attributes.value,
-        initiative: initiative.attributes.value
+        initiative: Number(initiative.attributes.value),
+        id: Math.floor(Math.random() * 1000000)
       }
     }
     props.addCard(newCard)
+    name.reset()
+    maxHp.reset()
+    count.reset()
+    ac.reset()
+    initiative.reset()
+    document.getElementById('name').focus()
+  }
+
+  console.log(combat)
+
+  const handleSave = () => {
+
   }
 
   const body = (
@@ -106,12 +126,19 @@ const IniTracker = (props) => {
       </form>
     </>
   )
+
   return (
     <>
-      <ButtonGroup>
-        <Button color='primary' variant='contained' onClick={handleOpen(false)}>Add PC</Button>
-        <Button color='secondary' variant='contained' onClick={handleOpen(true)}>Add Monster</Button>
-      </ButtonGroup>
+      <div className={classes.buttonContainer}>
+        <ButtonGroup>
+          <Button color='primary' variant='contained' onClick={handleOpen(false)}>Add PC</Button>
+          <Button color='secondary' variant='contained' onClick={handleOpen(true)}>Add Monster</Button>
+        </ButtonGroup>
+        <ButtonGroup>
+          <Button color='primary' variant='contained' onClick={handleSave(false)}>Save Party</Button>
+          <Button color='secondary' variant='contained' onClick={handleSave(true)}>Save Monsters</Button>
+        </ButtonGroup>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -120,13 +147,14 @@ const IniTracker = (props) => {
         {body}
       </Modal>
       <Box className={classes.cardContainer}>
-        {combat.map((card, index) => (
-          <CreatureCard {...card} key={index} index={index} />
+        {combat.map((card) => (
+          <CreatureCard {...card} key={card.id} />
         ))}
       </Box>
     </>
   )
 }
+
 
 const mapDispatchToProps = {
   setCombat,
