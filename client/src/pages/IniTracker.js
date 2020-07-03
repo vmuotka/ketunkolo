@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
 
 // material-ui components
 import ButtonGroup from '@material-ui/core/ButtonGroup'
@@ -12,6 +13,7 @@ import Box from '@material-ui/core/Box'
 // project components
 import { useField } from '../hooks'
 import CreatureCard from '../components/CreatureCard'
+import { setCombat } from '../reducers/initrackerReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,23 +30,21 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: '25ch',
     }
+  },
+  cardContainer: {
+    display: 'flex',
+    flexDirection: 'column'
   }
 }))
 
-const IniTracker = () => {
+const IniTracker = (props) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
 
-  const party = [
-    { name: 'Trander', initiative: 5 },
-    { name: 'Wolfgraff', initiative: 12 },
-    { name: 'Aren', initiative: 19 },
-    { name: 'Nikolaj', initiative: 7 }
-  ]
+  const combat = props.initracker.combat
 
   const name = useField('name', 'text')
   const initiative = useField('initiative', 'number')
-  const [combat, setCombat] = useState([])
 
   const handleOpen = () => {
     setOpen(true)
@@ -56,20 +56,6 @@ const IniTracker = () => {
     event.preventDefault()
   }
 
-  const compareInitiative = (a, b) => {
-    if (a.initiative < b.initiative)
-      return 1
-
-    if (a.initiative > b.initiative)
-      return -1
-
-    return 0
-  }
-  useEffect(() => {
-    const cb = party.sort(compareInitiative)
-    setCombat(cb)
-    // eslint-disable-next-line
-  }, [])
   console.log(combat)
 
   const body = (
@@ -97,13 +83,25 @@ const IniTracker = () => {
       >
         {body}
       </Modal>
-      <Box>
+      <Box className={classes.cardContainer}>
         {combat.map((card, index) => (
-          <CreatureCard {...card} key={index} />
+          <CreatureCard {...card} key={index} index={index} />
         ))}
       </Box>
     </>
   )
 }
 
-export default IniTracker
+const mapDispatchToProps = {
+  setCombat
+}
+
+const mapStateToProps = (state) => {
+  return {
+    initracker: state.initracker
+  }
+}
+
+const connectedIniTracker = connect(mapStateToProps, mapDispatchToProps)(IniTracker)
+
+export default connectedIniTracker
