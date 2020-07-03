@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 // material-ui components
 import ButtonGroup from '@material-ui/core/ButtonGroup'
@@ -7,9 +7,11 @@ import Modal from '@material-ui/core/Modal'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
 
 // project components
 import { useField } from '../hooks'
+import CreatureCard from '../components/CreatureCard'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,8 +35,16 @@ const IniTracker = () => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
 
+  const party = [
+    { name: 'Trander', initiative: 5 },
+    { name: 'Wolfgraff', initiative: 12 },
+    { name: 'Aren', initiative: 19 },
+    { name: 'Nikolaj', initiative: 7 }
+  ]
+
   const name = useField('name', 'text')
   const initiative = useField('initiative', 'number')
+  const [combat, setCombat] = useState([])
 
   const handleOpen = () => {
     setOpen(true)
@@ -45,6 +55,22 @@ const IniTracker = () => {
   const handleSubmit = event => {
     event.preventDefault()
   }
+
+  const compareInitiative = (a, b) => {
+    if (a.initiative < b.initiative)
+      return 1
+
+    if (a.initiative > b.initiative)
+      return -1
+
+    return 0
+  }
+  useEffect(() => {
+    const cb = party.sort(compareInitiative)
+    setCombat(cb)
+    // eslint-disable-next-line
+  }, [])
+  console.log(combat)
 
   const body = (
     <>
@@ -71,6 +97,11 @@ const IniTracker = () => {
       >
         {body}
       </Modal>
+      <Box>
+        {combat.map((card, index) => (
+          <CreatureCard {...card} key={index} />
+        ))}
+      </Box>
     </>
   )
 }

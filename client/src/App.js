@@ -3,7 +3,7 @@ import {
   Switch, Route, Redirect
 } from 'react-router-dom'
 import { login } from './reducers/userReducer'
-import { useDispatch, connect } from 'react-redux'
+import { connect } from 'react-redux'
 
 // pages
 import Register from './pages/Signup'
@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const App = (props) => {
-  const dispatch = useDispatch()
 
   const effectLogin = props.login
 
@@ -35,9 +34,9 @@ const App = (props) => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const userObject = JSON.parse(loggedUserJSON)
-      dispatch(effectLogin(userObject))
+      effectLogin(userObject)
     }
-  }, [dispatch, effectLogin])
+  }, [effectLogin])
 
 
 
