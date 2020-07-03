@@ -11,10 +11,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import { updateHp, refreshCombat } from '../reducers/initrackerReducer'
 
 const HpCounter = (props) => {
-  const maxHp = props.maxHp
   const id = props.id
   const label = props.label
-  const [hidden, setHidden] = useState('block')
+  // const [hidden, setHidden] = useState(maxHp)
+  let hidden = 'block'
+  if (props.hp < -2000)
+    hidden = 'none'
 
   const useStyles = makeStyles((theme) => ({
     hpCounter: {
@@ -25,7 +27,7 @@ const HpCounter = (props) => {
 
   const classes = useStyles()
 
-  const [hp, setHp] = useState(maxHp)
+  const [hp, setHp] = useState(props.hp)
   const handleChange = event => {
     setHp(event.target.value)
     const updated = {
@@ -37,14 +39,20 @@ const HpCounter = (props) => {
   }
 
   const hide = () => {
-    setHidden('none')
+    // setHidden('none')
+    const dead = {
+      index: Number(props.index),
+      hp: Number(-10000000),
+      id: Number(id)
+    }
+    props.updateHp(dead)
   }
   return (
     <>
       <div className={classes.hpCounter}>
         <TextField label='Creature' value={label} disabled />
         <TextField label='HP' value={hp} type='number' onChange={handleChange} />
-        <TextField label='MaxHP' value={maxHp} type='number' disabled />
+        <TextField label='MaxHP' value={props.maxHp} type='number' disabled />
         <IconButton aria-label="delete" onClick={hide}>
           <DeleteIcon />
         </IconButton>

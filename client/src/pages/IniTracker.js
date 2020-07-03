@@ -75,6 +75,7 @@ const IniTracker = (props) => {
         name: name.attributes.value,
         initiative: Number(initiative.attributes.value),
         hp: new Array(Number(count.attributes.value)).fill(Number(maxHp.attributes.value)),
+        maxHp: Number(maxHp.attributes.value),
         count: Number(count.attributes.value),
         ac: Number(ac.attributes.value),
         id: Math.floor(Math.random() * 1000000)
