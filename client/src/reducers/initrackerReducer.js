@@ -1,10 +1,25 @@
-const initialState = { party: [], monsters: [], combat: [] }
-
-export const setCombat = (obj) => {
-  return {
-    type: 'SET_COMBAT',
-    data: obj
-  }
+const initialState = {
+  party: [
+    {
+      id: 73923,
+      initiative: 15,
+      name: "Trander"
+    }
+  ],
+  monsters: [
+    {
+      ac: 15,
+      count: 3,
+      hp: [
+        7,
+        7,
+        7],
+      id: 55828,
+      initiative: 13,
+      maxHp: 7,
+      name: "Goblin"
+    }
+  ]
 }
 
 export const addCard = (obj) => {
@@ -21,32 +36,38 @@ export const updateHp = (obj) => {
   }
 }
 
-export const refreshCombat = () => {
+export const updateInitiative = (obj) => {
   return {
-    type: 'REFRESH_COMBAT'
+    type: 'UPDATE_INITIATIVE',
+    data: obj
+  }
+}
+
+export const deleteCard = (id) => {
+  return {
+    type: 'DELETE_CARD',
+    data: { id }
   }
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_HP':
-      return { combat: state.combat, party: state.party, monsters: updateMonstersHp(action.data, state.monsters) }
-    case 'REFRESH_COMBAT':
-      return { combat: [...state.party, ...state.monsters], party: state.party, monsters: state.monsters }
-    case 'SET_COMBAT':
-      return { combat: action.data, party: state.party, monsters: state.monsters }
+      return { party: state.party, monsters: updateMonstersHp(action.data, state.monsters) }
+    case 'UPDATE_INITIATIVE':
+      return { party: updateCreatureInitiative(action.data, state.party), monsters: updateCreatureInitiative(action.data, state.monsters) }
     case 'ADD_CARD':
       if (action.data.count === undefined) {
         const party = [...state.party, action.data]
         const monsters = state.monsters
-        const combat = [...party, ...monsters]
-        return { party, monsters, combat }
+        return { party, monsters }
       } else {
         const party = state.party
         const monsters = [...state.monsters, action.data]
-        const combat = [...party, ...monsters]
-        return { party, monsters, combat }
+        return { party, monsters }
       }
+    case 'DELETE_CARD':
+      return { party: state.party.filter(c => c.id !== action.data.id), monsters: state.monsters.filter(c => c.id !== action.data.id) }
     default: return state
   }
 }
@@ -55,6 +76,13 @@ const updateMonstersHp = (hpTracker, monsters) => {
   let creature = monsters.filter(c => c.id === hpTracker.id)[0]
   creature.hp[hpTracker.index] = hpTracker.hp
   return monsters.map(c => c.id !== hpTracker.id ? c : creature)
+}
+
+const updateCreatureInitiative = (iniTracker, group) => {
+  let creature = group.filter(c => c.id === iniTracker.id)[0]
+  if (creature !== undefined)
+    creature.initiative = iniTracker.initiative
+  return group.map(c => c.id !== iniTracker.id ? c : creature)
 }
 
 export default reducer

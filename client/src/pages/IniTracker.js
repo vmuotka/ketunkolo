@@ -13,7 +13,7 @@ import Box from '@material-ui/core/Box'
 // project components
 import { useField } from '../hooks'
 import CreatureCard from '../components/CreatureCard'
-import { setCombat, addCard } from '../reducers/initrackerReducer'
+import { addCard } from '../reducers/initrackerReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +52,7 @@ const IniTracker = (props) => {
   const [open, setOpen] = useState(false)
   const [monsterModal, setMonsterModal] = useState(false)
 
-  const combat = props.initracker.combat
+  const combat = [...props.initracker.party, ...props.initracker.monsters]
 
   const name = useField('name', 'text')
   const initiative = useField('initiative', 'number')
@@ -158,7 +158,6 @@ const IniTracker = (props) => {
 
 
 const mapDispatchToProps = {
-  setCombat,
   addCard
 }
 

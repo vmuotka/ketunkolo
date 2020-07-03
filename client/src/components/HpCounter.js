@@ -8,12 +8,11 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 
 // project components
-import { updateHp, refreshCombat } from '../reducers/initrackerReducer'
+import { updateHp } from '../reducers/initrackerReducer'
 
 const HpCounter = (props) => {
   const id = props.id
   const label = props.label
-  // const [hidden, setHidden] = useState(maxHp)
   let hidden = 'block'
   if (props.hp < -2000)
     hidden = 'none'
@@ -39,7 +38,6 @@ const HpCounter = (props) => {
   }
 
   const hide = () => {
-    // setHidden('none')
     const dead = {
       index: Number(props.index),
       hp: Number(-10000000),
@@ -63,8 +61,7 @@ const HpCounter = (props) => {
 }
 
 const mapDispatchToProps = {
-  updateHp,
-  refreshCombat
+  updateHp
 }
 
 const mapStateToProps = (state) => {

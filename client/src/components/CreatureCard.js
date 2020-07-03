@@ -6,10 +6,12 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 
 // project components
-import { setCombat } from '../reducers/initrackerReducer'
+import { updateInitiative, deleteCard } from '../reducers/initrackerReducer'
 import HpCounter from './HpCounter'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 
 
@@ -29,6 +31,12 @@ const CreatureCard = (props) => {
       padding: theme.spacing(1, 2),
       minWidth: '300px',
     },
+    cardTitle: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap'
+    }
   }
   ))
 
@@ -38,7 +46,7 @@ const CreatureCard = (props) => {
 
   const [ac, setAc] = useState(props.ac)
 
-  const combat = props.initracker.combat
+  const combat = [...props.initracker.party, ...props.initracker.monsters]
 
   const onChange = event => {
     setInit(event.target.value)
@@ -47,16 +55,22 @@ const CreatureCard = (props) => {
   const handleInitChange = event => {
     let creature = combat.filter(c => c.id === props.id)[0]
     creature.initiative = Number(event.target.value)
-    const newCombat = combat.map(c => c.id !== props.id ? c : creature)
-    props.setCombat(newCombat)
+    props.updateInitiative(creature)
   }
-  // const hpCounters = new Array(props.count).fill(props.maxHp)
+
+  const handleDelete = event => {
+    props.deleteCard(props.id)
+  }
 
   return (
     <>
       <Box className={classes.card}>
-        <Typography component='h5'>{props.name}</Typography>
+        <Typography component='h5' className={classes.cardTitle}>{props.name}
+          <IconButton size='small' onClick={handleDelete} >
+            <DeleteIcon />
+          </IconButton></Typography>
         <TextField label='Initiative' value={init} onChange={onChange} onBlur={handleInitChange} type='number' />
+
         {props.count === undefined ? null :
           (
             <>
@@ -73,7 +87,8 @@ const CreatureCard = (props) => {
 }
 
 const mapDispatchToProps = {
-  setCombat
+  updateInitiative,
+  deleteCard
 }
 
 const mapStateToProps = (state) => {
