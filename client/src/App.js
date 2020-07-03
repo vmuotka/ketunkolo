@@ -13,6 +13,7 @@ import UserSettings from './pages/UserSettings'
 
 // components
 import Navigation from './components/Navigation'
+import initrackerService from './services/initrackerService'
 
 // Material UI
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -35,6 +36,7 @@ const App = (props) => {
     if (loggedUserJSON) {
       const userObject = JSON.parse(loggedUserJSON)
       effectLogin(userObject)
+      initrackerService.setToken(userObject.token)
     }
   }, [effectLogin])
 

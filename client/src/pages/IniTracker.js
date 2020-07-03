@@ -14,6 +14,7 @@ import Box from '@material-ui/core/Box'
 import { useField } from '../hooks'
 import CreatureCard from '../components/CreatureCard'
 import { addCard } from '../reducers/initrackerReducer'
+import initrackerService from '../services/initrackerService'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +51,9 @@ const useStyles = makeStyles((theme) => ({
 const IniTracker = (props) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
+  const [modalType, setModalType] = useState('creator')
   const [monsterModal, setMonsterModal] = useState(false)
+  const [monsterManager, setMonsterManager] = useState(false)
 
   const combat = [...props.initracker.party, ...props.initracker.monsters]
 
@@ -60,8 +63,11 @@ const IniTracker = (props) => {
   const count = useField('count', 'number')
   const ac = useField('AC', 'number')
 
+  const groupName = useField('groupname', 'text')
+
   const handleOpen = (monster) => e => {
     setOpen(true)
+    setModalType('creator')
     setMonsterModal(monster)
   }
   const handleClose = () => {
@@ -96,13 +102,27 @@ const IniTracker = (props) => {
     document.getElementById('name').focus()
   }
 
+  const handleManagerSubmit = event => {
+    event.preventDefault()
+    const group = monsterManager ? props.initracker.monsters : props.initracker.party
+
+    const uploadObject = {
+      type: monsterManager ? 'monsters' : 'party',
+      groupname: groupName.attributes.value,
+      group: monsterManager ? props.initracker.monsters : props.initracker.party
+    }
+
+    initrackerService.upload(uploadObject)
+  }
   console.log(combat)
 
-  const handleSave = () => {
-
+  const handleManager = (monster) => e => {
+    setOpen(true)
+    setModalType('manager')
+    setMonsterManager(monster)
   }
 
-  const body = (
+  const creatorBody = (
     <>
       <form onSubmit={handleSubmit} className={classes.root}>
         <Typography id='modal-title' component='h5'>Add a Creature</Typography>
@@ -128,6 +148,16 @@ const IniTracker = (props) => {
     </>
   )
 
+  const managerBody = (
+    <>
+      <form onSubmit={handleManagerSubmit} className={classes.root}>
+        <Typography id='modal-title' component='h5'>Manager</Typography>
+        <div><TextField {...groupName.attributes} required /></div>
+        <Button type='submit' variant='contained' color='primary'>Save</Button>
+      </form>
+    </>
+  )
+
   return (
     <>
       <div className={classes.buttonContainer}>
@@ -136,8 +166,8 @@ const IniTracker = (props) => {
           <Button color='secondary' variant='contained' onClick={handleOpen(true)}>Add Monster</Button>
         </ButtonGroup>
         <ButtonGroup>
-          <Button color='primary' variant='contained' onClick={handleSave(false)}>Save Party</Button>
-          <Button color='secondary' variant='contained' onClick={handleSave(true)}>Save Monsters</Button>
+          <Button color='primary' variant='contained' onClick={handleManager(false)}>Save Party</Button>
+          <Button color='secondary' variant='contained' onClick={handleManager(true)}>Save Monsters</Button>
         </ButtonGroup>
       </div>
       <Modal
@@ -145,7 +175,9 @@ const IniTracker = (props) => {
         onClose={handleClose}
         aria-labelledby='modal-title'
       >
-        {body}
+        {modalType === 'creator' ?
+          creatorBody : managerBody
+        }
       </Modal>
       <Box className={classes.cardContainer}>
         {combat.map((card) => (

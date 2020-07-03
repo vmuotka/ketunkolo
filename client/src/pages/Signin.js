@@ -12,6 +12,7 @@ import Alert from '@material-ui/lab/Alert'
 // Project components
 import PasswordField from '../components/PasswordField'
 import userService from '../services/userService'
+import initrackerService from '../services/initrackerService'
 
 // reducer functions
 import { useDispatch } from 'react-redux'
@@ -68,6 +69,7 @@ const Signin = () => {
           'loggedUser', JSON.stringify(user)
         )
         dispatch(login(user))
+        initrackerService.setToken(user.token)
         history.push('/')
       } catch (expection) {
         setAlert(true)
