@@ -13,7 +13,7 @@ import Box from '@material-ui/core/Box'
 // project components
 import { useField } from '../hooks'
 import CreatureCard from '../components/CreatureCard'
-import { setCombat } from '../reducers/initrackerReducer'
+import { setCombat, addCard } from '../reducers/initrackerReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,30 +33,53 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContainer: {
     display: 'flex',
-    flexDirection: 'column'
-  }
+    flexDirection: 'column',
+    '& .MuiTextField-root': {
+      margin: theme.spacing(0.5),
+      width: '15ch',
+    }
+  },
+
 }))
 
 const IniTracker = (props) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
+  const [monsterModal, setMonsterModal] = useState(false)
 
   const combat = props.initracker.combat
 
   const name = useField('name', 'text')
   const initiative = useField('initiative', 'number')
+  const maxHp = useField('maxhp', 'number')
+  const count = useField('count', 'number')
+  const ac = useField('AC', 'number')
 
-  const handleOpen = () => {
+  const handleOpen = (monster) => e => {
     setOpen(true)
+    setMonsterModal(monster)
   }
   const handleClose = () => {
     setOpen(false)
   }
   const handleSubmit = event => {
     event.preventDefault()
+    let newCard = {}
+    if (monsterModal) {
+      newCard = {
+        name: name.attributes.value,
+        initiative: initiative.attributes.value,
+        maxHp: maxHp.attributes.value,
+        count: count.attributes.value
+      }
+    } else {
+      newCard = {
+        name: name.attributes.value,
+        initiative: initiative.attributes.value
+      }
+    }
+    props.addCard(newCard)
   }
-
-  console.log(combat)
 
   const body = (
     <>
@@ -64,8 +87,21 @@ const IniTracker = (props) => {
         <Typography id='modal-title' component='h5'>Add a Creature</Typography>
         <div>
           <TextField {...name.attributes} required />
-          <TextField {...initiative.attributes} />
+          <TextField {...initiative.attributes} required />
         </div>
+        {!monsterModal ? null :
+          (
+            <>
+              <div>
+                <TextField {...maxHp.attributes} required />
+                <TextField {...count.attributes} required />
+              </div>
+              <div>
+                <TextField {...ac.attributes} required />
+              </div>
+            </>
+          )
+        }
         <Button type='submit' variant='contained' color='primary'>Add</Button>
       </form>
     </>
@@ -73,8 +109,8 @@ const IniTracker = (props) => {
   return (
     <>
       <ButtonGroup>
-        <Button color='primary' variant='contained' onClick={handleOpen}>Add PC</Button>
-        <Button color='secondary' variant='contained'>Add Monster</Button>
+        <Button color='primary' variant='contained' onClick={handleOpen(false)}>Add PC</Button>
+        <Button color='secondary' variant='contained' onClick={handleOpen(true)}>Add Monster</Button>
       </ButtonGroup>
       <Modal
         open={open}
@@ -93,7 +129,8 @@ const IniTracker = (props) => {
 }
 
 const mapDispatchToProps = {
-  setCombat
+  setCombat,
+  addCard
 }
 
 const mapStateToProps = (state) => {
