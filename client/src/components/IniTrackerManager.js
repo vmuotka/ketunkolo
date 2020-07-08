@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { setup } from '../reducers/initrackerGroupReducer'
 import initrackerService from '../services/initrackerService'
 import { useField } from '../hooks'
+import IniTrackerManagerTable from './IniTrackerManagerTable'
+import { addGroup } from '../reducers/initrackerGroupReducer'
 
 // materialui-components
 import Typography from '@material-ui/core/Typography'
@@ -36,6 +38,8 @@ const IniTrackerManager = (props) => {
 
   const monsterManager = props.monsterManager
 
+  const groups = monsterManager ? props.initrackerGroup.monsters : props.initrackerGroup.parties
+
   const setupManager = props.setup
   useEffect(() => {
     initrackerService.getAll()
@@ -53,20 +57,24 @@ const IniTrackerManager = (props) => {
     }
 
     initrackerService.upload(uploadObject)
+    props.addGroup(uploadObject)
+    groupName.reset()
   }
   return (
-    <>
-      <form onSubmit={handleManagerSubmit} className={classes.root}>
-        <Typography id='modal-title' component='h5'>Manager</Typography>
+    <div className={classes.root}>
+      <form onSubmit={handleManagerSubmit}>
+        <Typography id='modal-title' component='h5'>{monsterManager ? 'Monster Manager' : 'Party Manager'}</Typography>
         <div><TextField {...groupName.attributes} required /></div>
         <Button type='submit' variant='contained' color='primary'>Save</Button>
       </form>
-    </>
+      <IniTrackerManagerTable groups={groups} />
+    </div>
   )
 }
 
 const mapDispatchToProps = {
-  setup
+  setup,
+  addGroup
 }
 
 const mapStateToProps = (state) => {

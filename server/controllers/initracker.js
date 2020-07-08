@@ -40,4 +40,16 @@ trackerRouter.get('/getall', async (req, res) => {
   res.status(200).json(groups)
 })
 
+trackerRouter.delete('/:id', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  await Group.deleteOne({ _id: req.params.id })
+    .catch(error => console.error(error))
+  return res.status(200)
+})
+
 module.exports = trackerRouter

@@ -4,9 +4,7 @@ const baseUrl = '/api/initracker'
 let token = null
 
 const setToken = newToken => {
-  console.log('token set')
   token = `bearer ${newToken}`
-  console.log(token)
 }
 
 const upload = async props => {
@@ -22,9 +20,16 @@ const getAll = async () => {
     headers: { Authorization: token }
   }
   const res = await axios.get(`${baseUrl}/getall`, config)
-  console.log('getall')
+  return res.data
+}
+
+const deleteGroup = async (id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const res = await axios.delete(`${baseUrl}/${id}`, config)
   return res.data
 }
 
 
-export default { setToken, upload, getAll }
+export default { setToken, upload, getAll, deleteGroup }

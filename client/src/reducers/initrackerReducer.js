@@ -50,6 +50,13 @@ export const deleteCard = (id) => {
   }
 }
 
+export const setGroup = (obj) => {
+  return {
+    type: 'SET_GROUP',
+    data: obj
+  }
+}
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_HP':
@@ -68,6 +75,8 @@ const reducer = (state = initialState, action) => {
       }
     case 'DELETE_CARD':
       return { party: state.party.filter(c => c.id !== action.data.id), monsters: state.monsters.filter(c => c.id !== action.data.id) }
+    case 'SET_GROUP':
+      return action.data.type === 'party' ? { party: action.data.group, monsters: state.monsters } : { party: state.party, monsters: action.data.group }
     default: return state
   }
 }

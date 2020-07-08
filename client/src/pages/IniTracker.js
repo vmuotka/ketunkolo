@@ -14,7 +14,6 @@ import Box from '@material-ui/core/Box'
 import { useField } from '../hooks'
 import CreatureCard from '../components/CreatureCard'
 import { addCard } from '../reducers/initrackerReducer'
-import initrackerService from '../services/initrackerService'
 import { setup } from '../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../components/IniTrackerManager'
 
@@ -48,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     flexWrap: 'wrap'
   },
+  buttonGroup: {
+    marginBottom: '1em',
+    marginRight: '1em'
+  }
 }))
 
 const IniTracker = (props) => {
@@ -103,9 +106,6 @@ const IniTracker = (props) => {
     document.getElementById('name').focus()
   }
 
-
-  console.log(props)
-
   const handleManager = (monster) => e => {
     setOpen(true)
     setModalType('manager')
@@ -141,14 +141,14 @@ const IniTracker = (props) => {
   return (
     <>
       <div className={classes.buttonContainer}>
-        <ButtonGroup>
+        <ButtonGroup className={classes.buttonGroup}>
           <Button color='primary' variant='contained' onClick={handleOpen(false)}>Add PC</Button>
           <Button color='secondary' variant='contained' onClick={handleOpen(true)}>Add Monster</Button>
         </ButtonGroup>
         {props.user === null ? null :
-          <ButtonGroup>
-            <Button color='primary' variant='contained' onClick={handleManager(false)}>Save Party</Button>
-            <Button color='secondary' variant='contained' onClick={handleManager(true)}>Save Monsters</Button>
+          <ButtonGroup className={classes.buttonGroup}>
+            <Button color='primary' variant='contained' onClick={handleManager(false)}>Save/Load Party</Button>
+            <Button color='secondary' variant='contained' onClick={handleManager(true)}>Save/Load Monsters</Button>
           </ButtonGroup>
         }
       </div>
