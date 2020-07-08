@@ -7,4 +7,4 @@
 | 02.07.2020 | 4 | frontend login/register form validation, regex user state |
 | 02.07.2020 | 4 | user settings page with dark/light theme toggle | 
 | 03.07.2020 | 8 | initracker frontend, order by initiative, pc and monsters |
-| 03.07.2020 | 2,5 | store monster hp to state, delete initiative cards |
+| 03.07.2020 | 4 | store monster hp to state, delete initiative cards, store party and monsters to database |

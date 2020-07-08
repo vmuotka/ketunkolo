@@ -6,11 +6,13 @@ import thunk from 'redux-thunk'
 import userReducer from './reducers/userReducer'
 import themeReducer from './reducers/themeReducer'
 import initrackerReducer from './reducers/initrackerReducer'
+import initrackerGroupReducer from './reducers/initrackerGroupReducer'
 
 const reducer = combineReducers({
   user: userReducer,
   theme: themeReducer,
-  initracker: initrackerReducer
+  initracker: initrackerReducer,
+  initrackerGroup: initrackerGroupReducer,
 })
 
 const store = createStore(

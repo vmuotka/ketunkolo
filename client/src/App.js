@@ -35,8 +35,10 @@ const App = (props) => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const userObject = JSON.parse(loggedUserJSON)
-      effectLogin(userObject)
-      initrackerService.setToken(userObject.token)
+      if (userObject !== null) {
+        effectLogin(userObject)
+        initrackerService.setToken(userObject.token)
+      }
     }
   }, [effectLogin])
 

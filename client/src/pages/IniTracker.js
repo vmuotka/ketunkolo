@@ -15,6 +15,8 @@ import { useField } from '../hooks'
 import CreatureCard from '../components/CreatureCard'
 import { addCard } from '../reducers/initrackerReducer'
 import initrackerService from '../services/initrackerService'
+import { setup } from '../reducers/initrackerGroupReducer'
+import IniTrackerManager from '../components/IniTrackerManager'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,7 +65,6 @@ const IniTracker = (props) => {
   const count = useField('count', 'number')
   const ac = useField('AC', 'number')
 
-  const groupName = useField('groupname', 'text')
 
   const handleOpen = (monster) => e => {
     setOpen(true)
@@ -102,19 +103,8 @@ const IniTracker = (props) => {
     document.getElementById('name').focus()
   }
 
-  const handleManagerSubmit = event => {
-    event.preventDefault()
-    const group = monsterManager ? props.initracker.monsters : props.initracker.party
 
-    const uploadObject = {
-      type: monsterManager ? 'monsters' : 'party',
-      groupname: groupName.attributes.value,
-      group: monsterManager ? props.initracker.monsters : props.initracker.party
-    }
-
-    initrackerService.upload(uploadObject)
-  }
-  console.log(combat)
+  console.log(props)
 
   const handleManager = (monster) => e => {
     setOpen(true)
@@ -148,16 +138,6 @@ const IniTracker = (props) => {
     </>
   )
 
-  const managerBody = (
-    <>
-      <form onSubmit={handleManagerSubmit} className={classes.root}>
-        <Typography id='modal-title' component='h5'>Manager</Typography>
-        <div><TextField {...groupName.attributes} required /></div>
-        <Button type='submit' variant='contained' color='primary'>Save</Button>
-      </form>
-    </>
-  )
-
   return (
     <>
       <div className={classes.buttonContainer}>
@@ -165,10 +145,12 @@ const IniTracker = (props) => {
           <Button color='primary' variant='contained' onClick={handleOpen(false)}>Add PC</Button>
           <Button color='secondary' variant='contained' onClick={handleOpen(true)}>Add Monster</Button>
         </ButtonGroup>
-        <ButtonGroup>
-          <Button color='primary' variant='contained' onClick={handleManager(false)}>Save Party</Button>
-          <Button color='secondary' variant='contained' onClick={handleManager(true)}>Save Monsters</Button>
-        </ButtonGroup>
+        {props.user === null ? null :
+          <ButtonGroup>
+            <Button color='primary' variant='contained' onClick={handleManager(false)}>Save Party</Button>
+            <Button color='secondary' variant='contained' onClick={handleManager(true)}>Save Monsters</Button>
+          </ButtonGroup>
+        }
       </div>
       <Modal
         open={open}
@@ -176,7 +158,7 @@ const IniTracker = (props) => {
         aria-labelledby='modal-title'
       >
         {modalType === 'creator' ?
-          creatorBody : managerBody
+          creatorBody : <IniTrackerManager monsterManager={monsterManager} />
         }
       </Modal>
       <Box className={classes.cardContainer}>
@@ -190,12 +172,15 @@ const IniTracker = (props) => {
 
 
 const mapDispatchToProps = {
-  addCard
+  addCard,
+  setup
 }
 
 const mapStateToProps = (state) => {
   return {
-    initracker: state.initracker
+    user: state.user,
+    initracker: state.initracker,
+    initrackerGroup: state.initrackerGroup
   }
 }
 

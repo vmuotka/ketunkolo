@@ -28,4 +28,16 @@ trackerRouter.post('/upload', async (req, res) => {
   res.status(200).json(savedGroup)
 })
 
+trackerRouter.get('/getall', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const groups = await Group.find({ user: decodedToken.id })
+
+  res.status(200).json(groups)
+})
+
 module.exports = trackerRouter
