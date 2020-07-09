@@ -1,26 +1,4 @@
-const initialState = {
-  party: [
-    {
-      id: 73923,
-      initiative: 15,
-      name: "Trander"
-    }
-  ],
-  monsters: [
-    {
-      ac: 15,
-      count: 3,
-      hp: [
-        7,
-        7,
-        7],
-      id: 55828,
-      initiative: 13,
-      maxHp: 7,
-      name: "Goblin"
-    }
-  ]
-}
+const initialState = { party: [], monsters: [] }
 
 export const addCard = (obj) => {
   return {

@@ -2,6 +2,9 @@
   "name": "ketunkolo",
   "version": "1.0.0",
   "description": "ketunkolo server",
+  "engines": {
+    "node": "12.14.1"
+  },
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",

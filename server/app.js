@@ -5,6 +5,8 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
+const path = require('path')
+
 
 // parse json bodies sent by api clients
 app.use(express.json())
@@ -21,4 +23,10 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 
 app.use(cors())
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'build')));
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'))
+  })
+}
 module.exports = app
