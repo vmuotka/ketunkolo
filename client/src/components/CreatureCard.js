@@ -10,9 +10,10 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import OpenInNewIcon from '@material-ui/icons/OpenInNew'
 import Link from '@material-ui/core/Link'
+import AddIcon from '@material-ui/icons/Add'
 
 // project components
-import { updateInitiative, deleteCard } from '../reducers/initrackerReducer'
+import { updateInitiative, deleteCard, incrementCount } from '../reducers/initrackerReducer'
 import HpCounter from './HpCounter'
 
 
@@ -64,6 +65,10 @@ const CreatureCard = (props) => {
     props.deleteCard(props.id)
   }
 
+  const handleIncrementCount = event => {
+    props.incrementCount(props.id)
+  }
+
   return (
     <>
       <Box className={classes.card}>
@@ -83,6 +88,7 @@ const CreatureCard = (props) => {
               <TextField label='AC' value={ac} onChange={(event) => { setAc(event.target.value) }} type='number' />
               <div>
                 {props.hp.map((hp, index) => (<HpCounter hp={hp} maxHp={props.maxHp} id={props.id} index={index} key={index} label={props.name + ' ' + (index + 1)} />))}
+                <IconButton size='small' title='Add HP Counter' onClick={handleIncrementCount}><AddIcon /></IconButton>
               </div>
             </>
           )
@@ -94,7 +100,8 @@ const CreatureCard = (props) => {
 
 const mapDispatchToProps = {
   updateInitiative,
-  deleteCard
+  deleteCard,
+  incrementCount
 }
 
 const mapStateToProps = (state) => {

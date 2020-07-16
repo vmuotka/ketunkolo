@@ -7,6 +7,13 @@ export const addCard = (obj) => {
   }
 }
 
+export const incrementCount = (id) => {
+  return {
+    type: 'INCREMENT_COUNT',
+    data: { id }
+  }
+}
+
 export const updateHp = (obj) => {
   return {
     type: 'UPDATE_HP',
@@ -51,6 +58,11 @@ const reducer = (state = initialState, action) => {
         const monsters = [...state.monsters, action.data]
         return { party, monsters }
       }
+    case 'INCREMENT_COUNT':
+      let updatedMonster = state.monsters.find(monster => monster.id === action.data.id)
+      updatedMonster.hp.push(updatedMonster.maxHp)
+      updatedMonster.count += 1
+      return { party: state.party, monsters: state.monsters.map(monster => monster.id !== action.data.id ? monster : updatedMonster) }
     case 'DELETE_CARD':
       return { party: state.party.filter(c => c.id !== action.data.id), monsters: state.monsters.filter(c => c.id !== action.data.id) }
     case 'SET_GROUP':
