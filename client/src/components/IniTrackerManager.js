@@ -67,7 +67,7 @@ const IniTrackerManager = (props) => {
         <div><TextField {...groupName.attributes} required /></div>
         <Button type='submit' variant='contained' color='primary'>Save</Button>
       </form>
-      <IniTrackerManagerTable groups={groups} />
+      <IniTrackerManagerTable groups={groups} monsterManager={monsterManager} />
     </div>
   )
 }

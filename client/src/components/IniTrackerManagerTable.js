@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux'
+
+// materialui 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -13,12 +16,13 @@ import Button from '@material-ui/core/Button'
 import { setGroup } from '../reducers/initrackerReducer'
 import { useDispatch } from 'react-redux'
 import initrackerService from '../services/initrackerService'
-import { deleteGroup } from '../reducers/initrackerGroupReducer'
+import { deleteGroup, updateGroup } from '../reducers/initrackerGroupReducer'
 
 const columns = [
   { id: 'name', label: 'Group Name', minWidth: 100 },
-  { id: 'load', label: 'Load', minWidth: 70 },
-  { id: 'del', label: 'Delete', minWidth: 70 }
+  { id: 'load', label: 'Load', minWidth: 50 },
+  { id: 'save', label: 'Save', minWidth: 50 },
+  { id: 'del', label: 'Delete', minWidth: 50 }
 ];
 
 
@@ -39,17 +43,26 @@ const IniTrackerManagerTable = (props) => {
 
   const dispatch = useDispatch()
 
+  const loadedGroup = props.monsterManager ? props.initracker.monsters : props.initracker.party
+
   const createData = (group) => {
     const load = (<Button onClick={() => {
-      dispatch(setGroup(group))
+      props.setGroup(group)
     }}>Load</Button>)
+    const save = (<Button onClick={() => {
+      if (window.confirm(`Are you sure you want to overwrite ${group.groupname}?`)) {
+        group.group = loadedGroup
+        initrackerService.save(group)
+        props.updateGroup(group)
+      }
+    }}>Save</Button>)
     const del = (<Button onClick={() => {
       if (window.confirm(`Are you sure you want to delete ${group.groupname}?`)) {
         initrackerService.deleteGroup(group.id)
-        dispatch(deleteGroup(group.id))
+        props.deleteGroup(group.id)
       }
     }}>Delete</Button>)
-    return { name: group.groupname, load, del };
+    return { name: group.groupname, load, save, del };
   }
 
 
@@ -112,4 +125,18 @@ const IniTrackerManagerTable = (props) => {
   );
 }
 
-export default IniTrackerManagerTable
+const mapDispatchToProps = {
+  setGroup,
+  deleteGroup,
+  updateGroup
+}
+
+const mapStateToProps = (state) => {
+  return {
+    initracker: state.initracker
+  }
+}
+
+const connectedIniTrackerManagerTable = connect(mapStateToProps, mapDispatchToProps)(IniTrackerManagerTable)
+
+export default connectedIniTrackerManagerTable

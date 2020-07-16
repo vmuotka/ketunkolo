@@ -15,6 +15,16 @@ const upload = async props => {
   return res.data
 }
 
+const save = async props => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+  const res = await axios.put(`${baseUrl}/upload`, props, config)
+  return res.data
+}
+
 const getAll = async () => {
   const config = {
     headers: { Authorization: token }
@@ -32,4 +42,4 @@ const deleteGroup = async (id) => {
 }
 
 
-export default { setToken, upload, getAll, deleteGroup }
+export default { setToken, upload, getAll, deleteGroup, save }
