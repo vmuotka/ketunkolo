@@ -14,7 +14,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button'
 
 import { setGroup } from '../reducers/initrackerReducer'
-import { useDispatch } from 'react-redux'
 import initrackerService from '../services/initrackerService'
 import { deleteGroup, updateGroup } from '../reducers/initrackerGroupReducer'
 
@@ -40,8 +39,6 @@ const IniTrackerManagerTable = (props) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const dispatch = useDispatch()
 
   const loadedGroup = props.monsterManager ? props.initracker.monsters : props.initracker.party
 
