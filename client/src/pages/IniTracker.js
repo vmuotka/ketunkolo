@@ -67,6 +67,7 @@ const IniTracker = (props) => {
   const maxHp = useField('maxhp', 'number')
   const count = useField('count', 'number')
   const ac = useField('AC', 'number')
+  const statblock = useField('Statblock', 'text')
 
 
   const handleOpen = (monster) => e => {
@@ -88,7 +89,8 @@ const IniTracker = (props) => {
         maxHp: Number(maxHp.attributes.value),
         count: Number(count.attributes.value),
         ac: Number(ac.attributes.value),
-        id: Math.floor(Math.random() * 1000000)
+        id: Math.floor(Math.random() * 1000000),
+        statblock: statblock.attributes.value
       }
     } else {
       newCard = {
@@ -103,6 +105,7 @@ const IniTracker = (props) => {
     count.reset()
     ac.reset()
     initiative.reset()
+    statblock.reset()
     document.getElementById('name').focus()
   }
 
@@ -129,6 +132,7 @@ const IniTracker = (props) => {
               </div>
               <div>
                 <TextField {...ac.attributes} required />
+                <TextField {...statblock.attributes} helperText='Link to a statblock' />
               </div>
             </>
           )

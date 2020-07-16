@@ -4,14 +4,16 @@ import { connect } from 'react-redux'
 // material-ui components
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
-
-// project components
-import { updateInitiative, deleteCard } from '../reducers/initrackerReducer'
-import HpCounter from './HpCounter'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
+import OpenInNewIcon from '@material-ui/icons/OpenInNew'
+import Link from '@material-ui/core/Link'
+
+// project components
+import { updateInitiative, deleteCard } from '../reducers/initrackerReducer'
+import HpCounter from './HpCounter'
 
 
 
@@ -65,7 +67,11 @@ const CreatureCard = (props) => {
   return (
     <>
       <Box className={classes.card}>
-        <Typography component='h5' className={classes.cardTitle}>{props.name}
+        <Typography component='h5' className={classes.cardTitle}>
+          {props.statblock !== undefined && props.statblock !== '' ?
+            <Link href={props.statblock} target='_blank' rel='noreferrer' color='inherit'>{props.name} <OpenInNewIcon /></Link> :
+            props.name
+          }
           <IconButton size='small' onClick={handleDelete} >
             <DeleteIcon />
           </IconButton></Typography>
