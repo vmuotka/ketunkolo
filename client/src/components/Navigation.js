@@ -19,12 +19,12 @@ import { makeStyles, useTheme, styled } from '@material-ui/core/styles'
 import HomeIcon from '@material-ui/icons/Home'
 import LoginIcon from '@material-ui/icons/LockOpen'
 import LogoutIcon from '@material-ui/icons/Lock'
-import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import SettingsIcon from '@material-ui/icons/Settings'
 import BallotIcon from '@material-ui/icons/Ballot'
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import RecentActorsIcon from '@material-ui/icons/RecentActors'
 
 import { Link as RouterLink } from 'react-router-dom'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { logout } from '../reducers/userReducer'
 
 const drawerWidth = 240
@@ -85,6 +85,11 @@ const mainNavs = [
     name: 'Characters',
     icon: <RecentActorsIcon />,
     route: '/characters'
+  },
+  {
+    name: 'Monsters',
+    icon: null,
+    route: '/search-monsters'
   }
 ]
 
@@ -116,18 +121,17 @@ const Navigation = (props) => {
   }
 
   const history = useHistory()
-  const dispatch = useDispatch()
 
   const handleLogout = (event) => {
     window.localStorage.setItem('loggedUser', null)
-    dispatch(props.logout)
+    props.logout()
     history.push('/')
   }
 
   const userNavs = [
     {
       name: props.user === null ? null : props.user.username,
-      icon: <AccountBoxIcon />,
+      icon: <SettingsIcon />,
       route: '/user_settings'
     }
   ]
