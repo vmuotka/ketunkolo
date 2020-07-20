@@ -38,7 +38,8 @@ const MonsterSearch = () => {
 
   const handleSearch = async event => {
     event.preventDefault()
-    setSearchResults(await monsterSearchService.search(search.attributes.value))
+    if (search.attributes.value !== '')
+      setSearchResults(await monsterSearchService.search(search.attributes.value))
   }
 
   const onLinkClick = (id) => event => {
