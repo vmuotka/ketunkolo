@@ -7,4 +7,9 @@ monsterRouter.get('/search/:searchword', async (req, res) => {
   return res.status(200).json(searchResults)
 })
 
+monsterRouter.get('/get/:id', async (req, res) => {
+  const monster = await Monster.findById(req.params.id)
+  return res.status(200).json(monster)
+})
+
 module.exports = monsterRouter

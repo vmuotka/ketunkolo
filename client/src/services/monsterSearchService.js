@@ -6,4 +6,9 @@ const search = async searchword => {
   return res.data
 }
 
-export default { search }
+const getMonsterById = async id => {
+  const res = await axios.get(`${baseUrl}/get/${id}`)
+  return res.data
+}
+
+export default { search, getMonsterById }

@@ -11,6 +11,7 @@ import SignIn from './pages/Signin'
 import IniTracker from './pages/IniTracker'
 import UserSettings from './pages/UserSettings'
 import MonsterSearch from './pages/MonsterSearch'
+import Monster from './pages/Monster'
 
 // components
 import Navigation from './components/Navigation'
@@ -63,8 +64,11 @@ const App = (props) => {
             <Route path='/signin' render={() =>
               props.user !== null ? <Redirect to='/' /> : <SignIn />
             } />
-            <Route path='/search-monsters' >
+            <Route path='/search-monsters'>
               <MonsterSearch />
+            </Route>
+            <Route path='/monster/:id'>
+              <Monster />
             </Route>
             <Route path='/'>
               <h1>Home</h1>
