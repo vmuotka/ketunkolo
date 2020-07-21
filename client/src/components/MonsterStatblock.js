@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 const MonsterStatblock = (props) => {
   const monster = props.monster
   const classes = useStyles()
-  console.log(monster)
 
   return (
     <>
