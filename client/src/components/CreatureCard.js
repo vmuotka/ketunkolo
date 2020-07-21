@@ -76,7 +76,7 @@ const CreatureCard = (props) => {
     <>
       <Box className={classes.card}>
         <Typography component='h5' className={classes.cardTitle}>
-          {props.statblock !== undefined && props.statblock !== '' ?
+          {props.statblock !== undefined && props.statblock.name !== undefined ?
             <Link className={classes.link} color='inherit' onClick={props.handleStatblockOpen(props.statblock)}>{props.name} <PetsIcon /></Link> :
             props.name
           }

@@ -79,7 +79,7 @@ const IniTracker = (props) => {
   const count = useField('count', 'number')
   const ac = useField('AC', 'number')
   const statblockSearch = useField('Statblock', 'text')
-  const [statblock, setStatblock] = useState(null)
+  const [statblock, setStatblock] = useState({})
 
   const [searchModal, setSearchModal] = useState(false)
   const [searchResults, setSearchResults] = useState([])
@@ -142,7 +142,7 @@ const IniTracker = (props) => {
     initiative.reset()
     statblockSearch.reset()
     setSearchResults([])
-    setStatblock(null)
+    setStatblock({})
     document.getElementById('name').focus()
   }
 
@@ -161,9 +161,12 @@ const IniTracker = (props) => {
   const onLinkClick = (monster) => event => {
     event.preventDefault()
     setStatblock(monster)
-    maxHp.setVal(monster.hit_points)
-    ac.setVal(monster.armor_class)
-    name.setVal(monster.name)
+    if (maxHp.attributes.value === '')
+      maxHp.setVal(monster.hit_points)
+    if (ac.attributes.value === '')
+      ac.setVal(monster.armor_class)
+    if (name.attributes.value === '')
+      name.setVal(monster.name)
     setSearchModal(false)
   }
 
@@ -184,7 +187,7 @@ const IniTracker = (props) => {
               </div>
               <div>
                 <TextField {...ac.attributes} required />
-                {statblock !== null ? <TextField value={statblock.name} label='Statblock' disabled /> : null}
+                {statblock.name !== undefined ? <TextField value={statblock.name} label='Statblock' disabled /> : null}
               </div>
             </>
           )
