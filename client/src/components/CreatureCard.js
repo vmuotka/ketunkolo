@@ -89,6 +89,7 @@ const CreatureCard = (props) => {
           (
             <>
               <TextField label='AC' value={ac} onChange={(event) => { setAc(event.target.value) }} type='number' />
+              <TextField label='MaxHP' value={props.maxHp} disabled />
               <div>
                 {props.hp.map((hp, index) => (<HpCounter hp={hp} maxHp={props.maxHp} id={props.id} index={index} key={index} label={props.name + ' ' + (index + 1)} />))}
                 <IconButton size='small' title='Add HP Counter' onClick={handleIncrementCount}><AddIcon /></IconButton>

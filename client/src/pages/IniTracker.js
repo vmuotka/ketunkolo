@@ -163,6 +163,7 @@ const IniTracker = (props) => {
     setStatblock(monster)
     maxHp.setVal(monster.hit_points)
     ac.setVal(monster.armor_class)
+    name.setVal(monster.name)
     setSearchModal(false)
   }
 
@@ -190,7 +191,7 @@ const IniTracker = (props) => {
         }
         <ButtonGroup>
           <Button type='submit' variant='contained' color='primary'>Add</Button>
-          <Button onClick={handleSearchOpen} variant='contained' color='secondary'>Add a statblock</Button>
+          {monsterModal ? <Button onClick={handleSearchOpen} variant='contained' color='secondary'>Add a statblock</Button> : null}
         </ButtonGroup>
       </form>
     </>

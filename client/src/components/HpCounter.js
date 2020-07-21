@@ -21,6 +21,9 @@ const HpCounter = (props) => {
     hpCounter: {
       display: hidden
     },
+    inline: {
+      display: 'inline'
+    }
   }
   ))
 
@@ -37,6 +40,17 @@ const HpCounter = (props) => {
     props.updateHp(updated)
   }
 
+  const onDamageChange = event => {
+    setDamage(Number(event.target.value))
+  }
+  const handleDamage = event => {
+    event.preventDefault()
+    setHp(hp - damage)
+    setDamage(0)
+  }
+
+  const [damage, setDamage] = useState(0)
+
   const hide = () => {
     const dead = {
       index: Number(props.index),
@@ -50,7 +64,9 @@ const HpCounter = (props) => {
       <div className={classes.hpCounter}>
         <TextField label='Creature' value={label} disabled />
         <TextField label='HP' value={hp} type='number' onChange={handleChange} />
-        <TextField label='MaxHP' value={props.maxHp} type='number' disabled />
+        <form onSubmit={handleDamage} className={classes.inline}>
+          <TextField label='Damage' value={damage} onChange={onDamageChange} type='number' />
+        </form>
         <IconButton aria-label="delete" onClick={hide}>
           <DeleteIcon />
         </IconButton>

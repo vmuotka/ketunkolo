@@ -11,4 +11,4 @@
 | 08.09.07.2020 | 5 | display and load party and monsters from database, deploying fontend and backend to one heroku host | 
 | 16.07.2020 | 3 | link a statblock to monster tracker, add hp counters after initialization, save changes to existing groups |
 | 20.07.2020 | 4 | search monsters by name from database |
-| 21.07.2020 | 4 | monster statblock |
+| 21.07.2020 | 5,5 | monster statblock, also available on initracker |
