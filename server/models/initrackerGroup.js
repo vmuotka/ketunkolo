@@ -17,6 +17,9 @@ const groupSchema = new mongoose.Schema({
   user: {
     type: String,
     required: true
+  },
+  statblock: {
+    type: Object
   }
 })
 

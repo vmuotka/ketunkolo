@@ -22,6 +22,7 @@ import LogoutIcon from '@material-ui/icons/Lock'
 import SettingsIcon from '@material-ui/icons/Settings'
 import BallotIcon from '@material-ui/icons/Ballot'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
+import PetsIcon from '@material-ui/icons/Pets'
 
 import { Link as RouterLink } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -88,7 +89,7 @@ const mainNavs = [
   },
   {
     name: 'Monsters',
-    icon: null,
+    icon: <PetsIcon />,
     route: '/search-monsters'
   }
 ]
@@ -105,10 +106,6 @@ const loggedOutNavs = [
     route: '/signup'
   }
 ]
-
-
-
-
 
 const Navigation = (props) => {
   const { windowVar } = props

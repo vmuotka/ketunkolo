@@ -8,9 +8,9 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
-import OpenInNewIcon from '@material-ui/icons/OpenInNew'
-import Link from '@material-ui/core/Link'
 import AddIcon from '@material-ui/icons/Add'
+import Link from '@material-ui/core/Link'
+import PetsIcon from '@material-ui/icons/Pets'
 
 // project components
 import { updateInitiative, deleteCard, incrementCount } from '../reducers/initrackerReducer'
@@ -39,6 +39,9 @@ const CreatureCard = (props) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       flexWrap: 'wrap'
+    },
+    link: {
+      cursor: 'pointer'
     }
   }
   ))
@@ -74,7 +77,7 @@ const CreatureCard = (props) => {
       <Box className={classes.card}>
         <Typography component='h5' className={classes.cardTitle}>
           {props.statblock !== undefined && props.statblock !== '' ?
-            <Link href={props.statblock} target='_blank' rel='noreferrer' color='inherit'>{props.name} <OpenInNewIcon /></Link> :
+            <Link className={classes.link} color='inherit' onClick={props.handleStatblockOpen(props.statblock)}>{props.name} <PetsIcon /></Link> :
             props.name
           }
           <IconButton size='small' onClick={handleDelete} >

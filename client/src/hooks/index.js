@@ -1,25 +1,30 @@
 import { useState } from 'react'
 
 export const useField = (name, type) => {
-    const [value, setValue] = useState('')
+  const [value, setValue] = useState('')
 
-    const onChange = (event) => {
-        setValue(event.target.value)
-    }
+  const onChange = (event) => {
+    setValue(event.target.value)
+  }
 
-    const reset = () => {
-        setValue('')
-    }
+  const reset = () => {
+    setValue('')
+  }
 
-    return {
-        attributes: {
-            name,
-            label: name.charAt(0).toUpperCase() + name.slice(1),
-            id: name,
-            type,
-            value,
-            onChange
-        },
-        reset
-    }
+  const setVal = (val) => {
+    setValue(val)
+  }
+
+  return {
+    attributes: {
+      name,
+      label: name.charAt(0).toUpperCase() + name.slice(1),
+      id: name,
+      type,
+      value,
+      onChange
+    },
+    reset,
+    setVal
+  }
 }

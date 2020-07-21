@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
+import SearchIcon from '@material-ui/icons/Search'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Link from '@material-ui/core/Link'
 
 // project components
 import { useField } from '../hooks'
@@ -16,6 +19,8 @@ import CreatureCard from '../components/CreatureCard'
 import { addCard } from '../reducers/initrackerReducer'
 import { setup } from '../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../components/IniTrackerManager'
+import monsterSearchService from '../services/monsterSearchService'
+import MonsterStatblock from '../components/MonsterStatblock'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    overflowY: 'auto',
+    maxHeight: '80%',
     transform: 'translate(-50%, -50%)',
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
@@ -50,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
   buttonGroup: {
     marginBottom: '1em',
     marginRight: '1em'
+  },
+  link: {
+    display: 'block',
+    cursor: 'pointer'
   }
 }))
 
@@ -67,7 +78,31 @@ const IniTracker = (props) => {
   const maxHp = useField('maxhp', 'number')
   const count = useField('count', 'number')
   const ac = useField('AC', 'number')
-  const statblock = useField('Statblock', 'text')
+  const statblockSearch = useField('Statblock', 'text')
+  const [statblock, setStatblock] = useState(null)
+
+  const [searchModal, setSearchModal] = useState(false)
+  const [searchResults, setSearchResults] = useState([])
+  const [statblockModalMonster, setStatblockModalMonster] = useState({})
+
+  const handleSearchOpen = () => {
+    setSearchModal(true)
+  }
+
+  const handleSearchClose = () => {
+    setSearchModal(false)
+  }
+
+  const [statblockModal, setStatblockModal] = useState(false)
+
+  const handleStatblockOpen = (statblock) => event => {
+    setStatblockModal(true)
+    setStatblockModalMonster(statblock)
+  }
+
+  const handleStatblockClose = () => {
+    setStatblockModal(false)
+  }
 
 
   const handleOpen = (monster) => e => {
@@ -90,7 +125,7 @@ const IniTracker = (props) => {
         count: Number(count.attributes.value),
         ac: Number(ac.attributes.value),
         id: Math.floor(Math.random() * 1000000),
-        statblock: statblock.attributes.value
+        statblock: statblock
       }
     } else {
       newCard = {
@@ -105,7 +140,9 @@ const IniTracker = (props) => {
     count.reset()
     ac.reset()
     initiative.reset()
-    statblock.reset()
+    statblockSearch.reset()
+    setSearchResults([])
+    setStatblock(null)
     document.getElementById('name').focus()
   }
 
@@ -115,10 +152,24 @@ const IniTracker = (props) => {
     setMonsterManager(monster)
   }
 
+  const handleSearch = async event => {
+    event.preventDefault()
+    if (statblockSearch.attributes.value !== '')
+      setSearchResults(await monsterSearchService.search(statblockSearch.attributes.value))
+  }
+
+  const onLinkClick = (monster) => event => {
+    event.preventDefault()
+    setStatblock(monster)
+    maxHp.setVal(monster.hit_points)
+    ac.setVal(monster.armor_class)
+    setSearchModal(false)
+  }
+
   const creatorBody = (
     <>
       <form onSubmit={handleSubmit} className={classes.root}>
-        <Typography id='modal-title' component='h5'>Add a Creature</Typography>
+        <Typography id='modal-title' component='h3'>Add a Creature</Typography>
         <div>
           <TextField {...name.attributes} required />
           <TextField {...initiative.attributes} required />
@@ -132,14 +183,46 @@ const IniTracker = (props) => {
               </div>
               <div>
                 <TextField {...ac.attributes} required />
-                <TextField {...statblock.attributes} helperText='Link to a statblock' />
+                {statblock !== null ? <TextField value={statblock.name} label='Statblock' disabled /> : null}
               </div>
             </>
           )
         }
-        <Button type='submit' variant='contained' color='primary'>Add</Button>
+        <ButtonGroup>
+          <Button type='submit' variant='contained' color='primary'>Add</Button>
+          <Button onClick={handleSearchOpen} variant='contained' color='secondary'>Add a statblock</Button>
+        </ButtonGroup>
       </form>
     </>
+  )
+
+  const statblockSearchBody = (
+    <form onSubmit={handleSearch} className={classes.root}>
+      <Typography component='h4'>Search Statblocks</Typography>
+      <TextField
+        {...statblockSearch.attributes} helperText='Search monsters by name'
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <SearchIcon />
+            </InputAdornment>
+          )
+        }}
+      />
+      <Typography component='p' >
+        {searchResults.map((result) => (
+          <Link key={result.id} className={classes.link} onClick={onLinkClick(result)} color='inherit'>
+            {result.name} (CR: {result.challenge_rating})
+          </Link>
+        ))}
+      </Typography>
+    </form>
+  )
+
+  const statblockModalBody = (
+    <div className={classes.root}>
+      <MonsterStatblock monster={statblockModalMonster} />
+    </div>
   )
 
   return (
@@ -165,9 +248,23 @@ const IniTracker = (props) => {
           creatorBody : <IniTrackerManager monsterManager={monsterManager} />
         }
       </Modal>
+      <Modal
+        open={searchModal}
+        onClose={handleSearchClose}
+        aria-labelledby='modal-title'
+      >
+        {statblockSearchBody}
+      </Modal>
+      <Modal
+        open={statblockModal}
+        onClose={handleStatblockClose}
+        aria-labelledby='modal-title'
+      >
+        {statblockModalBody}
+      </Modal>
       <Box className={classes.cardContainer}>
         {combat.map((card) => (
-          <CreatureCard {...card} key={card.id} />
+          <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
         ))}
       </Box>
     </>

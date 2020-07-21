@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   link: {
-    display: 'block'
+    display: 'block',
+    cursor: 'pointer'
   }
 }))
 
