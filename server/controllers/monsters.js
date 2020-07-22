@@ -8,19 +8,38 @@ monsterRouter.post('/search', async (req, res) => {
   if (body.searchword !== '')
     query.name = { '$regex': body.searchword, '$options': 'i' }
 
-  if (body.alignment !== '')
-    query.alignment = { '$regex': body.alignment, '$options': 'i' }
 
-  if (body.type !== '')
-    query.type = { '$regex': body.type, '$options': 'i' }
+  if (body.alignment.length !== 0) {
+    let alignments = []
+    body.alignment.forEach(alignment => {
+      alignments.push(new RegExp(alignment, 'i'))
+    })
+    query.alignment = alignments
+  }
 
-  if (body.size !== '')
-    query.size = { '$regex': body.size, '$options': 'i' }
+  if (body.type.length !== 0) {
+    let types = []
+    body.type.forEach(type => {
+      types.push(new RegExp(type, 'i'))
+    })
+    query.type = types
+  }
 
-  if (body.cr !== '')
+  if (body.size.length !== 0) {
+    let sizes = []
+    body.size.forEach(size => {
+      sizes.push(new RegExp(size, 'i'))
+    })
+    query.size = sizes
+  }
+
+  if (body.cr.length !== 0) {
     query.challenge_rating = body.cr
+  }
 
-  const searchResults = await Monster.find(query)
+  console.log(query)
+
+  const searchResults = await (await Monster.find(query))
   return res.status(200).json(searchResults)
 })
 

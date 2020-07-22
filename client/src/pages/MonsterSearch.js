@@ -9,7 +9,6 @@ import TextField from '@material-ui/core/TextField'
 import SearchIcon from '@material-ui/icons/Search'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Button from '@material-ui/core/Button'
-import Hidden from '@material-ui/core/Hidden'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
@@ -45,10 +44,10 @@ const MonsterSearch = () => {
 
   const [search, setSearch] = useState({
     searchword: '',
-    alignment: '',
-    type: '',
-    size: '',
-    cr: ''
+    alignment: [],
+    type: [],
+    size: [],
+    cr: []
   })
 
   let challenge_ratings = [
@@ -104,6 +103,7 @@ const MonsterSearch = () => {
         <FormControl className={classes.searchFormControl}>
           <InputLabel htmlFor='alignment'>Alignment</InputLabel>
           <Select
+            multiple
             autoWidth
             value={search.alignment}
             onChange={handleChange}
@@ -112,7 +112,6 @@ const MonsterSearch = () => {
               id: 'alignment'
             }}
           >
-            <MenuItem value=''>Any</MenuItem>
             <MenuItem value='good'>Good</MenuItem>
             <MenuItem value='neutral'>Neutral</MenuItem>
             <MenuItem value='evil'>Evil</MenuItem>
@@ -125,6 +124,8 @@ const MonsterSearch = () => {
         <FormControl className={classes.searchFormControl}>
           <InputLabel htmlFor='type'>Type</InputLabel>
           <Select
+            autoWidth
+            multiple
             value={search.type}
             onChange={handleChange}
             inputProps={{
@@ -132,7 +133,6 @@ const MonsterSearch = () => {
               id: 'type'
             }}
           >
-            <MenuItem value=''>Any</MenuItem>
             <MenuItem value='aberration'>Aberration</MenuItem>
             <MenuItem value='beast'>Beast</MenuItem>
             <MenuItem value='celestial'>Celestial</MenuItem>
@@ -153,6 +153,8 @@ const MonsterSearch = () => {
         <FormControl className={classes.searchFormControl}>
           <InputLabel htmlFor='size'>Size</InputLabel>
           <Select
+            autoWidth
+            multiple
             value={search.size}
             onChange={handleChange}
             inputProps={{
@@ -160,7 +162,6 @@ const MonsterSearch = () => {
               id: 'size'
             }}
           >
-            <MenuItem value=''>Any</MenuItem>
             <MenuItem value='tiny'>Tiny</MenuItem>
             <MenuItem value='small'>Small</MenuItem>
             <MenuItem value='medium'>Medium</MenuItem>
@@ -173,6 +174,8 @@ const MonsterSearch = () => {
         <FormControl className={classes.searchFormControl}>
           <InputLabel htmlFor='cr'>CR</InputLabel>
           <Select
+            multiple
+            autoWidth
             value={search.cr}
             onChange={handleChange}
             inputProps={{
@@ -180,7 +183,6 @@ const MonsterSearch = () => {
               id: 'cr'
             }}
           >
-            <MenuItem value=''>Any</MenuItem>
             {challenge_ratings.map(rating => <MenuItem key={rating} value={rating}>{rating}</MenuItem>)}
           </Select>
         </FormControl>
@@ -194,7 +196,7 @@ const MonsterSearch = () => {
         <Divider />
         <Typography component='p' >
           {searchResults.map((result) => (
-            <Link key={result.id} className={classes.link} href={'/monster' + result.id} onClick={onLinkClick(result.id)} color='inherit'>
+            <Link key={result.id} className={classes.link} href={'/monster/' + result.id} onClick={onLinkClick(result.id)} color='inherit'>
               {result.name} (CR: {result.challenge_rating})
             </Link>
           ))}
