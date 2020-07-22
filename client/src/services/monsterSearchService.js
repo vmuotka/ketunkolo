@@ -1,8 +1,8 @@
 import axios from 'axios'
 const baseUrl = '/api/monsters'
 
-const search = async searchword => {
-  const res = await axios.get(`${baseUrl}/search/${searchword}`)
+const search = async props => {
+  const res = await axios.post(`${baseUrl}/search`, props)
   return res.data
 }
 

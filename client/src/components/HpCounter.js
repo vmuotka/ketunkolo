@@ -46,10 +46,10 @@ const HpCounter = (props) => {
   const handleDamage = event => {
     event.preventDefault()
     setHp(hp - damage)
-    setDamage(0)
+    setDamage('')
   }
 
-  const [damage, setDamage] = useState(0)
+  const [damage, setDamage] = useState('')
 
   const hide = () => {
     const dead = {

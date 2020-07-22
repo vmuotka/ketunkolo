@@ -1,9 +1,26 @@
 const monsterRouter = require('express').Router()
 const Monster = require('../models/monster')
 
-monsterRouter.get('/search/:searchword', async (req, res) => {
-  const searchword = req.params.searchword.toLowerCase()
-  const searchResults = await Monster.find({ name: { '$regex': searchword, '$options': 'i' } })
+monsterRouter.post('/search', async (req, res) => {
+  const body = req.body
+  let query = {}
+
+  if (body.searchword !== '')
+    query.name = { '$regex': body.searchword, '$options': 'i' }
+
+  if (body.alignment !== '')
+    query.alignment = { '$regex': body.alignment, '$options': 'i' }
+
+  if (body.type !== '')
+    query.type = { '$regex': body.type, '$options': 'i' }
+
+  if (body.size !== '')
+    query.size = { '$regex': body.size, '$options': 'i' }
+
+  if (body.cr !== '')
+    query.challenge_rating = body.cr
+
+  const searchResults = await Monster.find(query)
   return res.status(200).json(searchResults)
 })
 
