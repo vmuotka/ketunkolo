@@ -10,11 +10,20 @@ monsterRouter.post('/search', async (req, res) => {
 
 
   if (body.alignment.length !== 0) {
-    let alignments = []
-    body.alignment.forEach(alignment => {
-      alignments.push(new RegExp(alignment, 'i'))
+    console.log(body.alignment)
+    let regex
+    body.alignment.forEach(value => {
+      if (regex === undefined)
+        regex = '(?=.*' + value + ')'
+      else
+        regex = regex + '(?=.*' + value + ')'
     })
-    query.alignment = alignments
+    console.log(regex)
+    const alignment = new RegExp(
+      regex
+    )
+
+    query.alignment = alignment
   }
 
   if (body.type.length !== 0) {
