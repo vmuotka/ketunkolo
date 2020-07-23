@@ -10,7 +10,6 @@ monsterRouter.post('/search', async (req, res) => {
 
 
   if (body.alignment.length !== 0) {
-    console.log(body.alignment)
     let regex
     body.alignment.forEach(value => {
       if (regex === undefined)
@@ -18,7 +17,6 @@ monsterRouter.post('/search', async (req, res) => {
       else
         regex = regex + '(?=.*' + value + ')'
     })
-    console.log(regex)
     const alignment = new RegExp(
       regex
     )
@@ -45,8 +43,6 @@ monsterRouter.post('/search', async (req, res) => {
   if (body.cr.length !== 0) {
     query.challenge_rating = body.cr
   }
-
-  console.log(query)
 
   const searchResults = await (await Monster.find(query))
   return res.status(200).json(searchResults)

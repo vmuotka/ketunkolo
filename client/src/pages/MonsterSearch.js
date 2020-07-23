@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 
 // project components
 import monsterSearchService from '../services/monsterSearchService'
+import SearchMonsterCard from '../components/SearchMonsterCard'
 
 // material-ui components
 import TextField from '@material-ui/core/TextField'
@@ -11,15 +11,16 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link'
 import Divider from '@material-ui/core/Divider'
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    width: '100%',
     margin: 'auto',
     display: 'table',
     '& .MuiTextField-root': {
@@ -31,19 +32,14 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-  link: {
-    display: 'block',
-    cursor: 'pointer'
-  }
 }))
 
 const MonsterSearch = () => {
   // const search = useField('search', 'text')
   const classes = useStyles()
-  const history = useHistory()
 
   const [search, setSearch] = useState({
-    searchword: '',
+    searchword: 'wolf',
     alignment: [],
     type: [],
     size: [],
@@ -63,13 +59,7 @@ const MonsterSearch = () => {
 
   const handleSearch = async event => {
     event.preventDefault()
-    console.log(search)
     setSearchResults(await monsterSearchService.search(search))
-  }
-
-  const onLinkClick = (id) => event => {
-    event.preventDefault()
-    history.push(`/monster/${id}`)
   }
 
   const handleChange = event => {
@@ -80,7 +70,15 @@ const MonsterSearch = () => {
     })
   }
 
-  console.log(searchResults)
+  const reset = () => {
+    setSearch({
+      searchword: '',
+      alignment: [],
+      type: [],
+      size: [],
+      cr: []
+    })
+  }
 
   return (
     <>
@@ -188,21 +186,21 @@ const MonsterSearch = () => {
         </FormControl>
 
         <div>
-          <Button type='submit' color='primary' variant='contained'>
-            Search
-            </Button>
+          <ButtonGroup>
+            <Button type='submit' color='primary' variant='contained'>
+              Search
+          </Button>
+            <Button color='secondary' variant='contained' onClick={reset}>
+              Reset Filters
+          </Button>
+          </ButtonGroup>
         </div>
-        <Typography component='p'>{searchResults.length} results</Typography>
+        <Typography component='p'>Showing {searchResults.length} result(s)</Typography>
         <Divider />
-        <Typography component='p' >
-          {searchResults.map((result) => (
-            <Link key={result.id} className={classes.link} href={'/monster/' + result.id} onClick={onLinkClick(result.id)} color='inherit'>
-              {result.name} (CR: {result.challenge_rating})
-            </Link>
-          ))}
-        </Typography>
+        {searchResults.map((result) => (
+          <SearchMonsterCard key={result.id} result={result} />
+        ))}
       </form>
-
     </>
   )
 }
