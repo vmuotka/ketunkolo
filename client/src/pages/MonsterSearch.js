@@ -47,6 +47,7 @@ const MonsterSearch = () => {
     alignment: [],
     type: [],
     size: [],
+    speed: [],
     cr: []
   })
 
@@ -58,6 +59,22 @@ const MonsterSearch = () => {
     challenge_ratings.push(`${i}`)
   }
   challenge_ratings.push('30')
+
+  const alignmentOptions = [
+    'Good', 'Neutral', 'Evil', 'Lawful', 'Chaotic', 'Unaligned'
+  ]
+
+  const typeOptions = [
+    'Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental', 'Fey', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'
+  ]
+
+  const sizeOptions = [
+    'Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'
+  ]
+
+  const speedOptions = [
+    'Fly', 'Swim', 'Burrow', 'Climb', 'Hover',
+  ]
 
   const [searchResults, setSearchResults] = useState([])
 
@@ -80,6 +97,7 @@ const MonsterSearch = () => {
       alignment: [],
       type: [],
       size: [],
+      speed: [],
       cr: []
     })
   }
@@ -113,12 +131,7 @@ const MonsterSearch = () => {
               id: 'alignment'
             }}
           >
-            <MenuItem value='good'>Good</MenuItem>
-            <MenuItem value='neutral'>Neutral</MenuItem>
-            <MenuItem value='evil'>Evil</MenuItem>
-            <MenuItem value='lawful'>Lawful</MenuItem>
-            <MenuItem value='chaotic'>Chaotic</MenuItem>
-            <MenuItem value='unaligned'>Unaligned</MenuItem>
+            {alignmentOptions.map(alignment => <MenuItem key={alignment} value={alignment.toLowerCase()}>{alignment}</MenuItem>)}
           </Select>
         </FormControl>
 
@@ -134,20 +147,7 @@ const MonsterSearch = () => {
               id: 'type'
             }}
           >
-            <MenuItem value='aberration'>Aberration</MenuItem>
-            <MenuItem value='beast'>Beast</MenuItem>
-            <MenuItem value='celestial'>Celestial</MenuItem>
-            <MenuItem value='construct'>Construct</MenuItem>
-            <MenuItem value='dragon'>Dragon</MenuItem>
-            <MenuItem value='elemental'>Elemental</MenuItem>
-            <MenuItem value='fey'>Fey</MenuItem>
-            <MenuItem value='fiend'>Fiend</MenuItem>
-            <MenuItem value='giant'>Giant</MenuItem>
-            <MenuItem value='humanoid'>Humanoid</MenuItem>
-            <MenuItem value='monstrosity'>Monstrosity</MenuItem>
-            <MenuItem value='ooze'>Ooze</MenuItem>
-            <MenuItem value='Plant'>Plant</MenuItem>
-            <MenuItem value='undead'>Undead</MenuItem>
+            {typeOptions.map(type => <MenuItem key={type} value={type.toLowerCase()}>{type}</MenuItem>)}
           </Select>
         </FormControl>
 
@@ -163,12 +163,23 @@ const MonsterSearch = () => {
               id: 'size'
             }}
           >
-            <MenuItem value='tiny'>Tiny</MenuItem>
-            <MenuItem value='small'>Small</MenuItem>
-            <MenuItem value='medium'>Medium</MenuItem>
-            <MenuItem value='large'>Large</MenuItem>
-            <MenuItem value='huge'>Huge</MenuItem>
-            <MenuItem value='gargantuan'>Gargantuan</MenuItem>
+            {sizeOptions.map(size => <MenuItem key={size} value={size.toLowerCase()}>{size}</MenuItem>)}
+          </Select>
+        </FormControl>
+
+        <FormControl className={classes.searchFormControl}>
+          <InputLabel htmlFor='speed'>Speed</InputLabel>
+          <Select
+            autoWidth
+            multiple
+            value={search.speed}
+            onChange={handleChange}
+            inputProps={{
+              name: 'speed',
+              id: 'speed'
+            }}
+          >
+            {speedOptions.map(speed => <MenuItem key={speed} value={speed.toLowerCase()}>{speed}</MenuItem>)}
           </Select>
         </FormControl>
 

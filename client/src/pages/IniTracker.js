@@ -160,6 +160,7 @@ const IniTracker = (props) => {
         alignment: [],
         type: [],
         size: [],
+        speed: [],
         cr: []
       }))
   }
