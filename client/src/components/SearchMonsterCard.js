@@ -6,7 +6,7 @@ import MonsterStatblock from './MonsterStatblock'
 
 // materialui components
 import Link from '@material-ui/core/Link'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -15,8 +15,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Divider from '@material-ui/core/Divider'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import SecurityIcon from '@material-ui/icons/Security'
-import FastForwardIcon from '@material-ui/icons/FastForward';
-import WarningIcon from '@material-ui/icons/Warning';
+import FastForwardIcon from '@material-ui/icons/FastForward'
+import WarningIcon from '@material-ui/icons/Warning'
+import Title from '@material-ui/core/Tooltip'
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -34,10 +35,25 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '.95rem'
     }
   },
+  attributes: {
+    display: 'flex',
+    alignItems: 'center',
+    '& span': {
+      margin: theme.spacing(.3, 1),
+    }
+  },
   divider: {
     margin: theme.spacing(1),
   }
 }))
+
+const Tooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: '#44bcd8',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+  },
+}))(Title);
 
 const SearchMonsterCard = ({ result }) => {
   const classes = useStyles()
@@ -69,13 +85,22 @@ const SearchMonsterCard = ({ result }) => {
             {result.subtype ? ' (' + result.subtype + ')' : null}
             ,&nbsp;{result.alignment}
           </Typography>
-          <Typography className={classes.properties} component='p'>
-            <FavoriteIcon fontSize='inherit' /> {result.hit_points} ({result.hit_dice})&nbsp;<strong>|</strong>&nbsp;
-            <SecurityIcon fontSize='inherit' /> {result.armor_class}&nbsp;
+          <Typography className={`${classes.properties}, ${classes.attributes}`} component='p'>
+            <Tooltip title='Hit Points' placement='top' arrow>
+              <span><FavoriteIcon fontSize='inherit' /> <span>{result.hit_points} ({result.hit_dice})&nbsp;</span></span>
+            </Tooltip>
+            <Tooltip title='Armor Class' placement='top' arrow>
+              <span><SecurityIcon fontSize='inherit' /> <span>{result.armor_class}&nbsp;</span></span>
+            </Tooltip>
+            <Tooltip title='Speed' placement='top' arrow>
+              <span><FastForwardIcon fontSize='inherit' /> <span>{result.speed}&nbsp;</span></span>
+            </Tooltip>
+            <Tooltip title='Challenge Rating' placement='top' arrow>
+              <span><WarningIcon fontSize='inherit' /> <span>{result.challenge_rating}</span></span>
+            </Tooltip>
           </Typography>
           <Typography className={classes.properties} component='p'>
-            <FastForwardIcon fontSize='inherit' /> {result.speed}&nbsp;<strong>|</strong>&nbsp;
-            <WarningIcon fontSize='inherit' /> {result.challenge_rating}
+
           </Typography>
         </div>
       </AccordionSummary>

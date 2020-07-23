@@ -26,12 +26,16 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
       width: '25ch',
-    }
+    },
+    marginBottom: theme.spacing(3)
   },
   searchFormControl: {
     margin: theme.spacing(1),
     minWidth: 120,
   },
+  divider: {
+    marginBottom: theme.spacing(2)
+  }
 }))
 
 const MonsterSearch = () => {
@@ -39,7 +43,7 @@ const MonsterSearch = () => {
   const classes = useStyles()
 
   const [search, setSearch] = useState({
-    searchword: 'wolf',
+    searchword: '',
     alignment: [],
     type: [],
     size: [],
@@ -84,7 +88,7 @@ const MonsterSearch = () => {
     <>
       <form onSubmit={handleSearch} className={classes.root}>
         <TextField
-          label='Search'
+          label='Name'
           onChange={handleChange}
           value={search.searchword}
           InputProps={{
@@ -95,7 +99,6 @@ const MonsterSearch = () => {
               </InputAdornment>
             )
           }}
-          helperText='Search by monster name'
         />
 
         <FormControl className={classes.searchFormControl}>
@@ -195,12 +198,14 @@ const MonsterSearch = () => {
           </Button>
           </ButtonGroup>
         </div>
-        <Typography component='p'>Showing {searchResults.length} result(s)</Typography>
-        <Divider />
-        {searchResults.map((result) => (
-          <SearchMonsterCard key={result.id} result={result} />
-        ))}
       </form>
+
+      <Typography component='p'>Showing {searchResults.length} result(s)</Typography>
+      <Divider className={classes.divider} />
+      {searchResults.map((result) => (
+        <SearchMonsterCard key={result.id} result={result} />
+      ))}
+
     </>
   )
 }
