@@ -155,7 +155,13 @@ const IniTracker = (props) => {
   const handleSearch = async event => {
     event.preventDefault()
     if (statblockSearch.attributes.value !== '')
-      setSearchResults(await monsterSearchService.search(statblockSearch.attributes.value))
+      setSearchResults(await monsterSearchService.search({
+        searchword: statblockSearch.attributes.value,
+        alignment: [],
+        type: [],
+        size: [],
+        cr: []
+      }))
   }
 
   const onLinkClick = (monster) => event => {

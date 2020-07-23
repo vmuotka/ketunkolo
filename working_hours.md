@@ -12,3 +12,4 @@
 | 16.07.2020 | 3 | link a statblock to monster tracker, add hp counters after initialization, save changes to existing groups |
 | 20.07.2020 | 4 | search monsters by name from database |
 | 21.07.2020 | 6 | monster statblock, also available on initracker |
+| 23.07.2020 | 7 | monster search filters, result displays on accordions |
