@@ -134,8 +134,8 @@ const MonsterStatblock = (props) => {
           {
             monster.special_abilities ?
               <>
-                {monster.special_abilities.map(ability => (
-                  <Typography component='span' className={classes.property} key={ability.name}>
+                {monster.special_abilities.map((ability, index) => (
+                  <Typography component='span' className={classes.property} key={index}>
                     <strong>{ability.name}&nbsp;</strong> {ability.desc}
                   </Typography>
                 ))}
@@ -160,8 +160,8 @@ const MonsterStatblock = (props) => {
                   {monster.legendary_desc}
                 </Typography>
                 {
-                  monster.legendary_actions.map(action => (
-                    <Typography component='span' className={classes.property} key={action.name}>
+                  monster.legendary_actions.map((action, index) => (
+                    <Typography component='span' className={classes.property} key={index}>
                       <strong>{action.name}&nbsp;</strong> {action.desc}
                     </Typography>
                   ))

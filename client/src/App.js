@@ -26,7 +26,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  relativeContainer: {
+    position: 'relative'
   }
 }))
 
@@ -53,7 +54,7 @@ const App = (props) => {
     <>
       <CssBaseline />
       <Navigation>
-        <Container maxWidth='lg' className={classes.root}>
+        <Container maxWidth='lg' className={classes.relativeContainer}>
           <Switch>
             <Route path='/initracker'>
               <IniTracker />
