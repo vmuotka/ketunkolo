@@ -145,8 +145,8 @@ const MonsterStatblock = (props) => {
           }
           <Typography component='h2'><strong>Actions</strong></Typography>
           {
-            monster.actions.map(action => (
-              <Typography component='span' className={classes.property} key={action.name}>
+            monster.actions.map((action, index) => (
+              <Typography component='span' className={classes.property} key={index}>
                 <strong>{action.name}&nbsp;</strong> {action.desc}
               </Typography>
             ))
@@ -156,6 +156,9 @@ const MonsterStatblock = (props) => {
               <>
                 <Divider className={classes.divider} />
                 <Typography component='h2'><strong>Legendary Actions</strong></Typography>
+                <Typography component='span' className={classes.property}>
+                  {monster.legendary_desc}
+                </Typography>
                 {
                   monster.legendary_actions.map(action => (
                     <Typography component='span' className={classes.property} key={action.name}>

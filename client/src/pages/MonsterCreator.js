@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
+import Button from '@material-ui/core/Button'
 
 // project components
 import MonsterStatblock from '../components/MonsterStatblock'
@@ -76,6 +77,25 @@ const skillOptions = [
   { name: 'Survival', value: 'survival', att: 'wis' }
 ]
 
+const damageTypes = [
+  'acid', 'cold', 'fire', 'force', 'lightning', 'necrotic', 'poison', 'psychic', 'radiant', 'thunder', 'bludgeoning', 'piercing', 'slashing'
+]
+
+const conditionTypes = [
+  'blinded', 'charmed', 'deafened', 'fatigued', 'frightened', 'grappled', 'incapacitated', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious', 'exhaustion']
+
+let challenge_ratings = [
+  '0', '1/8', '1/4', '1/2'
+]
+
+for (let i = 1; i <= 30; i++) {
+  challenge_ratings.push(`${i}`)
+}
+
+const speedTypes = [
+  'Fly', 'Swim', 'Burrow', 'Climb', 'Hover',
+]
+
 const MonsterCreator = () => {
   const classes = useStyles()
 
@@ -109,7 +129,7 @@ const MonsterCreator = () => {
     special_abilities: [],
     actions: [],
     legendary_desc: '',
-    legendary_actions: '',
+    legendary_actions: [],
     armor_desc: '',
   })
 
@@ -122,7 +142,98 @@ const MonsterCreator = () => {
     size: 8
   })
 
+  const [damagetypes, setDamagetypes] = useState({
+    vulnerabilities: [],
+    resistances: [],
+    immunities: [],
+    condition_immunities: []
+  })
+
   const [skills, setSkills] = useState([])
+
+  const [speeds, setSpeeds] = useState([])
+
+  const addSpeed = () => {
+    setSpeeds([
+      ...speeds,
+      { type: '', value: '' }
+    ])
+  }
+
+  const handleSpeed = event => {
+    const name = event.target.name
+    const index = event.target.dataset.index
+    let speedArr = [...speeds]
+    speedArr[index] = {
+      ...speedArr[index],
+      [name]: event.target.value
+    }
+    setSpeeds([
+      ...speedArr
+    ])
+  }
+
+  const handleSpeedType = (index) => event => {
+    let speedArr = [...speeds]
+    speedArr[index] = {
+      ...speedArr[index],
+      type: event.target.value
+    }
+    setSpeeds([
+      ...speedArr
+    ])
+  }
+
+  useEffect(() => {
+    console.log(speeds)
+    let text = ''
+    speeds.forEach(speed => {
+      if (speed.type === 'Hover') {
+        if (text === '')
+          text = 'fly ' + speed.value + ' ft. (hover)'
+        else
+          text = text + ', ' + 'fly ' + speed.value + ' ft. (hover)'
+      } else {
+        if (text === '')
+          text = speed.type + ' ' + speed.value + ' ft.'
+        else
+          text = text + ', ' + speed.type + ' ' + speed.value + ' ft.'
+      }
+    })
+
+    setForm(form => ({
+      ...form,
+      speed: text
+    }))
+  }, [speeds])
+
+  const handleDamagetypes = event => {
+    const name = event.target.name
+    setDamagetypes({
+      ...damagetypes,
+      [name]: event.target.value.sort()
+    })
+  }
+
+  useEffect(() => {
+    let text = { vulnerabilities: '', resistances: '', immunities: '', condition_immunities: '' }
+    const types = ['vulnerabilities', 'resistances', 'immunities', 'condition_immunities']
+    types.forEach(type => {
+      damagetypes[type].forEach(val => {
+        if (text[type] !== '')
+          text[type] = text[type] + ', ' + val
+        else
+          text[type] = val
+      })
+    })
+    setForm(form => ({
+      ...form,
+      vulnerabilities: text.vulnerabilities,
+      resistances: text.resistances,
+      immunities: text.immunities,
+      condition_immunities: text.condition_immunities
+    }))
+  }, [damagetypes])
 
   const handleHitdice = event => {
     const name = event.target.name
@@ -130,7 +241,6 @@ const MonsterCreator = () => {
       ...hitdice,
       [name]: event.target.value
     })
-
   }
 
   useEffect(() => {
@@ -158,6 +268,71 @@ const MonsterCreator = () => {
   const handleSkills = event => {
     const skillArr = event.target.value
     setSkills(skillArr)
+  }
+
+  const addAction = () => {
+    setForm({
+      ...form,
+      actions: [
+        ...form.actions,
+        {
+          name: '', desc: '', attack_bonus: 0, damage_dice: '', damage_bonus: 0
+        }
+      ]
+    })
+  }
+
+  const addLegendary = () => {
+    setForm({
+      ...form,
+      legendary_actions: [
+        ...form.legendary_actions,
+        {
+          name: '', desc: '', attack_bonus: 0, damage_dice: '', damage_bonus: 0
+        }
+      ]
+    })
+  }
+
+  const handleActionChange = event => {
+    const name = event.target.name
+    const index = event.target.id
+    const actionType = event.target.step
+    let actions = [...form[actionType]]
+    actions[index] = {
+      ...actions[index],
+      [name]: event.target.value
+    }
+    setForm({
+      ...form,
+      [actionType]: actions
+    })
+  }
+
+  const addSpecialAbility = () => {
+    setForm({
+      ...form,
+      special_abilities: [
+        ...form.special_abilities,
+        {
+          name: '', desc: ''
+        }
+      ]
+    })
+  }
+
+  const handleSpecialAbility = event => {
+    const name = event.target.name
+    const index = event.target.id
+    let special = [...form.special_abilities]
+    special[index] = {
+      ...special[index],
+      [name]: event.target.value
+    }
+    setForm({
+      ...form,
+      special_abilities: special
+    })
   }
 
   useEffect(() => {
@@ -280,6 +455,38 @@ const MonsterCreator = () => {
                 onChange={handleChange}
                 helperText='Eg. natural armor'
               />
+              <Button onClick={addSpeed} color='primary' variant='contained'>Add Speed</Button>
+              {speeds.map((speed, index) => (
+                <div key={index}>
+                  <TextField
+                    type='number'
+                    label='Speed'
+                    onChange={handleSpeed}
+                    inputProps={{
+                      name: 'value',
+                      'data-index': index
+                    }}
+                  />
+                  <FormControl className={classes.formControl}>
+                    <InputLabel shrink htmlFor={`speed-${index}`}>Speed Type</InputLabel>
+                    <Select
+                      autoWidth
+                      value={speed.type}
+                      onChange={handleSpeedType(index)}
+                      inputProps={{
+                        id: `speed-${index}`,
+                        name: 'type',
+                      }}
+                    >
+                      <MenuItem value=''>walk</MenuItem>
+                      {speedTypes.map(type => (
+                        <MenuItem key={type} value={type.toLowerCase()}>{type.toLowerCase()}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              ))}
+
             </div>
             <div>
               <TextField
@@ -368,6 +575,178 @@ const MonsterCreator = () => {
               value={proficiency}
               onChange={handleProficiencyChange}
             />
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor='vulnerabilities'>Vulnerabilities</InputLabel>
+              <Select
+                multiple
+                autoWidth
+                value={damagetypes.vulnerabilities}
+                onChange={handleDamagetypes}
+                inputProps={{ name: 'vulnerabilities', id: 'vulnerabilities' }}
+              >
+                {damageTypes.map(type => (
+                  <MenuItem key={type} value={type}>{type}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor='resistances'>Resistances</InputLabel>
+              <Select
+                multiple
+                autoWidth
+                value={damagetypes.resistances}
+                onChange={handleDamagetypes}
+                inputProps={{ name: 'resistances', id: 'resistances' }}
+              >
+                {damageTypes.map(type => (
+                  <MenuItem key={type} value={type}>{type}</MenuItem>
+                ))}
+                <MenuItem value='from nonmagical weapons'>nonmagical weapons</MenuItem>
+                <MenuItem value="that aren't silvered">that aren't silvered</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor='immunities'>Immunities</InputLabel>
+              <Select
+                multiple
+                autoWidth
+                value={damagetypes.immunities}
+                onChange={handleDamagetypes}
+                inputProps={{ name: 'immunities', id: 'immunities' }}
+              >
+                {damageTypes.map(type => (
+                  <MenuItem key={type} value={type}>{type}</MenuItem>
+                ))}
+                <MenuItem value='from nonmagical weapons'>nonmagical weapons</MenuItem>
+                <MenuItem value="that aren't silvered">that aren't silvered</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor='condition_immunities'>Condition Immunities</InputLabel>
+              <Select
+                multiple
+                autoWidth
+                value={damagetypes.condition_immunities}
+                onChange={handleDamagetypes}
+                inputProps={{ name: 'condition_immunities', id: 'condition_immunities' }}
+              >
+                {conditionTypes.map(type => (
+                  <MenuItem key={type} value={type}>{type}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <TextField
+              type='text'
+              label='Senses'
+              value={form.senses}
+              onChange={handleChange}
+              inputProps={
+                {
+                  name: 'senses',
+                  id: 'senses'
+                }
+              }
+            />
+            <TextField
+              type='text'
+              label='Languages'
+              value={form.languages}
+              onChange={handleChange}
+              inputProps={
+                {
+                  name: 'languages',
+                  id: 'languages'
+                }
+              }
+            />
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor='challenge_rating'>CR</InputLabel>
+              <Select
+                required
+                autoWidth
+                value={form.challenge_rating}
+                onChange={handleChange}
+                inputProps={{ name: 'challenge_rating', id: 'challenge_rating' }}
+              >
+                {challenge_ratings.map(cr => (
+                  <MenuItem key={cr} value={cr}>{cr}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <div>
+              <Button onClick={addSpecialAbility} color='primary' variant='contained'>Add Special Abilities</Button>
+              {form.special_abilities.map((ability, index) => (
+                <div key={index}>
+                  <TextField
+                    label='Name'
+                    value={ability.name}
+                    inputProps={{ name: 'name', id: index }}
+                    onChange={handleSpecialAbility}
+                  />
+                  <TextField
+                    label='Description'
+                    value={ability.desc}
+                    inputProps={{ name: 'desc', id: index }}
+                    onChange={handleSpecialAbility}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <Button onClick={addAction} color='primary' variant='contained'>Add Action</Button>
+              {form.actions.map((action, index) => (
+                <div key={index}>
+                  <TextField
+                    label='Action'
+                    value={action.name}
+                    inputProps={{ name: 'name', id: index, step: 'actions' }}
+                    onChange={handleActionChange}
+                  />
+                  <TextField
+                    label='Description'
+                    value={action.desc}
+                    inputProps={{ name: 'desc', id: index, step: 'actions' }}
+                    onChange={handleActionChange}
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <Button onClick={addLegendary} color='primary' variant='contained'>Add Legendary</Button>
+              {form.legendary_actions.length > 0 ?
+                <TextField
+                  label='Actions Desc'
+                  value={form.legendary_desc}
+                  inputProps={{ name: 'legendary_desc' }}
+                  onChange={handleChange}
+                  helperText='Eg. How many legendary actions the creature can take'
+                />
+                : null
+              }
+              {form.legendary_actions.map((action, index) => (
+                <div key={index}>
+                  <TextField
+                    label='Action'
+                    value={action.name}
+                    inputProps={{ name: 'name', id: index, step: 'legendary_actions' }}
+                    onChange={handleActionChange}
+                  />
+                  <TextField
+                    label='Description'
+                    value={action.desc}
+                    inputProps={{ name: 'desc', id: index, step: 'legendary_actions' }}
+                    onChange={handleActionChange}
+                  />
+                </div>
+              ))}
+            </div>
           </form>
         </Grid>
         <Grid item md={6}>

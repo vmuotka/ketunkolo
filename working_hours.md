@@ -13,3 +13,4 @@
 | 20.07.2020 | 4 | search monsters by name from database |
 | 21.07.2020 | 6 | monster statblock, also available on initracker |
 | 23.07.2020 | 7 | monster search filters, result displays on accordions |
+| 24.07.2020 | 5 | monster creator page skeleton, live display monster statblock |
