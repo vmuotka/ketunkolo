@@ -12,6 +12,8 @@ import IniTracker from './pages/IniTracker'
 import UserSettings from './pages/UserSettings'
 import MonsterSearch from './pages/MonsterSearch'
 import Monster from './pages/Monster'
+import MonsterWorkshop from './pages/MonsterWorkshop'
+import MonsterCreator from './pages/MonsterCreator'
 
 // components
 import Navigation from './components/Navigation'
@@ -64,8 +66,14 @@ const App = (props) => {
             <Route path='/signin' render={() =>
               props.user !== null ? <Redirect to='/' /> : <SignIn />
             } />
-            <Route path='/search-monsters'>
+            <Route path='/monsters/search'>
               <MonsterSearch />
+            </Route>
+            <Route path='/monsters/workshop'>
+              <MonsterWorkshop />
+            </Route>
+            <Route path='/monsters/create'>
+              <MonsterCreator />
             </Route>
             <Route path='/monster/:id'>
               <Monster />

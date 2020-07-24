@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+
+// materialui components
 import AppBar from '@material-ui/core/AppBar'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
@@ -14,6 +16,9 @@ import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles, useTheme, styled } from '@material-ui/core/styles'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import Collapse from '@material-ui/core/Collapse'
 
 // icons
 import HomeIcon from '@material-ui/icons/Home'
@@ -23,6 +28,8 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import BallotIcon from '@material-ui/icons/Ballot'
 import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PetsIcon from '@material-ui/icons/Pets'
+import SearchIcon from '@material-ui/icons/Search'
+import BuildIcon from '@material-ui/icons/Build'
 
 import { Link as RouterLink } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -63,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }))
 
 const Link = styled(RouterLink)({
@@ -87,11 +97,6 @@ const mainNavs = [
     icon: <RecentActorsIcon />,
     route: '/characters'
   },
-  {
-    name: 'Monsters',
-    icon: <PetsIcon />,
-    route: '/search-monsters'
-  }
 ]
 
 const loggedOutNavs = [
@@ -113,6 +118,11 @@ const Navigation = (props) => {
   const theme = useTheme()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
+  // open collapsible menus
+  const [open, setOpen] = useState({
+    monsters: false
+  })
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
@@ -133,6 +143,13 @@ const Navigation = (props) => {
     }
   ]
 
+  const handleMenuOpen = (menu) => event => {
+    setOpen({
+      ...open,
+      [menu]: !open[menu]
+    })
+  }
+
   const loggedInDrawer = (
     <>
       {userNavs.map((nav, index) => (
@@ -143,7 +160,7 @@ const Navigation = (props) => {
           </ListItem>
         </Link>
       ))}
-      < ListItem button key='logout' onClick={handleLogout} >
+      <ListItem button key='logout' onClick={handleLogout} >
         <ListItemIcon><LogoutIcon /></ListItemIcon>
         <ListItemText primary='Log out' />
       </ListItem >
@@ -163,7 +180,37 @@ const Navigation = (props) => {
             </ListItem>
           </Link>
         ))}
+
+        <ListItem button onClick={handleMenuOpen('monsters')}>
+          <ListItemIcon>
+            <PetsIcon />
+          </ListItemIcon>
+          <ListItemText primary='Monsters' />
+          {open.monsters ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={open.monsters} timeout='auto' unmountOnExit>
+          <List component='div' disablePadding>
+            <Link to='/monsters/search'>
+              <ListItem button className={classes.nested}>
+                <ListItemIcon>
+                  <SearchIcon />
+                </ListItemIcon>
+                <ListItemText primary='Search' />
+              </ListItem>
+            </Link>
+            <Link to='/monsters/workshop'>
+              <ListItem button className={classes.nested}>
+                <ListItemIcon>
+                  <BuildIcon />
+                </ListItemIcon>
+                <ListItemText primary='Workshop' />
+              </ListItem>
+            </Link>
+          </List>
+        </Collapse>
+
       </List>
+
       <Divider />
       <List>
         {props.user === null ?

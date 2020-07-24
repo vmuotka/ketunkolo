@@ -52,8 +52,6 @@ monsterRouter.post('/search', async (req, res) => {
     query.challenge_rating = body.cr
   }
 
-  console.log(query)
-
   const searchResults = await (await Monster.find(query).limit(100))
   return res.status(200).json(searchResults)
 })
