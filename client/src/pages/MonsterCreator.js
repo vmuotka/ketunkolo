@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 // materialui components
 import TextField from '@material-ui/core/TextField'
@@ -24,6 +25,7 @@ import IconButton from '@material-ui/core/IconButton'
 // project components
 import MonsterStatblock from '../components/MonsterStatblock'
 import { useWindowDimensions } from '../hooks'
+import monsterService from '../services/monsterService'
 
 const creatorFields = [
   {
@@ -89,6 +91,7 @@ const speedTypes = [
 ]
 
 const MonsterCreator = () => {
+  const history = useHistory()
   const { width } = useWindowDimensions()
   const useStyles = makeStyles((theme) => ({
     form: {
@@ -124,6 +127,13 @@ const MonsterCreator = () => {
     },
     container: {
       marginBottom: '100px'
+    },
+    iconButtonContainer: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    error: {
+      color: theme.palette.error.main
     }
   }))
   const classes = useStyles()
@@ -131,7 +141,7 @@ const MonsterCreator = () => {
   const [navigation, setNavigation] = useState(0)
 
   const [form, setForm] = useState({
-    name: 'goblin',
+    name: '',
     size: '',
     type: '',
     subtype: '',
@@ -182,13 +192,21 @@ const MonsterCreator = () => {
 
   const [skills, setSkills] = useState([])
 
-  const [speeds, setSpeeds] = useState([])
+  const [speeds, setSpeeds] = useState([
+    { type: '', value: '30' }
+  ])
 
   const addSpeed = () => {
     setSpeeds([
       ...speeds,
       { type: '', value: '' }
     ])
+  }
+
+  const deleteSpeed = (index) => event => {
+    let arr = [...speeds]
+    arr.splice(index, 1)
+    setSpeeds(arr)
   }
 
   const handleSpeed = event => {
@@ -202,6 +220,10 @@ const MonsterCreator = () => {
     setSpeeds([
       ...speedArr
     ])
+    setError({
+      ...error,
+      speed: undefined
+    })
   }
 
   const handleSpeedType = (index) => event => {
@@ -326,9 +348,9 @@ const MonsterCreator = () => {
 
   const handleActionChange = event => {
     const name = event.target.name
-    const index = event.target.id
-    const actionType = event.target.step
-    let actions = [...form[actionType]]
+    const index = event.target.dataset.index
+    const actionType = event.target.dataset.type
+    let actions = form[actionType]
     actions[index] = {
       ...actions[index],
       [name]: event.target.value
@@ -353,7 +375,7 @@ const MonsterCreator = () => {
 
   const handleSpecialAbility = event => {
     const name = event.target.name
-    const index = event.target.id
+    const index = event.target.dataset.index
     let special = [...form.special_abilities]
     special[index] = {
       ...special[index],
@@ -397,8 +419,39 @@ const MonsterCreator = () => {
     }))
   }, [form.attributes, savingThrows, proficiency])
 
-  const handleSubmit = event => {
+  const [error, setError] = useState({})
+
+  const handleSubmit = async event => {
     event.preventDefault()
+    if (window.confirm(`Are you sure you want to save ${form.name}`)) {
+      let validation = {}
+      if (form.name === '')
+        validation.name = true
+      if (form.size === '')
+        validation.size = true
+      if (form.type === '')
+        validation.type = true
+      if (form.alignment === '')
+        validation.alignment = true
+      if (form.armor_class === '')
+        validation.armor_class = true
+      if (form.speed === '')
+        validation.speed = true
+      if (form.challenge_rating === '')
+        validation.challenge_rating = true
+      if (Object.getOwnPropertyNames(validation).length >= 1) {
+        window.alert('Some  fields are not filled')
+        setError(validation)
+      } else {
+        const res = await monsterService.save(form)
+        if (res.error) {
+          window.alert('Some required fields were missing from the request.')
+        }
+        if (res.id) {
+          history.push(`/monster/${res.id}`)
+        }
+      }
+    }
   }
 
   const handleChange = event => {
@@ -406,6 +459,10 @@ const MonsterCreator = () => {
     setForm({
       ...form,
       [name]: event.target.value
+    })
+    setError({
+      ...error,
+      [name]: undefined
     })
   }
 
@@ -449,8 +506,9 @@ const MonsterCreator = () => {
                 <Typography component='h2'>Attributes</Typography>
                 <div>
                   <TextField
+                    error={error.name}
                     className={classes.textField}
-                    required
+
                     value={form.name}
                     label='Name'
                     type='text'
@@ -463,10 +521,9 @@ const MonsterCreator = () => {
 
                 <div>
                   {creatorFields.map(field => (
-                    <FormControl key={field.name} className={classes.formControl}>
+                    <FormControl error={error[field.name.toLowerCase()]} key={field.name} className={classes.formControl}>
                       <InputLabel htmlFor={field.name.toLowerCase()}>{field.name}</InputLabel>
                       <Select
-                        required
                         autoWidth
                         value={form[field.name.toLowerCase()]}
                         inputProps={
@@ -495,7 +552,7 @@ const MonsterCreator = () => {
                 <Divider className={classes.divider} />
                 <div>
                   <TextField
-                    required
+                    error={error.armor_class}
                     value={form.armor_class}
                     label='Armor Class'
                     type='number'
@@ -530,7 +587,7 @@ const MonsterCreator = () => {
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor='hitdie'>Hit Die</InputLabel>
                     <Select
-                      required
+
                       autoWidth
                       value={hitdice.size}
                       inputProps={
@@ -551,9 +608,9 @@ const MonsterCreator = () => {
                   </FormControl>
                 </div>
                 <div>
-                  <Button size='small' onClick={addSpeed} color='primary' variant='contained'>Add Speed</Button>
+                  <Button size='small' onClick={addSpeed} color='secondary' variant='contained'>Add Speed</Button>
                   {speeds.map((speed, index) => (
-                    <div key={index}>
+                    <div className={classes.iconButtonContainer} key={index}>
                       <TextField
                         type='number'
                         label='Speed'
@@ -581,18 +638,22 @@ const MonsterCreator = () => {
                           ))}
                         </Select>
                       </FormControl>
+                      <IconButton onClick={deleteSpeed(index)}>
+                        <DeleteIcon size='small' />
+                      </IconButton>
                     </div>
                   ))}
                 </div>
               </>
             )}
+            {error.speed ? <Typography component='p' className={classes.error}>Speed required</Typography> : null}
             {navigation !== 1 ? null : <>
               <div>
                 <Typography component='h2'>Statistics</Typography>
                 {attributeFields.map((attribute, index) => (
                   <TextField
                     key={attribute}
-                    required
+
                     type='number'
                     label={attribute}
                     value={form.attributes[attribute]}
@@ -636,7 +697,7 @@ const MonsterCreator = () => {
                 </Select>
               </FormControl>
               <TextField
-                required
+
                 label='Proficiency'
                 type='number'
                 value={proficiency}
@@ -741,10 +802,9 @@ const MonsterCreator = () => {
                   }
                 />
               </div>
-              <FormControl className={classes.formControl}>
+              <FormControl error={error.challenge_rating} className={classes.formControl}>
                 <InputLabel htmlFor='challenge_rating'>CR</InputLabel>
                 <Select
-                  required
                   autoWidth
                   value={form.challenge_rating}
                   onChange={handleChange}
@@ -759,13 +819,13 @@ const MonsterCreator = () => {
 
             {navigation !== 3 ? null : <>
               <Typography component='h2'>Special Abilities</Typography>
-              <Button size='small' onClick={addSpecialAbility} color='primary' variant='contained'>Add Special Abilities</Button>
+              <Button size='small' onClick={addSpecialAbility} color='secondary' variant='contained'>Add Special Abilities</Button>
               {form.special_abilities.map((ability, index) => (
-                <div key={index}>
+                <div className={classes.iconButtonContainer} key={index}>
                   <TextField
                     label='Name'
                     value={ability.name}
-                    inputProps={{ name: 'name', id: index }}
+                    inputProps={{ name: 'name', 'data-index': index }}
                     onChange={handleSpecialAbility}
                   />
                   <TextField
@@ -773,7 +833,7 @@ const MonsterCreator = () => {
                     fullWidth
                     multiline
                     value={ability.desc}
-                    inputProps={{ name: 'desc', id: index }}
+                    inputProps={{ name: 'desc', 'data-index': index }}
                     onChange={handleSpecialAbility}
                   />
                   <IconButton size='small' onClick={deleteAction('special_abilities', index)}>
@@ -785,13 +845,13 @@ const MonsterCreator = () => {
             {navigation !== 4 ? null : <>
               <Typography component='h2'>Actions</Typography>
               <div>
-                <Button size='small' onClick={addAction} color='primary' variant='contained'>Add Action</Button>
+                <Button size='small' onClick={addAction} color='secondary' variant='contained'>Add Action</Button>
                 {form.actions.map((action, index) => (
-                  <div key={index}>
+                  <div className={classes.iconButtonContainer} key={index}>
                     <TextField
                       label='Action'
                       value={action.name}
-                      inputProps={{ name: 'name', id: index, step: 'actions' }}
+                      inputProps={{ name: 'name', 'data-index': index, 'data-type': 'actions' }}
                       onChange={handleActionChange}
                     />
                     <TextField
@@ -799,7 +859,7 @@ const MonsterCreator = () => {
                       value={action.desc}
                       fullWidth
                       multiline
-                      inputProps={{ name: 'desc', id: index, step: 'actions' }}
+                      inputProps={{ name: 'desc', 'data-index': index, 'data-type': 'actions' }}
                       onChange={handleActionChange}
                     />
                     <IconButton size='small' onClick={deleteAction('actions', index)}>
@@ -810,7 +870,7 @@ const MonsterCreator = () => {
               </div>
               <Divider className={classes.divider} />
               <div>
-                <Button size='small' onClick={addLegendary} color='primary' variant='contained'>Add Legendary</Button>
+                <Button size='small' onClick={addLegendary} color='secondary' variant='contained'>Add Legendary</Button>
                 {form.legendary_actions.length > 0 ?
                   <div><TextField
                     label='Actions Desc'
@@ -823,11 +883,11 @@ const MonsterCreator = () => {
                   : null
                 }
                 {form.legendary_actions.map((action, index) => (
-                  <div key={index}>
+                  <div className={classes.iconButtonContainer} key={index}>
                     <TextField
                       label='Action'
                       value={action.name}
-                      inputProps={{ name: 'name', id: index, step: 'legendary_actions' }}
+                      inputProps={{ name: 'name', 'data-index': index, 'data-type': 'legendary_actions' }}
                       onChange={handleActionChange}
                     />
                     <TextField
@@ -835,7 +895,7 @@ const MonsterCreator = () => {
                       fullWidth
                       multiline
                       value={action.desc}
-                      inputProps={{ name: 'desc', id: index, step: 'legendary_actions' }}
+                      inputProps={{ name: 'desc', 'data-index': index, 'data-type': 'legendary_actions' }}
                       onChange={handleActionChange}
                     />
                     <IconButton size='small' onClick={deleteAction('legendary_actions', index)}>
@@ -845,6 +905,8 @@ const MonsterCreator = () => {
                 ))}
               </div>
             </>}
+            <Divider className={classes.divider} />
+            <Button type='submit' variant='contained' color='primary'>Save</Button>
           </form>
         </Grid>
         <Grid item md={6}>

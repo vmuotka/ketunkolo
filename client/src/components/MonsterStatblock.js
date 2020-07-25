@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
 const MonsterStatblock = (props) => {
   const monster = props.monster
   const classes = useStyles()
-
   return (
     <>
-      {monster.name ?
+      {monster && Object.getOwnPropertyNames(monster).length >= 1 ?
         (<>
+          <Divider className={classes.divider} />
           <Typography component='h1'>
             <strong>{monster.name}</strong>
           </Typography>
@@ -65,8 +65,18 @@ const MonsterStatblock = (props) => {
               ))
             }
           </div>
-          <Divider className={classes.divider} />
-          {monster.saving_throws ?
+          {((monster.saving_throws && Object.getOwnPropertyNames(monster.saving_throws).length >= 1) ||
+            (monster.skills && Object.getOwnPropertyNames(monster.skills).length >= 1) ||
+            monster.vulnerabilities ||
+            monster.immunities ||
+            monster.resistances ||
+            monster.condition_immunities ||
+            monster.senses ||
+            monster.languages ||
+            monster.challenge_rating)
+            ? <Divider className={classes.divider} /> : null}
+
+          {monster.saving_throws && Object.getOwnPropertyNames(monster.saving_throws).length >= 1 ?
             <Typography component='span' className={classes.property}><strong>Saving Throws&nbsp;</strong>
               {Object.keys(monster.saving_throws).map((stat, i) => (
                 <span key={i}>
@@ -76,7 +86,7 @@ const MonsterStatblock = (props) => {
             </Typography>
             : null}
           {
-            monster.skills ?
+            monster.skills && Object.getOwnPropertyNames(monster.skills).length >= 1 ?
               <Typography component='span' className={classes.property}><strong>Skills&nbsp;</strong>
                 {
                   Object.keys(monster.skills).map((skill, i) => (
@@ -130,26 +140,30 @@ const MonsterStatblock = (props) => {
             </Typography>
               : null
           }
-          <Divider className={classes.divider} />
           {
-            monster.special_abilities ?
+            monster.special_abilities.length !== 0 ?
               <>
+                <Divider className={classes.divider} />
                 {monster.special_abilities.map((ability, index) => (
                   <Typography component='span' className={classes.property} key={index}>
                     <strong>{ability.name}&nbsp;</strong> {ability.desc}
                   </Typography>
                 ))}
-                <Divider className={classes.divider} />
               </>
               : null
           }
-          <Typography component='h2'><strong>Actions</strong></Typography>
+
           {
-            monster.actions.map((action, index) => (
-              <Typography component='span' className={classes.property} key={index}>
-                <strong>{action.name}&nbsp;</strong> {action.desc}
-              </Typography>
-            ))
+            monster.actions.length === 0 ? null :
+              <>
+                <Divider className={classes.divider} />
+                <Typography component='h2'><strong>Actions</strong></Typography>
+                {monster.actions.map((action, index) => (
+                  <Typography component='span' className={classes.property} key={index}>
+                    <strong>{action.name}&nbsp;</strong> {action.desc}
+                  </Typography>
+                ))}
+              </>
           }
           {
             monster.legendary_actions.length === 0 ? null :
@@ -171,6 +185,7 @@ const MonsterStatblock = (props) => {
 
         </>) : null
       }
+      <Divider className={classes.divider} />
     </>
   )
 }

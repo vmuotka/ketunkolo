@@ -1,5 +1,6 @@
 const monsterRouter = require('express').Router()
 const Monster = require('../models/monster')
+const jwt = require('jsonwebtoken')
 
 monsterRouter.post('/search', async (req, res) => {
   const body = req.body
@@ -54,6 +55,39 @@ monsterRouter.post('/search', async (req, res) => {
 
   const searchResults = await (await Monster.find(query).limit(100))
   return res.status(200).json(searchResults)
+})
+
+monsterRouter.post('/upload', async (req, res) => {
+  const form = req.body
+  let validation = {}
+  if (form.name === '')
+    validation.name = true
+  if (form.size === '')
+    validation.size = true
+  if (form.type === '')
+    validation.type = true
+  if (form.alignment === '')
+    validation.alignment = true
+  if (form.armor_class === '')
+    validation.armor_class = true
+  if (form.speed === '')
+    validation.speed = true
+  if (form.challenge_rating === '')
+    validation.challenge_rating = true
+  if (Object.getOwnPropertyNames(validation).length >= 1) {
+    return res.status(400).json({ error: 'Missing required fields' })
+  }
+
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+  form.user = decodedToken.id
+
+  const monster = new Monster(form)
+  const returnedObject = await monster.save()
+  return res.status(200).json(returnedObject)
 })
 
 monsterRouter.get('/get/:id', async (req, res) => {

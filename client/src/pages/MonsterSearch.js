@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 // project components
-import monsterSearchService from '../services/monsterSearchService'
+import monsterService from '../services/monsterService'
 import SearchMonsterCard from '../components/SearchMonsterCard'
 
 // material-ui components
@@ -80,7 +80,7 @@ const MonsterSearch = () => {
 
   const handleSearch = async event => {
     event.preventDefault()
-    setSearchResults(await monsterSearchService.search(search))
+    setSearchResults(await monsterService.search(search))
   }
 
   const handleChange = event => {

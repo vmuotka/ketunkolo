@@ -18,6 +18,7 @@ import MonsterCreator from './pages/MonsterCreator'
 // components
 import Navigation from './components/Navigation'
 import initrackerService from './services/initrackerService'
+import monsterService from './services/monsterService'
 
 // Material UI
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -43,11 +44,10 @@ const App = (props) => {
       if (userObject !== null) {
         effectLogin(userObject)
         initrackerService.setToken(userObject.token)
+        monsterService.setToken(userObject.token)
       }
     }
   }, [effectLogin])
-
-
 
   const classes = useStyles()
   return (

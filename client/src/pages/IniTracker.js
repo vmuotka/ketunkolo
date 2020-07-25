@@ -19,7 +19,7 @@ import CreatureCard from '../components/CreatureCard'
 import { addCard } from '../reducers/initrackerReducer'
 import { setup } from '../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../components/IniTrackerManager'
-import monsterSearchService from '../services/monsterSearchService'
+import monsterService from '../services/monsterService'
 import MonsterStatblock from '../components/MonsterStatblock'
 
 const useStyles = makeStyles((theme) => ({
@@ -155,7 +155,7 @@ const IniTracker = (props) => {
   const handleSearch = async event => {
     event.preventDefault()
     if (statblockSearch.attributes.value !== '')
-      setSearchResults(await monsterSearchService.search({
+      setSearchResults(await monsterService.search({
         searchword: statblockSearch.attributes.value,
         alignment: [],
         type: [],

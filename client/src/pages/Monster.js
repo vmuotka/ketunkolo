@@ -2,23 +2,28 @@ import React, { useEffect, useState } from 'react'
 import {
   useParams
 } from 'react-router'
-import { useHistory } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 
 // project components
-import monsterSearchService from '../services/monsterSearchService'
+import monsterService from '../services/monsterService'
 import MonsterStatblock from '../components/MonsterStatblock'
 
 // material-ui components
 import Typography from '@material-ui/core/Typography'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
-import Link from '@material-ui/core/Link'
+import { styled } from '@material-ui/core/styles'
+
+const Link = styled(RouterLink)({
+  textDecoration: 'none',
+  color: 'inherit'
+})
 
 
 const Monster = () => {
   const { id } = useParams()
   const [monster, setMonster] = useState({})
   useEffect(() => {
-    monsterSearchService.getMonsterById(id)
+    monsterService.getMonsterById(id)
       .then(
         (data) => {
           setMonster(data)
@@ -26,22 +31,16 @@ const Monster = () => {
       )
   }, [id])
 
-  const history = useHistory()
-
-  const handleBreadcrumbClick = (href) => event => {
-    event.preventDefault()
-    history.push(href)
-  }
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb">
-        <Link color="inherit" href='/' onClick={handleBreadcrumbClick('/')}>
+        <Link color='inherit' to='/'>
           Ketunkolo
         </Link>
-        <Link color="inherit" href="/monsters" onClick={handleBreadcrumbClick('/search-monsters')}>
+        <Link color='inherit' to='/monsters'>
           Monsters
         </Link>
-        <Typography color="textPrimary">{monster.name}</Typography>
+        <Typography color="textPrimary">{monster ? monster.name : null}</Typography>
       </Breadcrumbs>
 
       <MonsterStatblock monster={monster} />

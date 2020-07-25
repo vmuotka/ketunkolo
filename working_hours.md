@@ -14,3 +14,5 @@
 | 21.07.2020 | 6 | monster statblock, also available on initracker |
 | 23.07.2020 | 7 | monster search filters, result displays on accordions |
 | 24.07.2020 | 5 | monster creator page skeleton, live display monster statblock |
+| 24.07.2020 | 6 | creator form contains all required fields |
+| 25.07.2020 | 3,5 | saving created monsters to database, creator form validation |
