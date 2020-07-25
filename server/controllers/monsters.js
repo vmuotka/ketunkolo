@@ -53,8 +53,6 @@ monsterRouter.post('/search', async (req, res) => {
     query.challenge_rating = body.cr
   }
 
-  console.log(query)
-
   const searchResults = await Monster.find(query).limit(100)
   console.log(searchResults)
   return res.status(200).json(searchResults)
@@ -73,7 +71,7 @@ monsterRouter.post('/upload', async (req, res) => {
     validation.alignment = true
   if (form.armor_class === '')
     validation.armor_class = true
-  if (form.speed === '')
+  if (Object.keys(form.speed).length === 0)
     validation.speed = true
   if (form.challenge_rating === '')
     validation.challenge_rating = true
@@ -98,6 +96,16 @@ monsterRouter.post('/upload', async (req, res) => {
 monsterRouter.get('/get/:id', async (req, res) => {
   const monster = await Monster.findById(req.params.id)
   return res.status(200).json(monster)
+})
+
+monsterRouter.post('/getbyuser', async (req, res) => {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+  const returnArr = await Monster.find({ user: decodedToken.id })
+  return res.status(200).json(returnArr)
 })
 
 module.exports = monsterRouter

@@ -44,7 +44,6 @@ const App = (props) => {
       if (userObject !== null) {
         effectLogin(userObject)
         initrackerService.setToken(userObject.token)
-        monsterService.setToken(userObject.token)
       }
     }
   }, [effectLogin])
@@ -71,7 +70,7 @@ const App = (props) => {
               <MonsterSearch />
             </Route>
             <Route path='/monsters/workshop' render={() =>
-              props.user === null ? <Redirect to='/signin' /> : <MonsterWorkshop />
+              false ? <Redirect to='/signin' /> : <MonsterWorkshop />
             }>
             </Route>
             <Route path='/monsters/create' render={() =>

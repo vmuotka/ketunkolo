@@ -209,6 +209,10 @@ const MonsterCreator = () => {
         [name]: 30
       }
     })
+    setError({
+      ...error,
+      speed: undefined
+    })
   }
 
   const deleteSpeed = (type) => event => {
@@ -403,7 +407,7 @@ const MonsterCreator = () => {
         validation.alignment = true
       if (form.armor_class === '')
         validation.armor_class = true
-      if (form.speed === '')
+      if (Object.keys(form.speed).length === 0)
         validation.speed = true
       if (form.challenge_rating === '')
         validation.challenge_rating = true
@@ -641,10 +645,10 @@ const MonsterCreator = () => {
                       </IconButton>
                     </div>
                   ))}
+                  {error.speed ? <Typography component='p' className={classes.error}>Speed required</Typography> : null}
                 </div>
               </>
             )}
-            {error.speed ? <Typography component='p' className={classes.error}>Speed required</Typography> : null}
             {navigation !== 1 ? null : <>
               <div>
                 <Typography component='h2'>Statistics</Typography>

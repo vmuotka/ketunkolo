@@ -24,4 +24,12 @@ const save = async (monster) => {
   return res.data
 }
 
-export default { search, getMonsterById, setToken, save }
+const getByUser = async () => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const res = await axios.post(`${baseUrl}/getbyuser`, {}, config)
+  return res.data
+}
+
+export default { search, getMonsterById, setToken, save, getByUser }
