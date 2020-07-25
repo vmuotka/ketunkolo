@@ -91,7 +91,7 @@ const SearchMonsterCard = ({ result }) => {
               <span><SecurityIcon fontSize='inherit' /> <span>{result.armor_class}&nbsp;</span></span>
             </Tooltip>
             <Tooltip title='Speed' placement='top' arrow>
-              <span><FastForwardIcon fontSize='inherit' /> <span>{result.speed}&nbsp;</span></span>
+              <span><FastForwardIcon fontSize='inherit' /> <span>{Object.keys(result.speed).map(key => key !== 'hover' ? key + ' ' + result.speed[key] + 'ft., ' : 'fly ' + result.speed[key] + 'ft. (hover),')}&nbsp;</span></span>
             </Tooltip>
             <Tooltip title='Challenge Rating' placement='top' arrow>
               <span><WarningIcon fontSize='inherit' /> <span>{result.challenge_rating}</span></span>

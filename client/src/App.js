@@ -70,11 +70,13 @@ const App = (props) => {
             <Route path='/monsters/search'>
               <MonsterSearch />
             </Route>
-            <Route path='/monsters/workshop'>
-              <MonsterWorkshop />
+            <Route path='/monsters/workshop' render={() =>
+              props.user === null ? <Redirect to='/signin' /> : <MonsterWorkshop />
+            }>
             </Route>
-            <Route path='/monsters/create'>
-              <MonsterCreator />
+            <Route path='/monsters/create' render={() =>
+              false ? <Redirect to='/signin' /> : <MonsterCreator />
+            }>
             </Route>
             <Route path='/monster/:id'>
               <Monster />

@@ -37,7 +37,7 @@ const Monster = () => {
         <Link color='inherit' to='/'>
           Ketunkolo
         </Link>
-        <Link color='inherit' to='/monsters'>
+        <Link color='inherit' to='/monsters/search'>
           Monsters
         </Link>
         <Typography color="textPrimary">{monster ? monster.name : null}</Typography>

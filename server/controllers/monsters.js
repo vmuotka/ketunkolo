@@ -19,7 +19,7 @@ monsterRouter.post('/search', async (req, res) => {
         regex = regex + '(?=.*' + value + ')'
     })
     const alignment = new RegExp(
-      regex
+      regex, 'i'
     )
 
     query.alignment = alignment
@@ -46,14 +46,17 @@ monsterRouter.post('/search', async (req, res) => {
     body.speed.forEach(speed => {
       speeds.push(new RegExp(speed, 'i'))
     })
-    query.speed = speeds
+    query.speed_types = { $in: speeds }
   }
 
   if (body.cr !== undefined && body.cr.length !== 0) {
     query.challenge_rating = body.cr
   }
 
-  const searchResults = await (await Monster.find(query).limit(100))
+  console.log(query)
+
+  const searchResults = await Monster.find(query).limit(100)
+  console.log(searchResults)
   return res.status(200).json(searchResults)
 })
 
@@ -84,6 +87,8 @@ monsterRouter.post('/upload', async (req, res) => {
     return res.status(401).json({ error: 'token missing or invalid' })
   }
   form.user = decodedToken.id
+
+  form.speed_types = Object.keys(form.speed)
 
   const monster = new Monster(form)
   const returnedObject = await monster.save()

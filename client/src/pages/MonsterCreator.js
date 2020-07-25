@@ -35,15 +35,15 @@ const creatorFields = [
   {
     name: 'Alignment',
     options: [
-      'Lawful Good', 'Neutral Good', 'Chaotic Good',
-      'Lawful Neutral', 'Neutral', 'Chaotic Neutral',
-      'Lawful Evil', 'Neutral Evil', 'Chaotic Evil',
-      'Unaligned'
+      'lawful good', 'neutral good', 'chaotic good',
+      'lawful neutral', 'neutral', 'chaotic neutral',
+      'lawful evil', 'neutral evil', 'chaotic evil',
+      'unaligned', 'any alignment'
     ]
   },
   {
     name: 'Type',
-    options: ['Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental', 'Fey', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead']
+    options: ['aberration', 'beast', 'celestial', 'construct', 'dragon', 'elemental', 'fey', 'giant', 'humanoid', 'monstrosity', 'ooze', 'plant', 'undead']
   },
 ]
 
@@ -87,7 +87,7 @@ for (let i = 1; i <= 30; i++) {
 }
 
 const speedTypes = [
-  'Fly', 'Swim', 'Burrow', 'Climb', 'Hover',
+  'walk', 'fly', 'swim', 'burrow', 'climb', 'hover',
 ]
 
 const MonsterCreator = () => {
@@ -149,7 +149,9 @@ const MonsterCreator = () => {
     armor_class: '',
     hit_points: '6',
     hit_dice: '1d8',
-    speed: '',
+    speed: {
+      'walk': 30
+    },
     attributes: {
       str: 10,
       dex: 10,
@@ -160,12 +162,12 @@ const MonsterCreator = () => {
     },
     saving_throws: {},
     skills: {},
-    vulnerabilities: '',
-    resistances: '',
-    immunities: '',
-    condition_immunities: '',
-    senses: '',
-    languages: '',
+    vulnerabilities: [],
+    resistances: [],
+    immunities: [],
+    condition_immunities: [],
+    senses: [],
+    languages: [],
     challenge_rating: '',
     special_abilities: [],
     actions: [],
@@ -183,109 +185,75 @@ const MonsterCreator = () => {
     size: 8
   })
 
-  const [damagetypes, setDamagetypes] = useState({
-    vulnerabilities: [],
-    resistances: [],
-    immunities: [],
-    condition_immunities: []
-  })
-
   const [skills, setSkills] = useState([])
 
-  const [speeds, setSpeeds] = useState([
-    { type: '', value: '30' }
-  ])
+  const [speeds, setSpeeds] = useState(speedTypes)
+
+  useEffect(() => {
+    let speedArr = speedTypes
+    const takenSpeeds = Object.keys(form.speed)
+    takenSpeeds.forEach(speed => {
+      speedArr = speedArr.filter(value => value.toLowerCase() !== speed.toLowerCase())
+    })
+    setSpeeds(speedArr)
+
+  }, [form.speed])
 
   const addSpeed = () => {
-    setSpeeds([
-      ...speeds,
-      { type: '', value: '' }
-    ])
+    const name = speeds[0]
+
+    setForm({
+      ...form,
+      speed: {
+        ...form.speed,
+        [name]: 30
+      }
+    })
   }
 
-  const deleteSpeed = (index) => event => {
-    let arr = [...speeds]
-    arr.splice(index, 1)
-    setSpeeds(arr)
+  const deleteSpeed = (type) => event => {
+    let speedObj = { ...form.speed }
+    delete speedObj[type]
+    setForm({
+      ...form,
+      speed: speedObj
+    })
   }
 
   const handleSpeed = event => {
-    const name = event.target.name
-    const index = event.target.dataset.index
-    let speedArr = [...speeds]
-    speedArr[index] = {
-      ...speedArr[index],
-      [name]: event.target.value
-    }
-    setSpeeds([
-      ...speedArr
-    ])
+    const type = event.target.dataset.type
+    let speedObj = form.speed
+    speedObj[type] = event.target.value
+    setForm({
+      ...form,
+      speed: speedObj
+    })
     setError({
       ...error,
       speed: undefined
     })
   }
 
-  const handleSpeedType = (index) => event => {
-    let speedArr = [...speeds]
-    speedArr[index] = {
-      ...speedArr[index],
-      type: event.target.value
-    }
-    setSpeeds([
-      ...speedArr
-    ])
-  }
-
-  useEffect(() => {
-    let text = ''
-    speeds.forEach(speed => {
-      if (speed.type === 'Hover') {
-        if (text === '')
-          text = 'fly ' + speed.value + ' ft. (hover)'
-        else
-          text = text + ', fly ' + speed.value + ' ft. (hover)'
-      } else {
-        if (text === '')
-          text = speed.type + ' ' + speed.value + ' ft.'
-        else
-          text = text + ', ' + speed.type + ' ' + speed.value + ' ft.'
-      }
-    })
-
-    setForm(form => ({
+  const handleSpeedType = (event) => {
+    const oldType = event.target.name
+    const newType = event.target.value
+    const speedValue = form.speed[oldType]
+    let speedObj = { ...form.speed }
+    delete speedObj[oldType]
+    speedObj[newType] = speedValue
+    setForm({
       ...form,
-      speed: text
-    }))
-  }, [speeds])
+      speed: speedObj
+    })
+  }
 
   const handleDamagetypes = event => {
     const name = event.target.name
-    setDamagetypes({
-      ...damagetypes,
+    setForm({
+      ...form,
       [name]: event.target.value.sort()
     })
   }
-
-  useEffect(() => {
-    let text = { vulnerabilities: '', resistances: '', immunities: '', condition_immunities: '' }
-    const types = ['vulnerabilities', 'resistances', 'immunities', 'condition_immunities']
-    types.forEach(type => {
-      damagetypes[type].forEach(val => {
-        if (text[type] !== '')
-          text[type] = text[type] + ', ' + val
-        else
-          text[type] = val
-      })
-    })
-    setForm(form => ({
-      ...form,
-      vulnerabilities: text.vulnerabilities,
-      resistances: text.resistances,
-      immunities: text.immunities,
-      condition_immunities: text.condition_immunities
-    }))
-  }, [damagetypes])
 
   const handleHitdice = event => {
     const name = event.target.name
@@ -466,6 +434,36 @@ const MonsterCreator = () => {
     })
   }
 
+  const [langString, setLangString] = useState('')
+  const handleLanguages = (event) => {
+    setLangString(event.target.value)
+  }
+
+  useEffect(() => {
+    let arr = langString.split(', ')
+    if (langString === '')
+      arr = []
+    setForm(form => ({
+      ...form,
+      languages: arr
+    }))
+  }, [langString])
+
+  const [senseString, setSenseString] = useState('')
+  const handleSenses = (event) => {
+    setSenseString(event.target.value)
+  }
+
+  useEffect(() => {
+    let arr = senseString.split(', ')
+    if (senseString === '')
+      arr = []
+    setForm(form => ({
+      ...form,
+      senses: arr
+    }))
+  }, [senseString])
+
   const handleChangeObject = event => {
     const name = event.target.name
     const object = event.target.id
@@ -609,36 +607,36 @@ const MonsterCreator = () => {
                 </div>
                 <div>
                   <Button size='small' onClick={addSpeed} color='secondary' variant='contained'>Add Speed</Button>
-                  {speeds.map((speed, index) => (
+                  {Object.keys(form.speed).map((type, index) => (
                     <div className={classes.iconButtonContainer} key={index}>
                       <TextField
                         type='number'
                         label='Speed'
-                        value={speed.value}
+                        value={form.speed[type]}
                         onChange={handleSpeed}
                         inputProps={{
                           name: 'value',
-                          'data-index': index
+                          'data-type': type
                         }}
                       />
                       <FormControl className={classes.formControl}>
                         <InputLabel shrink htmlFor={`speed-${index}`}>Speed Type</InputLabel>
                         <Select
                           autoWidth
-                          value={speed.type}
-                          onChange={handleSpeedType(index)}
+                          value={type}
+                          onChange={handleSpeedType}
                           inputProps={{
                             id: `speed-${index}`,
-                            name: 'type',
+                            name: type,
                           }}
                         >
-                          <MenuItem value=''>walk</MenuItem>
-                          {speedTypes.map(type => (
-                            <MenuItem key={type} value={type.toLowerCase()}>{type.toLowerCase()}</MenuItem>
+                          <MenuItem value={type}>{type}</MenuItem>
+                          {speeds.map(val => (
+                            <MenuItem key={val} value={val}>{val}</MenuItem>
                           ))}
                         </Select>
                       </FormControl>
-                      <IconButton onClick={deleteSpeed(index)}>
+                      <IconButton onClick={deleteSpeed(type)}>
                         <DeleteIcon size='small' />
                       </IconButton>
                     </div>
@@ -712,7 +710,7 @@ const MonsterCreator = () => {
                   <Select
                     multiple
                     autoWidth
-                    value={damagetypes.vulnerabilities}
+                    value={form.vulnerabilities}
                     onChange={handleDamagetypes}
                     inputProps={{ name: 'vulnerabilities', id: 'vulnerabilities' }}
                   >
@@ -727,7 +725,7 @@ const MonsterCreator = () => {
                   <Select
                     multiple
                     autoWidth
-                    value={damagetypes.resistances}
+                    value={form.resistances}
                     onChange={handleDamagetypes}
                     inputProps={{ name: 'resistances', id: 'resistances' }}
                   >
@@ -744,7 +742,7 @@ const MonsterCreator = () => {
                   <Select
                     multiple
                     autoWidth
-                    value={damagetypes.immunities}
+                    value={form.immunities}
                     onChange={handleDamagetypes}
                     inputProps={{ name: 'immunities', id: 'immunities' }}
                   >
@@ -760,7 +758,7 @@ const MonsterCreator = () => {
                   <Select
                     multiple
                     autoWidth
-                    value={damagetypes.condition_immunities}
+                    value={form.condition_immunities}
                     onChange={handleDamagetypes}
                     inputProps={{ name: 'condition_immunities', id: 'condition_immunities' }}
                   >
@@ -779,8 +777,8 @@ const MonsterCreator = () => {
                   type='text'
                   label='Senses'
                   multiline
-                  value={form.senses}
-                  onChange={handleChange}
+                  value={senseString}
+                  onChange={handleSenses}
                   inputProps={
                     {
                       name: 'senses',
@@ -792,8 +790,8 @@ const MonsterCreator = () => {
                   type='text'
                   label='Languages'
                   multiline
-                  value={form.languages}
-                  onChange={handleChange}
+                  value={langString}
+                  onChange={handleLanguages}
                   inputProps={
                     {
                       name: 'languages',

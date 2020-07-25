@@ -50,7 +50,13 @@ const MonsterStatblock = (props) => {
             <strong>Hit Points</strong> {monster.hit_points} ({monster.hit_dice})
       </Typography>
           <Typography component='span' className={classes.property}>
-            <strong>Speed</strong> {monster.speed}
+            <strong>Speed</strong> {
+              Object.keys(monster.speed).map((speedType) => (
+                speedType !== 'hover' ?
+                  speedType + ' ' + monster.speed[speedType] + ' ft., '
+                  : 'fly ' + monster.speed[speedType] + ' ft. (hover),'
+              ))
+            }
           </Typography>
           <Divider className={classes.divider} />
           <div className={classes.attributes}>
@@ -67,12 +73,12 @@ const MonsterStatblock = (props) => {
           </div>
           {((monster.saving_throws && Object.getOwnPropertyNames(monster.saving_throws).length >= 1) ||
             (monster.skills && Object.getOwnPropertyNames(monster.skills).length >= 1) ||
-            monster.vulnerabilities ||
-            monster.immunities ||
-            monster.resistances ||
-            monster.condition_immunities ||
-            monster.senses ||
-            monster.languages ||
+            monster.vulnerabilities.length !== 0 ||
+            monster.immunities.length !== 0 ||
+            monster.resistances.length !== 0 ||
+            monster.condition_immunities.length !== 0 ||
+            monster.senses.length !== 0 ||
+            monster.languages.length !== 0 ||
             monster.challenge_rating)
             ? <Divider className={classes.divider} /> : null}
 
@@ -99,38 +105,62 @@ const MonsterStatblock = (props) => {
               : null
           }
           {
-            monster.vulnerabilities ? <Typography component='span' className={classes.property}>
-              <strong>Damage Vulnerabilities&nbsp;</strong> {monster.vulnerabilities}
+            monster.vulnerabilities.length > 0 ? <Typography component='span' className={classes.property}>
+              <strong>Damage Vulnerabilities&nbsp;</strong> {
+                monster.vulnerabilities.map(vulnerability => (
+                  vulnerability + ', '
+                ))
+              }
             </Typography>
               : null
           }
           {
-            monster.resistances ? <Typography component='span' className={classes.property}>
-              <strong>Damage Resistances&nbsp;</strong> {monster.resistances}
+            monster.resistances.length > 0 ? <Typography component='span' className={classes.property}>
+              <strong>Damage Resistances&nbsp;</strong> {
+                monster.resistances.map(resistance => (
+                  resistance + ', '
+                ))
+              }
             </Typography>
               : null
           }
           {
-            monster.immunities ? <Typography component='span' className={classes.property}>
-              <strong>Damage Immunities&nbsp;</strong> {monster.immunities}
+            monster.immunities.length > 0 ? <Typography component='span' className={classes.property}>
+              <strong>Damage Immunities&nbsp;</strong> {
+                monster.immunities.map(immunity => (
+                  immunity + ', '
+                ))
+              }
             </Typography>
               : null
           }
           {
-            monster.condition_immunities ? <Typography component='span' className={classes.property}>
-              <strong>Condition Immunities&nbsp;</strong> {monster.condition_immunities}
+            monster.condition_immunities.length > 0 ? <Typography component='span' className={classes.property}>
+              <strong>Condition Immunities&nbsp;</strong> {
+                monster.condition_immunities.map(immunity => (
+                  immunity + ', '
+                ))
+              }
             </Typography>
               : null
           }
           {
-            monster.senses ? <Typography component='span' className={classes.property}>
-              <strong>Senses&nbsp;</strong> {monster.senses}
+            monster.senses.length > 0 ? <Typography component='span' className={classes.property}>
+              <strong>Senses&nbsp;</strong> {
+                monster.senses.map(sense => (
+                  sense + ', '
+                ))
+              }
             </Typography>
               : null
           }
           {
-            monster.languages ? <Typography component='span' className={classes.property}>
-              <strong>Languages&nbsp;</strong> {monster.languages}
+            monster.languages.length ? <Typography component='span' className={classes.property}>
+              <strong>Languages&nbsp;</strong> {
+                monster.languages.map(language => (
+                  language + ', '
+                ))
+              }
             </Typography>
               : null
           }
