@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 // project components
 import monsterService from '../services/monsterService'
 import MonsterStatblock from '../components/MonsterStatblock'
-import { copyMonster } from '../reducers/monsterCreatorReducer'
+import { copyMonster, editMonster } from '../reducers/monsterCreatorReducer'
 
 // material-ui components
 import Typography from '@material-ui/core/Typography'
@@ -56,6 +56,11 @@ const Monster = (props) => {
     }
   }
 
+  const handleEdit = () => {
+    props.editMonster(monster)
+    history.push('/monsters/create')
+  }
+
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb">
@@ -67,9 +72,9 @@ const Monster = (props) => {
         </Link>
         <Typography color="textPrimary">{monster ? monster.name : null}</Typography>
       </Breadcrumbs>
-
       <ButtonGroup>
         {props.user ? <Button variant='contained' color='primary' onClick={handleCopy}>Copy</Button> : null}
+        {props.user && props.user.id === monster.user ? <Button variant='contained' color='primary' onClick={handleEdit}>Edit</Button> : null}
         {props.user && props.user.id === monster.user ? <Button variant='contained' color='secondary' onClick={handleDelete}>Delete</Button> : null}
       </ButtonGroup>
       <MonsterStatblock monster={monster} />
@@ -78,7 +83,7 @@ const Monster = (props) => {
 }
 
 const mapDispatchToProps = {
-  copyMonster
+  copyMonster, editMonster
 }
 
 const mapStateToProps = (state) => {

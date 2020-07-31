@@ -51,6 +51,13 @@ export const copyMonster = (obj) => {
   }
 }
 
+export const editMonster = (obj) => {
+  return {
+    type: 'EDIT',
+    data: obj
+  }
+}
+
 export const resetMonster = () => {
   return {
     type: 'RESET'
@@ -77,6 +84,8 @@ const reducer = (state = initialState, action) => {
         }
       }
       return form
+    case 'EDIT':
+      return action.data
     case 'COPY':
       return action.data
     case 'RESET':

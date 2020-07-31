@@ -7,7 +7,7 @@ monsterRouter.post('/search', async (req, res) => {
   let query = {}
 
   if (body.searchword !== undefined && body.searchword !== '')
-    query.name = { '$regex': body.searchword, '$options': 'i' }
+    query.name = { '$regex': body.searchword.trim(), '$options': 'i' }
 
 
   if (body.alignment !== undefined && body.alignment.length !== 0) {
@@ -78,17 +78,24 @@ monsterRouter.post('/upload', async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  form.speed_types = Object.keys(form.speed)
 
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
   if (!req.token || !decodedToken.id) {
     return res.status(401).json({ error: 'token missing or invalid' })
   }
-  form.user = decodedToken.id
 
-  form.speed_types = Object.keys(form.speed)
+  let returnedObject = {}
+  if (form.user) {
+    const monster = await Monster.findById(form.id)
+    if (monster.user === decodedToken.id)
+      returnedObject = await Monster.findByIdAndUpdate(form.id, form, { new: true })
+  } else {
+    form.user = decodedToken.id
+    const monster = new Monster(form)
+    returnedObject = await monster.save()
+  }
 
-  const monster = new Monster(form)
-  const returnedObject = await monster.save()
   return res.status(200).json(returnedObject)
 })
 
@@ -103,9 +110,8 @@ monsterRouter.delete('/delete', async (req, res) => {
 
   const monster = await Monster.findById(document_id)
   if (monster.user === decodedToken.id) {
-    console.log('deleted')
     await Monster.findByIdAndDelete(document_id)
-    return res.status(200)
+    return res.status(200).json({ message: 'deleted' })
   } else {
     return res.status(401)
   }

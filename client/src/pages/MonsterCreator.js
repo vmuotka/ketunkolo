@@ -144,13 +144,11 @@ const MonsterCreator = (props) => {
   const form = props.monster
   const setForm = props.setForm
 
-  console.log(form)
-
   const [navigation, setNavigation] = useState(0)
 
   const [proficiency, setProficiency] = useState(form.proficiency ? form.proficiency : 2)
 
-  const [savingThrows, setSavingThrows] = useState(Object.keys(form.saving_throws).length > 0 ? Object.keys(form.saving_throws) : [])
+  const [savingThrows, setSavingThrows] = useState(form.saving_throws ? Object.keys(form.saving_throws) : [])
 
 
   const [skills, setSkills] = useState(form.skills ? Object.keys(form.skills) : [])
