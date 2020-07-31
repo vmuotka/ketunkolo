@@ -80,7 +80,6 @@ const reducer = (state = initialState, action) => {
     case 'COPY':
       return action.data
     case 'RESET':
-      console.log('reset tp thos', initialState)
       return initialState
     default: return state
   }

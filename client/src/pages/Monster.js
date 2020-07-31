@@ -3,7 +3,7 @@ import {
   useParams
 } from 'react-router'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 
 // project components
 import monsterService from '../services/monsterService'
@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import { styled } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
 
 const Link = styled(RouterLink)({
   textDecoration: 'none',
@@ -22,24 +23,37 @@ const Link = styled(RouterLink)({
 })
 
 
-const Monster = () => {
+const Monster = (props) => {
   const { id } = useParams()
   const [monster, setMonster] = useState({})
+  const history = useHistory()
   useEffect(() => {
     monsterService.getMonsterById(id)
       .then(
         (data) => {
+          if (data === null)
+            history.push('/monsters/search')
           setMonster(data)
         }
       )
-  }, [id])
+  }, [id, history])
 
-  const history = useHistory()
-  const dispatch = useDispatch()
 
-  const copy = () => {
-    dispatch(copyMonster(monster))
+  const handleCopy = () => {
+    props.copyMonster(monster)
     history.push('/monsters/create')
+  }
+
+  useEffect(() => {
+    if (props.user)
+      monsterService.setToken(props.user.token)
+  }, [props.user])
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete ${monster.name}?`)) {
+      monsterService.deleteMonster({ id })
+      history.push('/monsters/workshop')
+    }
   }
 
   return (
@@ -54,10 +68,25 @@ const Monster = () => {
         <Typography color="textPrimary">{monster ? monster.name : null}</Typography>
       </Breadcrumbs>
 
-      <Button variant='contained' color='primary' onClick={copy}>Copy</Button>
+      <ButtonGroup>
+        {props.user ? <Button variant='contained' color='primary' onClick={handleCopy}>Copy</Button> : null}
+        {props.user && props.user.id === monster.user ? <Button variant='contained' color='secondary' onClick={handleDelete}>Delete</Button> : null}
+      </ButtonGroup>
       <MonsterStatblock monster={monster} />
     </>
   )
 }
 
-export default Monster
+const mapDispatchToProps = {
+  copyMonster
+}
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
+
+const connectedMonster = connect(mapStateToProps, mapDispatchToProps)(Monster)
+
+export default connectedMonster

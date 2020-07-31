@@ -24,6 +24,15 @@ const save = async (monster) => {
   return res.data
 }
 
+const deleteMonster = async (data) => {
+  const config = {
+    headers: { Authorization: token },
+    data
+  }
+  const res = await axios.delete(`${baseUrl}/delete`, config,)
+  return res.data
+}
+
 const getByUser = async () => {
   const config = {
     headers: { Authorization: token }
@@ -32,4 +41,4 @@ const getByUser = async () => {
   return res.data
 }
 
-export default { search, getMonsterById, setToken, save, getByUser }
+export default { search, getMonsterById, setToken, save, getByUser, deleteMonster }

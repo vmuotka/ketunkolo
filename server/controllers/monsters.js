@@ -92,6 +92,25 @@ monsterRouter.post('/upload', async (req, res) => {
   return res.status(200).json(returnedObject)
 })
 
+monsterRouter.delete('/delete', async (req, res) => {
+  let decodedToken = null
+  if (req.token) {
+    decodedToken = jwt.verify(req.token, process.env.SECRET)
+  } else
+    return res.status(400).json({ error: 'Token not provided' })
+
+  const document_id = req.body.id
+
+  const monster = await Monster.findById(document_id)
+  if (monster.user === decodedToken.id) {
+    console.log('deleted')
+    await Monster.findByIdAndDelete(document_id)
+    return res.status(200)
+  } else {
+    return res.status(401)
+  }
+})
+
 monsterRouter.get('/get/:id', async (req, res) => {
   const monster = await Monster.findById(req.params.id)
   return res.status(200).json(monster)

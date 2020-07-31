@@ -162,7 +162,7 @@ const Navigation = (props) => {
       ))}
       <ListItem button key='logout' onClick={handleLogout} >
         <ListItemIcon><LogoutIcon /></ListItemIcon>
-        <ListItemText primary='Log out' />
+        <ListItemText primary='Sign out' />
       </ListItem >
     </>
   )
