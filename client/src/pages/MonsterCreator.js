@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 // materialui components
@@ -21,11 +22,13 @@ import Filter4Icon from '@material-ui/icons/Filter4'
 import Filter5Icon from '@material-ui/icons/Filter5'
 import DeleteIcon from '@material-ui/icons/Delete'
 import IconButton from '@material-ui/core/IconButton'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
 
 // project components
 import MonsterStatblock from '../components/MonsterStatblock'
 import { useWindowDimensions } from '../hooks'
 import monsterService from '../services/monsterService'
+import { setForm, resetMonster } from '../reducers/monsterCreatorReducer'
 
 const creatorFields = [
   {
@@ -90,7 +93,7 @@ const speedTypes = [
   'walk', 'fly', 'swim', 'burrow', 'climb', 'hover',
 ]
 
-const MonsterCreator = () => {
+const MonsterCreator = (props) => {
   const history = useHistory()
   const { width } = useWindowDimensions()
   const useStyles = makeStyles((theme) => ({
@@ -138,54 +141,19 @@ const MonsterCreator = () => {
   }))
   const classes = useStyles()
 
+  const form = props.monster
+  const setForm = props.setForm
+
+  console.log(form)
+
   const [navigation, setNavigation] = useState(0)
 
-  const [form, setForm] = useState({
-    name: '',
-    size: '',
-    type: '',
-    subtype: '',
-    alignment: '',
-    armor_class: '',
-    hit_points: '6',
-    hit_dice: '1d8',
-    speed: {
-      'walk': 30
-    },
-    attributes: {
-      str: 10,
-      dex: 10,
-      con: 10,
-      int: 10,
-      wis: 10,
-      cha: 10
-    },
-    saving_throws: {},
-    skills: {},
-    vulnerabilities: [],
-    resistances: [],
-    immunities: [],
-    condition_immunities: [],
-    senses: [],
-    languages: [],
-    challenge_rating: '',
-    special_abilities: [],
-    actions: [],
-    legendary_desc: '',
-    legendary_actions: [],
-    armor_desc: '',
-  })
+  const [proficiency, setProficiency] = useState(form.proficiency ? form.proficiency : 2)
 
-  const [proficiency, setProficiency] = useState(2)
+  const [savingThrows, setSavingThrows] = useState(Object.keys(form.saving_throws).length > 0 ? Object.keys(form.saving_throws) : [])
 
-  const [savingThrows, setSavingThrows] = useState([])
 
-  const [hitdice, setHitdice] = useState({
-    count: 1,
-    size: 8
-  })
-
-  const [skills, setSkills] = useState([])
+  const [skills, setSkills] = useState(form.skills ? Object.keys(form.skills) : [])
 
   const [speeds, setSpeeds] = useState(speedTypes)
 
@@ -203,7 +171,6 @@ const MonsterCreator = () => {
     const name = speeds[0]
 
     setForm({
-      ...form,
       speed: {
         ...form.speed,
         [name]: 30
@@ -219,7 +186,6 @@ const MonsterCreator = () => {
     let speedObj = { ...form.speed }
     delete speedObj[type]
     setForm({
-      ...form,
       speed: speedObj
     })
   }
@@ -229,7 +195,6 @@ const MonsterCreator = () => {
     let speedObj = form.speed
     speedObj[type] = event.target.value
     setForm({
-      ...form,
       speed: speedObj
     })
     setError({
@@ -246,7 +211,6 @@ const MonsterCreator = () => {
     delete speedObj[oldType]
     speedObj[newType] = speedValue
     setForm({
-      ...form,
       speed: speedObj
     })
   }
@@ -254,16 +218,20 @@ const MonsterCreator = () => {
   const handleDamagetypes = event => {
     const name = event.target.name
     setForm({
-      ...form,
       [name]: event.target.value.sort()
     })
   }
+
+  const [hitdice, setHitdice] = useState({
+    count: Number(form.hit_dice.split(' ')[0].split('d')[0]),
+    size: Number(form.hit_dice.split(' ')[0].split('d')[1])
+  })
 
   const handleHitdice = event => {
     const name = event.target.name
     setHitdice({
       ...hitdice,
-      [name]: event.target.value
+      [name]: Number(event.target.value)
     })
   }
 
@@ -277,12 +245,11 @@ const MonsterCreator = () => {
     else
       hit_dice = hitdice.count + 'd' + hitdice.size
 
-    setForm(form => ({
-      ...form,
+    setForm({
       hit_points: Math.floor(hitdice.count * (hitdice.size + 1) / 2 + (hitdice.count * Math.floor((form.attributes.con - 10) / 2))),
       hit_dice
-    }))
-  }, [hitdice, form.attributes.con])
+    })
+  }, [hitdice, form.attributes.con, setForm])
 
   const handleSavingThrows = event => {
     const saveOptions = event.target.value
@@ -296,7 +263,6 @@ const MonsterCreator = () => {
 
   const addAction = () => {
     setForm({
-      ...form,
       actions: [
         ...form.actions,
         {
@@ -308,7 +274,6 @@ const MonsterCreator = () => {
 
   const addLegendary = () => {
     setForm({
-      ...form,
       legendary_actions: [
         ...form.legendary_actions,
         {
@@ -328,14 +293,12 @@ const MonsterCreator = () => {
       [name]: event.target.value
     }
     setForm({
-      ...form,
       [actionType]: actions
     })
   }
 
   const addSpecialAbility = () => {
     setForm({
-      ...form,
       special_abilities: [
         ...form.special_abilities,
         {
@@ -354,7 +317,6 @@ const MonsterCreator = () => {
       [name]: event.target.value
     }
     setForm({
-      ...form,
       special_abilities: special
     })
   }
@@ -363,7 +325,6 @@ const MonsterCreator = () => {
     let arr = form[type]
     arr.splice(index, 1)
     setForm({
-      ...form,
       [type]: arr
     })
   }
@@ -374,22 +335,20 @@ const MonsterCreator = () => {
       const att = skillOptions.filter((option) => option.value === skill)[0].att
       skillsObj[skill] = Math.floor((form.attributes[att] - 10) / 2) + Number(proficiency)
     })
-    setForm(form => ({
-      ...form,
+    setForm({
       skills: skillsObj
-    }))
-  }, [skills, form.attributes, proficiency])
+    })
+  }, [skills, form.attributes, proficiency, setForm])
 
   useEffect(() => {
     let saves = {}
     savingThrows.forEach(save => {
       saves[save] = Math.floor((form.attributes[save] - 10) / 2) + Number(proficiency)
     })
-    setForm(form => ({
-      ...form,
+    setForm({
       saving_throws: saves
-    }))
-  }, [form.attributes, savingThrows, proficiency])
+    })
+  }, [form.attributes, savingThrows, proficiency, setForm])
 
   const [error, setError] = useState({})
 
@@ -429,7 +388,6 @@ const MonsterCreator = () => {
   const handleChange = event => {
     const name = event.target.name
     setForm({
-      ...form,
       [name]: event.target.value
     })
     setError({
@@ -438,7 +396,7 @@ const MonsterCreator = () => {
     })
   }
 
-  const [langString, setLangString] = useState('')
+  const [langString, setLangString] = useState(form.languages.join(', '))
   const handleLanguages = (event) => {
     setLangString(event.target.value)
   }
@@ -447,13 +405,12 @@ const MonsterCreator = () => {
     let arr = langString.split(', ')
     if (langString === '')
       arr = []
-    setForm(form => ({
-      ...form,
+    setForm({
       languages: arr
-    }))
-  }, [langString])
+    })
+  }, [langString, setForm])
 
-  const [senseString, setSenseString] = useState('')
+  const [senseString, setSenseString] = useState(form.senses.join(', '))
   const handleSenses = (event) => {
     setSenseString(event.target.value)
   }
@@ -462,11 +419,10 @@ const MonsterCreator = () => {
     let arr = senseString.split(', ')
     if (senseString === '')
       arr = []
-    setForm(form => ({
-      ...form,
+    setForm({
       senses: arr
-    }))
-  }, [senseString])
+    })
+  }, [senseString, setForm])
 
   const handleChangeObject = event => {
     const name = event.target.name
@@ -476,13 +432,27 @@ const MonsterCreator = () => {
       [name]: event.target.value
     }
     setForm({
-      ...form,
       [object]: newObj
     })
   }
 
   const handleProficiencyChange = event => {
     setProficiency(event.target.value)
+  }
+
+  const resetForm = () => {
+    if (window.confirm('Are you sure you want to reset the form?')) {
+      props.resetMonster()
+      setLangString('')
+      setSenseString('')
+      setHitdice({
+        count: 1,
+        size: 8
+      })
+      setSavingThrows([])
+      setSkills([])
+      setProficiency(2)
+    }
   }
 
   return (
@@ -496,7 +466,7 @@ const MonsterCreator = () => {
         <BottomNavigationAction icon={<Filter1Icon />} className={classes.navigationAction} value={0} label='Attributes' />
         <BottomNavigationAction icon={<Filter2Icon />} className={classes.navigationAction} value={1} label='Statistics' />
         <BottomNavigationAction icon={<Filter3Icon />} className={classes.navigationAction} value={2} label='Other' />
-        <BottomNavigationAction icon={<Filter4Icon />} className={classes.navigationAction} value={3} label='Special Abilities' />
+        <BottomNavigationAction icon={<Filter4Icon />} className={classes.navigationAction} value={3} label='Abilities' />
         <BottomNavigationAction icon={<Filter5Icon />} className={classes.navigationAction} value={4} label='Actions' />
       </BottomNavigation>
       <Grid container spacing={3}>
@@ -541,7 +511,7 @@ const MonsterCreator = () => {
                     </FormControl>
                   ))}
                   <TextField
-                    value={form.subtype}
+                    value={form.subtype || ''}
                     label='Subtype'
                     type='text'
                     inputProps={
@@ -578,9 +548,9 @@ const MonsterCreator = () => {
 
                 <div>
                   <TextField
+                    type='number'
                     value={hitdice.count}
                     label='Hit Dice Count'
-                    type='number'
                     onChange={handleHitdice}
                     inputProps={
                       { name: 'count' }
@@ -589,7 +559,7 @@ const MonsterCreator = () => {
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor='hitdie'>Hit Die</InputLabel>
                     <Select
-
+                      type='number'
                       autoWidth
                       value={hitdice.size}
                       inputProps={
@@ -908,7 +878,10 @@ const MonsterCreator = () => {
               </div>
             </>}
             <Divider className={classes.divider} />
-            <Button type='submit' variant='contained' color='primary'>Save</Button>
+            <ButtonGroup>
+              <Button type='submit' variant='contained' color='primary'>Save</Button>
+              <Button variant='contained' color='secondary' onClick={resetForm}>Reset</Button>
+            </ButtonGroup>
           </form>
         </Grid>
         <Grid item md={6}>
@@ -919,4 +892,16 @@ const MonsterCreator = () => {
   )
 }
 
-export default MonsterCreator
+const mapDispatchToProps = {
+  setForm,
+  resetMonster
+}
+
+const mapStateToProps = (state) => {
+  return {
+    monster: state.monsterCreator
+  }
+}
+const connectedMonsterCreator = connect(mapStateToProps, mapDispatchToProps)(MonsterCreator)
+
+export default connectedMonsterCreator

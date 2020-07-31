@@ -54,7 +54,6 @@ monsterRouter.post('/search', async (req, res) => {
   }
 
   const searchResults = await Monster.find(query).limit(100)
-  console.log(searchResults)
   return res.status(200).json(searchResults)
 })
 

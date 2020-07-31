@@ -32,7 +32,6 @@ const MonsterWorkshop = () => {
       setUserCreations(arr)
     )
   }, [])
-  console.log(userCreations)
   return (
     <>
       <Link to='/monsters/create'>

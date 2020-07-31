@@ -18,7 +18,6 @@ import MonsterCreator from './pages/MonsterCreator'
 // components
 import Navigation from './components/Navigation'
 import initrackerService from './services/initrackerService'
-import monsterService from './services/monsterService'
 
 // Material UI
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -70,11 +69,11 @@ const App = (props) => {
               <MonsterSearch />
             </Route>
             <Route path='/monsters/workshop' render={() =>
-              false ? <Redirect to='/signin' /> : <MonsterWorkshop />
+              props.user === null ? <Redirect to='/signin' /> : <MonsterWorkshop />
             }>
             </Route>
             <Route path='/monsters/create' render={() =>
-              false ? <Redirect to='/signin' /> : <MonsterCreator />
+              props.user === null ? <Redirect to='/signin' /> : <MonsterCreator />
             }>
             </Route>
             <Route path='/monster/:id'>
