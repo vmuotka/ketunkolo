@@ -30,6 +30,7 @@ import RecentActorsIcon from '@material-ui/icons/RecentActors'
 import PetsIcon from '@material-ui/icons/Pets'
 import SearchIcon from '@material-ui/icons/Search'
 import BuildIcon from '@material-ui/icons/Build'
+import GestureIcon from '@material-ui/icons/Gesture';
 
 import { Link as RouterLink } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -120,7 +121,8 @@ const Navigation = (props) => {
 
   // open collapsible menus
   const [open, setOpen] = useState({
-    monsters: false
+    monsters: false,
+    spells: false
   })
 
   const handleDrawerToggle = () => {
@@ -181,6 +183,35 @@ const Navigation = (props) => {
           </Link>
         ))}
 
+        <ListItem button onClick={handleMenuOpen('spells')}>
+          <ListItemIcon>
+            <GestureIcon />
+          </ListItemIcon>
+          <ListItemText primary='Spells' />
+          {open.spells ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={open.spells} timeout='auto' unmountOnExit>
+          <List component='div' disablePadding>
+            <Link to='/spells/search'>
+              <ListItem button className={classes.nested}>
+                <ListItemIcon>
+                  <SearchIcon />
+                </ListItemIcon>
+                <ListItemText primary='Search' />
+              </ListItem>
+            </Link>
+            {props.user ?
+              <Link to='/spells/workshop'>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <BuildIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Workshop' />
+                </ListItem>
+              </Link>
+              : null}
+          </List>
+        </Collapse>
         <ListItem button onClick={handleMenuOpen('monsters')}>
           <ListItemIcon>
             <PetsIcon />
@@ -198,14 +229,16 @@ const Navigation = (props) => {
                 <ListItemText primary='Search' />
               </ListItem>
             </Link>
-            <Link to='/monsters/workshop'>
-              <ListItem button className={classes.nested}>
-                <ListItemIcon>
-                  <BuildIcon />
-                </ListItemIcon>
-                <ListItemText primary='Workshop' />
-              </ListItem>
-            </Link>
+            {props.user ?
+              <Link to='/monsters/workshop'>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <BuildIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Workshop' />
+                </ListItem>
+              </Link>
+              : null}
           </List>
         </Collapse>
 

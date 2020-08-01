@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 // project components
-import MonsterStatblock from './MonsterStatblock'
+import SpellBlock from './SpellBlock'
 
 // materialui components
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -11,10 +11,10 @@ import AccordionDetails from '@material-ui/core/AccordionDetails'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import FavoriteIcon from '@material-ui/icons/Favorite'
-import SecurityIcon from '@material-ui/icons/Security'
-import FastForwardIcon from '@material-ui/icons/FastForward'
-import WarningIcon from '@material-ui/icons/Warning'
+import SchoolIcon from '@material-ui/icons/School'
+import TimerIcon from '@material-ui/icons/Timer'
+import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet'
+import AvTimerIcon from '@material-ui/icons/AvTimer';
 import Title from '@material-ui/core/Tooltip'
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +58,7 @@ const Tooltip = withStyles((theme) => ({
   },
 }))(Title);
 
-const SearchMonsterCard = ({ result }) => {
+const SearchSpellCard = ({ result }) => {
   const classes = useStyles()
 
   const [expanded, setExpanded] = useState(false)
@@ -71,39 +71,56 @@ const SearchMonsterCard = ({ result }) => {
     <Accordion expanded={expanded} onChange={handleChange}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls='monster-content'
+        aria-controls='spell-content'
       >
         <div>
-          <Link className={classes.link} to={`/monster/${result.id}`} color='inherit'>
+          <Link className={classes.link} to={`/spell/${result.id}`} color='inherit'>
             {result.name}
+            {result.ritual ? '\xa0(ritual)' : null}
           </Link >
-          <Typography className={classes.properties} component='p'>
-            {result.size}&nbsp;
-            {result.type}
-            {result.subtype ? ' (' + result.subtype + ')' : null}
-            ,&nbsp;{result.alignment}
-          </Typography>
           <Typography className={`${classes.properties}, ${classes.attributes}`} component='p'>
-            <Tooltip title='Hit Points' placement='top' arrow>
-              <span><FavoriteIcon fontSize='inherit' /> <span>{result.hit_points} ({result.hit_dice})&nbsp;</span></span>
+            <Tooltip title='School' placement='top' arrow>
+              <span>
+                <SchoolIcon fontSize='inherit' />
+                <span>
+                  {result.level}&nbsp;
+            {result.school}
+                </span>
+              </span>
             </Tooltip>
-            <Tooltip title='Armor Class' placement='top' arrow>
-              <span><SecurityIcon fontSize='inherit' /> <span>{result.armor_class}&nbsp;</span></span>
+            <Tooltip title='Casting Time' placement='top' arrow>
+              <span>
+                <TimerIcon fontSize='inherit' />
+                <span>
+                  {result.casting_time}
+                </span>
+              </span>
             </Tooltip>
-            <Tooltip title='Speed' placement='top' arrow>
-              <span><FastForwardIcon fontSize='inherit' /> <span>{Object.keys(result.speed).map(key => key !== 'hover' ? key + ' ' + result.speed[key] + 'ft., ' : 'fly ' + result.speed[key] + 'ft. (hover),')}&nbsp;</span></span>
+            <Tooltip title='Range' placement='top' arrow>
+              <span>
+                <SettingsEthernetIcon fontSize='inherit' />
+                <span>
+                  {result.range}
+                </span>
+              </span>
             </Tooltip>
-            <Tooltip title='Challenge Rating' placement='top' arrow>
-              <span><WarningIcon fontSize='inherit' /> <span>{result.challenge_rating}</span></span>
+            <Tooltip title='Duration' placement='top' arrow>
+              <span>
+                <AvTimerIcon fontSize='inherit' />
+                <span>
+                  {result.duration}
+                  {result.concentration ? '\xa0(c)' : null}
+                </span>
+              </span>
             </Tooltip>
           </Typography>
         </div>
       </AccordionSummary>
       <AccordionDetails className={classes.details}>
-        {expanded ? <MonsterStatblock monster={result} /> : null}
+        {expanded ? <SpellBlock spell={result} /> : null}
       </AccordionDetails>
     </Accordion>
   )
 }
 
-export default SearchMonsterCard
+export default SearchSpellCard

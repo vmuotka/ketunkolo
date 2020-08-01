@@ -14,6 +14,8 @@ import MonsterSearch from './pages/MonsterSearch'
 import Monster from './pages/Monster'
 import MonsterWorkshop from './pages/MonsterWorkshop'
 import MonsterCreator from './pages/MonsterCreator'
+import SpellSearch from './pages/SpellSearch'
+import Spell from './pages/Spell'
 
 // components
 import Navigation from './components/Navigation'
@@ -67,6 +69,12 @@ const App = (props) => {
             } />
             <Route path='/monsters/search'>
               <MonsterSearch />
+            </Route>
+            <Route path='/spells/search'>
+              <SpellSearch />
+            </Route>
+            <Route path='/spell/:id'>
+              <Spell />
             </Route>
             <Route path='/monsters/workshop' render={() =>
               props.user === null ? <Redirect to='/signin' /> : <MonsterWorkshop />

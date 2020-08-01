@@ -22,6 +22,9 @@ app.use('/api/initracker', trackerRouter)
 const monsterRouter = require('./controllers/monsters')
 app.use('/api/monsters', monsterRouter)
 
+const spellRouter = require('./controllers/spells')
+app.use('/api/spells', spellRouter)
+
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
 
 app.use(cors())
