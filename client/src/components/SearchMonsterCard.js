@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   attributes: {
     display: 'flex',
+    flexWrap: 'wrap',
     alignItems: 'center',
     '& span': {
       margin: theme.spacing(.3, 1),
