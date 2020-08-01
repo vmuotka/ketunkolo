@@ -16,3 +16,5 @@
 | 24.07.2020 | 5 | monster creator page skeleton, live display monster statblock |
 | 24.07.2020 | 6 | creator form contains all required fields |
 | 25.07.2020 | 7 | saving created monsters to database, creator form validation, refactor monster object |
+| 31.07.2020 | 3 | created functionality to copy and edit existing monsters |
+| 01.08.2020 | 1 | monster creator now supports markdown |

@@ -23,6 +23,7 @@ import Filter5Icon from '@material-ui/icons/Filter5'
 import DeleteIcon from '@material-ui/icons/Delete'
 import IconButton from '@material-ui/core/IconButton'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
+import TextAreaAutoSize from '@material-ui/core/TextareaAutosize'
 
 // project components
 import MonsterStatblock from '../components/MonsterStatblock'
@@ -802,9 +803,13 @@ const MonsterCreator = (props) => {
                     label='Description'
                     fullWidth
                     multiline
+                    placeholder='Supports markdown lists, line breaks, paragraphs, strong and italics'
                     value={ability.desc}
                     inputProps={{ name: 'desc', 'data-index': index }}
                     onChange={handleSpecialAbility}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                   />
                   <IconButton size='small' onClick={deleteAction('special_abilities', index)}>
                     <DeleteIcon />
@@ -829,8 +834,12 @@ const MonsterCreator = (props) => {
                       value={action.desc}
                       fullWidth
                       multiline
+                      placeholder='Supports markdown lists, line breaks, paragraphs, strong and italics'
                       inputProps={{ name: 'desc', 'data-index': index, 'data-type': 'actions' }}
                       onChange={handleActionChange}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                     <IconButton size='small' onClick={deleteAction('actions', index)}>
                       <DeleteIcon />
@@ -864,9 +873,13 @@ const MonsterCreator = (props) => {
                       label='Description'
                       fullWidth
                       multiline
+                      placeholder='Supports markdown lists, line breaks, paragraphs, strong and italics'
                       value={action.desc}
                       inputProps={{ name: 'desc', 'data-index': index, 'data-type': 'legendary_actions' }}
                       onChange={handleActionChange}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                     <IconButton size='small' onClick={deleteAction('legendary_actions', index)}>
                       <DeleteIcon />

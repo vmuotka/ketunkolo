@@ -1,9 +1,10 @@
 import React from 'react'
+import ReactMarkdown from 'react-markdown'
 
 // materialui components
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, styled } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   property: {
@@ -23,9 +24,23 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     backgroundColor: '#3f51b5',
     height: '.15rem'
+  },
+  markdown: {
+    display: 'inline',
+    '& *': {
+      margin: theme.spacing(.15, 1.5)
+    }
   }
 }))
 
+const Markdown = styled(ReactMarkdown)({
+  p: {
+    display: 'inline'
+  }
+})
+
+// only types listed here are rendered
+const markdownTypes = ['paragraph', 'text', 'strong', 'emphasis', 'list', 'listItem']
 
 
 const MonsterStatblock = (props) => {
@@ -184,7 +199,12 @@ const MonsterStatblock = (props) => {
                 {monster.special_abilities.map((ability, index) => (
                   <Typography component='span' className={classes.property} key={index}>
                     <strong>{ability.name}.&nbsp;</strong>
-                    {ability.desc}
+                    <Markdown
+                      className={classes.markdown}
+                      source={ability.desc}
+                      skipHtml={true}
+                      allowedTypes={markdownTypes}
+                    />
                   </Typography>
                 ))}
               </>
@@ -199,7 +219,12 @@ const MonsterStatblock = (props) => {
                 {monster.actions.map((action, index) => (
                   <Typography component='span' className={classes.property} key={index}>
                     <strong>{action.name}.&nbsp;</strong>
-                    {action.desc}
+                    <Markdown
+                      className={classes.markdown}
+                      source={action.desc}
+                      skipHtml={true}
+                      allowedTypes={markdownTypes}
+                    />
                   </Typography>
                 ))}
               </>
@@ -216,7 +241,12 @@ const MonsterStatblock = (props) => {
                   monster.legendary_actions.map((action, index) => (
                     <Typography component='span' className={classes.property} key={index}>
                       <strong>{action.name}.&nbsp;</strong>
-                      {action.desc}
+                      <Markdown
+                        className={classes.markdown}
+                        source={action.desc}
+                        skipHtml={true}
+                        allowedTypes={markdownTypes}
+                      />
                     </Typography>
                   ))
                 }
