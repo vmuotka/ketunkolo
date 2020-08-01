@@ -40,17 +40,17 @@ const MonsterStatblock = (props) => {
             <strong>{monster.name}</strong>
           </Typography>
           <Typography component='span' className={classes.property}>
-            {monster.size}&nbsp;{monster.type}&nbsp;{monster.subtype ? `(${monster.subtype})` : null}&nbsp;{monster.alignment}
+            {monster.size}&nbsp;{monster.type}{monster.subtype ? `\xa0(${monster.subtype}),\xa0` : ',\xa0'}{monster.alignment}
           </Typography>
           <Divider className={classes.divider} />
           <Typography component='span' className={classes.property}>
-            <strong>Armor Class&nbsp;</strong> {monster.armor_class}&nbsp;{monster.armor_desc ? `(${monster.armor_desc})` : null}
+            <strong>Armor Class&nbsp;</strong>{monster.armor_class}&nbsp;{monster.armor_desc ? `(${monster.armor_desc})` : null}
           </Typography>
           <Typography component='span' className={classes.property}>
-            <strong>Hit Points</strong> {monster.hit_points} ({monster.hit_dice})
+            <strong>Hit Points</strong>&nbsp;{monster.hit_points}&nbsp;({monster.hit_dice})
       </Typography>
           <Typography component='span' className={classes.property}>
-            <strong>Speed</strong> {
+            <strong>Speed</strong>&nbsp;{
               Object.keys(monster.speed).map((speedType) => (
                 speedType !== 'hover' ?
                   speedType + ' ' + monster.speed[speedType] + ' ft., '
@@ -106,7 +106,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.vulnerabilities.length > 0 ? <Typography component='span' className={classes.property}>
-              <strong>Damage Vulnerabilities&nbsp;</strong> {
+              <strong>Damage Vulnerabilities&nbsp;</strong>
+              {
                 monster.vulnerabilities.map(vulnerability => (
                   vulnerability + ', '
                 ))
@@ -116,7 +117,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.resistances.length > 0 ? <Typography component='span' className={classes.property}>
-              <strong>Damage Resistances&nbsp;</strong> {
+              <strong>Damage Resistances&nbsp;</strong>
+              {
                 monster.resistances.map(resistance => (
                   resistance + ', '
                 ))
@@ -126,7 +128,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.immunities.length > 0 ? <Typography component='span' className={classes.property}>
-              <strong>Damage Immunities&nbsp;</strong> {
+              <strong>Damage Immunities&nbsp;</strong>
+              {
                 monster.immunities.map(immunity => (
                   immunity + ', '
                 ))
@@ -136,7 +139,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.condition_immunities.length > 0 ? <Typography component='span' className={classes.property}>
-              <strong>Condition Immunities&nbsp;</strong> {
+              <strong>Condition Immunities&nbsp;</strong>
+              {
                 monster.condition_immunities.map(immunity => (
                   immunity + ', '
                 ))
@@ -146,7 +150,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.senses.length > 0 ? <Typography component='span' className={classes.property}>
-              <strong>Senses&nbsp;</strong> {
+              <strong>Senses&nbsp;</strong>
+              {
                 monster.senses.map(sense => (
                   sense + ', '
                 ))
@@ -156,7 +161,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.languages.length ? <Typography component='span' className={classes.property}>
-              <strong>Languages&nbsp;</strong> {
+              <strong>Languages&nbsp;</strong>
+              {
                 monster.languages.map(language => (
                   language + ', '
                 ))
@@ -166,7 +172,8 @@ const MonsterStatblock = (props) => {
           }
           {
             monster.challenge_rating ? <Typography component='span' className={classes.property}>
-              <strong>Challenge Rating&nbsp;</strong> {monster.challenge_rating}
+              <strong>Challenge Rating&nbsp;</strong>
+              {monster.challenge_rating}
             </Typography>
               : null
           }
@@ -176,7 +183,8 @@ const MonsterStatblock = (props) => {
                 <Divider className={classes.divider} />
                 {monster.special_abilities.map((ability, index) => (
                   <Typography component='span' className={classes.property} key={index}>
-                    <strong>{ability.name}&nbsp;</strong> {ability.desc}
+                    <strong>{ability.name}.&nbsp;</strong>
+                    {ability.desc}
                   </Typography>
                 ))}
               </>
@@ -190,7 +198,8 @@ const MonsterStatblock = (props) => {
                 <Typography component='h2'><strong>Actions</strong></Typography>
                 {monster.actions.map((action, index) => (
                   <Typography component='span' className={classes.property} key={index}>
-                    <strong>{action.name}&nbsp;</strong> {action.desc}
+                    <strong>{action.name}.&nbsp;</strong>
+                    {action.desc}
                   </Typography>
                 ))}
               </>
@@ -206,7 +215,8 @@ const MonsterStatblock = (props) => {
                 {
                   monster.legendary_actions.map((action, index) => (
                     <Typography component='span' className={classes.property} key={index}>
-                      <strong>{action.name}&nbsp;</strong> {action.desc}
+                      <strong>{action.name}.&nbsp;</strong>
+                      {action.desc}
                     </Typography>
                   ))
                 }
