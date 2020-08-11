@@ -1,25 +1,12 @@
 import React, { useEffect } from 'react'
-import {
-  Switch, Route, Redirect
-} from 'react-router-dom'
 import { login } from './reducers/userReducer'
 import { connect } from 'react-redux'
 
-// pages
-import Register from './pages/Signup'
-import SignIn from './pages/Signin'
-import IniTracker from './pages/IniTracker'
-import UserSettings from './pages/UserSettings'
-import MonsterSearch from './pages/MonsterSearch'
-import Monster from './pages/Monster'
-import MonsterWorkshop from './pages/MonsterWorkshop'
-import MonsterCreator from './pages/MonsterCreator'
-import SpellSearch from './pages/SpellSearch'
-import Spell from './pages/Spell'
 
 // components
 import Navigation from './components/Navigation'
 import initrackerService from './services/initrackerService'
+import Router from './Router'
 
 // Material UI
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -55,42 +42,7 @@ const App = (props) => {
       <CssBaseline />
       <Navigation>
         <Container maxWidth='lg' className={classes.relativeContainer}>
-          <Switch>
-            <Route path='/initracker'>
-              <IniTracker />
-            </Route>
-            <Route path='/user_settings' render={() =>
-              props.user === null ? <Redirect to='/signin' /> : <UserSettings />} />
-            <Route path='/signup' render={() =>
-              props.user !== null ? <Redirect to='/' /> : <Register />
-            } />
-            <Route path='/signin' render={() =>
-              props.user !== null ? <Redirect to='/' /> : <SignIn />
-            } />
-            <Route path='/monsters/search'>
-              <MonsterSearch />
-            </Route>
-            <Route path='/spells/search'>
-              <SpellSearch />
-            </Route>
-            <Route path='/spell/:id'>
-              <Spell />
-            </Route>
-            <Route path='/monsters/workshop' render={() =>
-              props.user === null ? <Redirect to='/signin' /> : <MonsterWorkshop />
-            }>
-            </Route>
-            <Route path='/monsters/create' render={() =>
-              props.user === null ? <Redirect to='/signin' /> : <MonsterCreator />
-            }>
-            </Route>
-            <Route path='/monster/:id'>
-              <Monster />
-            </Route>
-            <Route path='/'>
-              <h1>Home</h1>
-            </Route>
-          </Switch>
+          <Router props></Router>
         </Container>
       </Navigation>
     </>

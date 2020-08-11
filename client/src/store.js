@@ -8,6 +8,7 @@ import themeReducer from './reducers/themeReducer'
 import initrackerReducer from './reducers/initrackerReducer'
 import initrackerGroupReducer from './reducers/initrackerGroupReducer'
 import monsterCreatorReducer from './reducers/monsterCreatorReducer'
+import spellCreatorReducer from './reducers/spellCreatorReducer'
 
 const reducer = combineReducers({
   user: userReducer,
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   initracker: initrackerReducer,
   initrackerGroup: initrackerGroupReducer,
   monsterCreator: monsterCreatorReducer,
+  spellCreator: spellCreatorReducer,
 })
 
 const store = createStore(

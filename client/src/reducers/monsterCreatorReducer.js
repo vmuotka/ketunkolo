@@ -35,7 +35,6 @@ const initialState = {
   proficiency: 2
 }
 
-
 export const setForm = (obj) => {
   return {
     type: 'SET_STATE',

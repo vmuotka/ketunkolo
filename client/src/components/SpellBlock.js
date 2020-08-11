@@ -84,22 +84,20 @@ const SpellBlock = (props) => {
             {spell.class.join(', ')}
           </Typography>
           <Divider className={classes.divider} />
-          <Typography component='p'>
+          <Markdown
+            source={spell.desc}
+            className={classes.markdown}
+            skipHtml={true}
+            allowedTypes={markdownTypes}
+          />
+          {spell.higher_level ?
             <Markdown
-              source={spell.desc}
+              source={spell.higher_level}
               className={classes.markdown}
               skipHtml={true}
               allowedTypes={markdownTypes}
             />
-            {spell.higher_level ?
-              <Markdown
-                source={spell.higher_level}
-                className={classes.markdown}
-                skipHtml={true}
-                allowedTypes={markdownTypes}
-              />
-              : null}
-          </Typography>
+            : null}
           <Divider className={classes.divider} />
         </>
       ) : null}
