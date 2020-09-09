@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 // project components
 import spellService from '../services/spellService'
 import SearchSpellCard from '../components/SearchSpellCard'
+import SpellSearchResults from '../components/SpellSearchResults'
 
 // material-ui components
 import TextField from '@material-ui/core/TextField'
@@ -17,6 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +37,11 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     marginBottom: theme.spacing(2)
-  }
+  },
+  loadingCenter: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
 }))
 
 const levelOptions = [
@@ -87,10 +93,13 @@ const SpellSearch = () => {
   })
 
   const [searchResults, setSearchResults] = useState([])
+  const [searching, setSearching] = useState(false)
 
   const handleSearch = async event => {
     event.preventDefault()
+    setSearching(true)
     setSearchResults(await spellService.search(search))
+    setSearching(false)
   }
 
   const handleChange = event => {
@@ -243,10 +252,8 @@ const SpellSearch = () => {
 
       <Typography component='p'>Showing {searchResults.length} result(s)</Typography>
       <Divider className={classes.divider} />
-      {searchResults.map((result, index) => (
-        <SearchSpellCard key={index} result={result} />
-      ))
-      }
+      {searching ? <div className={classes.loadingCenter}><CircularProgress color="secondary" /></div> : null}
+      <SpellSearchResults results={searchResults} />
 
     </>
   )

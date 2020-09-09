@@ -50,7 +50,7 @@ spellRouter.post('/search', async (req, res) => {
     query.concentration = body.concentration
   }
 
-  const searchResults = await Spell.find(query).limit(150)
+  const searchResults = await Spell.find(query)
   return res.status(200).json(searchResults)
 })
 

@@ -53,11 +53,11 @@ const routes = [
     component: <SpellWorkshop />,
     login: true
   },
-  {
-    path: '/spells/create',
-    component: <SpellCreator />,
-    login: true
-  },
+  // {
+  //   path: '/spells/create',
+  //   component: <SpellCreator />,
+  //   login: true
+  // },
   {
     path: '/monsters/search',
     component: <MonsterSearch />,
@@ -87,7 +87,7 @@ const routes = [
 
 const Router = (props) => {
   const loggedUserJSON = window.localStorage.getItem('loggedUser')
-  let userObject
+  let userObject = null
   if (loggedUserJSON) {
     userObject = JSON.parse(loggedUserJSON)
   }

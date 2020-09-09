@@ -19,3 +19,5 @@
 | 31.07.2020 | 3 | created functionality to copy and edit existing monsters |
 | 01.08.2020 | 1 | monster creator now supports markdown |
 | 01.08.2020 | 2 | spell info page and spell search | 
+| 11.08.2020 | 4 | refactor app routing and start on spell creating form |
+| 09.09.2020 | 1 | optimize search pages by not rerendering search results on filter changes | 
