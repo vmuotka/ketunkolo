@@ -8,6 +8,9 @@ import Modal from '@material-ui/core/Modal'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import { Typography } from '@material-ui/core'
+import CasinoIcon from '@material-ui/icons/Casino'
+import IconButton from '@material-ui/core/IconButton'
 
 // project components
 import CreatureCard from '../../components/CreatureCard'
@@ -16,7 +19,7 @@ import { setup } from '../../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../../components/IniTrackerManager'
 import MonsterStatblock from '../../components/MonsterStatblock'
 import Creator from './Creator'
-import { Typography } from '@material-ui/core'
+import DiceRoller from '../../components/DiceRoller'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +73,7 @@ const IniTracker = (props) => {
   const [modalType, setModalType] = useState('creator')
   const [monsterModal, setMonsterModal] = useState(false)
   const [monsterManager, setMonsterManager] = useState(false)
+  const [diceRoller, setDiceRoller] = useState(false)
 
   const [combat, setCombat] = useState([])
 
@@ -169,7 +173,18 @@ const IniTracker = (props) => {
       >
         {statblockModalBody}
       </Modal>
-      <Box className={classes.cardContainer}>
+      <Box className={classes.cardContainer} style={{ position: 'relative' }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+        }} >
+          <IconButton style={{ width: '100%', justifyContent: 'end' }} onClick={() => setDiceRoller(!diceRoller)}>
+            <CasinoIcon color={diceRoller ? 'secondary' : undefined} />
+          </IconButton>
+          <DiceRoller style={{ display: diceRoller ? 'block' : 'none' }} />
+        </div>
+
         <ButtonGroup>
           <Button onClick={handleProgress} >
             Next Turn
