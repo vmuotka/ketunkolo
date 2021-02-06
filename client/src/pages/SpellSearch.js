@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 // project components
 import spellService from '../services/spellService'
-import SearchSpellCard from '../components/SearchSpellCard'
 import SpellSearchResults from '../components/SpellSearchResults'
 
 // material-ui components

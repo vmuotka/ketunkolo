@@ -59,7 +59,7 @@ const Tooltip = withStyles((theme) => ({
   },
 }))(Title);
 
-const SearchSpellCard = ({ result }) => {
+const SearchSpellCard = React.memo(({ result }) => {
   const classes = useStyles()
 
   const [expanded, setExpanded] = useState(false)
@@ -122,6 +122,6 @@ const SearchSpellCard = ({ result }) => {
       </AccordionDetails>
     </Accordion>
   )
-}
+})
 
 export default SearchSpellCard

@@ -59,7 +59,7 @@ const Tooltip = withStyles((theme) => ({
   },
 }))(Title);
 
-const SearchMonsterCard = ({ result }) => {
+const SearchMonsterCard = React.memo(({ result }) => {
   const classes = useStyles()
 
   const [expanded, setExpanded] = useState(false)
@@ -105,6 +105,6 @@ const SearchMonsterCard = ({ result }) => {
       </AccordionDetails>
     </Accordion>
   )
-}
+})
 
 export default SearchMonsterCard

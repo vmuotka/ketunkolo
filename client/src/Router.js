@@ -53,11 +53,11 @@ const routes = [
     component: <SpellWorkshop />,
     login: true
   },
-  // {
-  //   path: '/spells/create',
-  //   component: <SpellCreator />,
-  //   login: true
-  // },
+  {
+    path: '/spells/create',
+    component: <SpellCreator />,
+    login: true
+  },
   {
     path: '/monsters/search',
     component: <MonsterSearch />,

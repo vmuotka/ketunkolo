@@ -182,7 +182,7 @@ const IniTracker = (props) => {
       <form onSubmit={handleSubmit} className={classes.root}>
         <Typography id='modal-title' component='h3'>Add a Creature</Typography>
         <div>
-          <TextField {...name.attributes} required />
+          <TextField {...name.attributes} required autoFocus />
           <TextField {...initiative.attributes} required />
         </div>
         {!monsterModal ? null :
@@ -201,16 +201,21 @@ const IniTracker = (props) => {
         }
         <ButtonGroup>
           <Button type='submit' variant='contained' color='primary'>Add</Button>
-          {monsterModal ? <Button onClick={handleSearchOpen} variant='contained' color='secondary'>Add a statblock</Button> : null}
+          {
+            monsterModal &&
+              statblock.name === undefined ? <Button onClick={handleSearchOpen} variant='contained' color='secondary'>Add a statblock</Button>
+              : <Button color='secondary' variant='contained' onClick={() => setStatblock({})}>Remove statblock</Button>
+          }
         </ButtonGroup>
       </form>
     </>
   )
 
   const statblockSearchBody = (
-    <form onSubmit={handleSearch} className={classes.root}>
+    <form onChange={handleSearch} onSubmit={(event) => event.preventDefault()} className={classes.root}>
       <Typography component='h4'>Search Statblocks</Typography>
       <TextField
+        autoFocus
         {...statblockSearch.attributes} helperText='Search monsters by name'
         InputProps={{
           endAdornment: (
