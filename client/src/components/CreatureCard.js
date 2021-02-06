@@ -19,7 +19,6 @@ import HpCounter from './HpCounter'
 
 
 const CreatureCard = (props) => {
-  const order = props.initiative
   let color = '#00AD1D'
 
   if (props.count !== undefined)
@@ -27,10 +26,8 @@ const CreatureCard = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     card: {
-      // order: -order,
       display: 'inline-block',
       background: color,
-      margin: '10px auto',
       padding: theme.spacing(1, 2),
       minWidth: '300px',
     },

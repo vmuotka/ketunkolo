@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 // project components
 import CreatureCard from '../../components/CreatureCard'
@@ -15,6 +16,7 @@ import { setup } from '../../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../../components/IniTrackerManager'
 import MonsterStatblock from '../../components/MonsterStatblock'
 import Creator from './Creator'
+import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
       width: '15ch',
     }
   },
+  card: {
+    margin: '10px auto',
+    position: 'relative'
+  },
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -67,8 +73,24 @@ const IniTracker = (props) => {
 
   const [combat, setCombat] = useState([])
 
+  const [progress, setProgress] = useState({ round: 0, turn: 0 })
+
+  const handleProgress = () => {
+    let progressCopy = { ...progress }
+    progressCopy.turn = progressCopy.turn + 1
+    if (progressCopy.turn >= combat.length) {
+      progressCopy.turn = 0
+      progressCopy.round = progressCopy.round + 1
+    }
+    setProgress(progressCopy)
+  }
+
+  const resetProgress = () => {
+    if (window.confirm('Are you sure?'))
+      setProgress({ round: 0, turn: 0 })
+  }
+
   useEffect(() => {
-    console.log('chabnge')
     let arr = [...props.initracker.party, ...props.initracker.monsters]
     arr.sort((a, b) => {
       if (a.initiative > b.initiative)
@@ -148,8 +170,28 @@ const IniTracker = (props) => {
         {statblockModalBody}
       </Modal>
       <Box className={classes.cardContainer}>
-        {combat.map((card) => (
-          <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
+        <ButtonGroup>
+          <Button onClick={handleProgress} >
+            Next Turn
+        </Button>
+          <Button onClick={resetProgress} >
+            Reset
+        </Button>
+        </ButtonGroup>
+        <Typography component='p' style={{ padding: '.4em' }}>Round: {progress.round + 1}</Typography>
+        {combat.map((card, index) => (
+          <div className={classes.card}>
+            <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
+            {
+              progress.turn === index &&
+              <ArrowBackIosIcon style={{
+                margin: '0 1em',
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)'
+              }} />
+            }
+          </div>
         ))}
       </Box>
     </>
