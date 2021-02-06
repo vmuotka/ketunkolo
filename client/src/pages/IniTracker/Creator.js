@@ -74,6 +74,7 @@ const Creator = (props) => {
   const ac = useField('AC', 'number')
   const statblockSearch = useField('Statblock', 'text')
   const [statblock, setStatblock] = useState({})
+  const perception = useField('perception', 'number')
 
 
   const [searchModal, setSearchModal] = useState(false)
@@ -113,7 +114,8 @@ const Creator = (props) => {
       newCard = {
         name: name.attributes.value,
         initiative: Number(initiative.attributes.value),
-        id: Math.floor(Math.random() * 1000000)
+        id: Math.floor(Math.random() * 1000000),
+        perception: perception.attributes.value ? Number(perception.attributes.value) : undefined
       }
     }
     props.addCard(newCard)
@@ -175,6 +177,7 @@ const Creator = (props) => {
         <div>
           <TextField {...name.attributes} required autoFocus />
           <TextField {...initiative.attributes} required />
+          {!monsterModal && <TextField {...perception.attributes} />}
         </div>
         {!monsterModal ? null :
           (

@@ -59,7 +59,6 @@ const SpellCreator = (props) => {
 
   const handleChange = event => {
     const name = event.target.name
-    console.log(name)
     setForm({
       [name]: event.target.value
     })
@@ -69,8 +68,6 @@ const SpellCreator = (props) => {
     event.preventDefault()
   }
 
-
-  console.log(form)
   return (
     <>
       <Grid container spacing={3}>

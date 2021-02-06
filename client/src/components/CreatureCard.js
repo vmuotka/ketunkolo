@@ -53,7 +53,6 @@ const CreatureCard = (props) => {
 
   const onChange = event => {
     setInit(event.target.value)
-    console.log(event.target)
   }
 
   const handleInitChange = event => {
@@ -82,6 +81,7 @@ const CreatureCard = (props) => {
             <DeleteIcon />
           </IconButton></Typography>
         <TextField label='Initiative' value={init} onClick={(e) => e.target.focus()} onChange={onChange} onBlur={handleInitChange} type='number' />
+        {props.perception && <TextField label='Perception' value={props.perception} disabled />}
 
         {props.count === undefined ? null :
           (
