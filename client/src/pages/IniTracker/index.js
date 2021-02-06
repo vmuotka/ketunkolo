@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 
 // material-ui components
@@ -65,13 +65,23 @@ const IniTracker = (props) => {
   const [monsterModal, setMonsterModal] = useState(false)
   const [monsterManager, setMonsterManager] = useState(false)
 
-  const combat = [...props.initracker.party, ...props.initracker.monsters]
+  const [combat, setCombat] = useState([])
 
+  useEffect(() => {
+    console.log('chabnge')
+    let arr = [...props.initracker.party, ...props.initracker.monsters]
+    arr.sort((a, b) => {
+      if (a.initiative > b.initiative)
+        return -1
+      if (b.initiative > a.initiative)
+        return 1
 
+      return 0
+    })
+    setCombat(arr)
+  }, [props.initracker.party, props.initracker.monsters])
 
   const [statblockModalMonster, setStatblockModalMonster] = useState({})
-
-
 
   const [statblockModal, setStatblockModal] = useState(false)
 

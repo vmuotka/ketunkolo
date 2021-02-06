@@ -27,7 +27,7 @@ const CreatureCard = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     card: {
-      order: -order,
+      // order: -order,
       display: 'inline-block',
       background: color,
       margin: '10px auto',
@@ -56,6 +56,7 @@ const CreatureCard = (props) => {
 
   const onChange = event => {
     setInit(event.target.value)
+    console.log(event.target)
   }
 
   const handleInitChange = event => {
@@ -83,7 +84,7 @@ const CreatureCard = (props) => {
           <IconButton size='small' onClick={handleDelete} >
             <DeleteIcon />
           </IconButton></Typography>
-        <TextField label='Initiative' value={init} onChange={onChange} onBlur={handleInitChange} type='number' />
+        <TextField label='Initiative' value={init} onClick={(e) => e.target.focus()} onChange={onChange} onBlur={handleInitChange} type='number' />
 
         {props.count === undefined ? null :
           (

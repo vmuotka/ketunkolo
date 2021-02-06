@@ -22,6 +22,7 @@ export const updateHp = (obj) => {
 }
 
 export const updateInitiative = (obj) => {
+  console.log('updateing')
   return {
     type: 'UPDATE_INITIATIVE',
     data: obj
