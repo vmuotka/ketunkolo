@@ -6,7 +6,7 @@ import {
 // pages
 import Register from './pages/Signup'
 import SignIn from './pages/Signin'
-import IniTracker from './pages/IniTracker'
+import IniTracker from './pages/IniTracker/'
 import UserSettings from './pages/UserSettings'
 import MonsterSearch from './pages/MonsterSearch'
 import Monster from './pages/Monster'
