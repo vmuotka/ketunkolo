@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Modal from '@material-ui/core/Modal'
+import CasinoIcon from '@material-ui/icons/Casino'
+import IconButton from '@material-ui/core/IconButton'
 
 // project components
 import { useField } from '../../hooks'
@@ -83,6 +85,10 @@ const Creator = (props) => {
     setSearchModal(false)
   }
 
+  const handleRoll = () => {
+    initiative.setVal(Math.floor(Math.random() * 20 + 1))
+  }
+
   const handleSearch = async event => {
     event.preventDefault()
     if (statblockSearch.attributes.value !== '')
@@ -96,13 +102,15 @@ const Creator = (props) => {
       }))
   }
 
+  console.log(statblock)
+
   const handleSubmit = event => {
     event.preventDefault()
     let newCard = {}
     if (monsterModal) {
       newCard = {
         name: name.attributes.value,
-        initiative: Number(initiative.attributes.value),
+        initiative: statblock.name !== undefined ? Number(initiative.attributes.value) + Number(Math.floor(statblock.attributes.dex / 2 - 5)) : Number(initiative.attributes.value),
         hp: new Array(Number(count.attributes.value)).fill(Number(maxHp.attributes.value)),
         maxHp: Number(maxHp.attributes.value),
         count: Number(count.attributes.value),
@@ -176,7 +184,17 @@ const Creator = (props) => {
         <Typography id='modal-title' component='h3'>Add a Creature</Typography>
         <div>
           <TextField {...name.attributes} required autoFocus />
-          <TextField {...initiative.attributes} required />
+          <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+            <TextField
+              {...initiative.attributes}
+              // helperText={statblock.name && 'D20 result'}
+              helperText={monsterModal && 'D20 roll with statblock'}
+              required
+            />
+            <IconButton onClick={handleRoll} style={{ marginTop: '.7em' }} >
+              <CasinoIcon />
+            </IconButton>
+          </span>
           {!monsterModal && <TextField {...perception.attributes} />}
         </div>
         {!monsterModal ? null :
