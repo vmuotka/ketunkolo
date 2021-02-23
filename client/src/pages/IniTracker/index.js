@@ -178,6 +178,7 @@ const IniTracker = (props) => {
           position: 'absolute',
           top: 0,
           right: 0,
+          zIndex: 5,
         }} >
           <IconButton style={{ width: '100%', justifyContent: 'end' }} onClick={() => setDiceRoller(!diceRoller)}>
             <CasinoIcon color={diceRoller ? 'secondary' : undefined} />
@@ -195,7 +196,7 @@ const IniTracker = (props) => {
         </ButtonGroup>
         <Typography component='p' style={{ padding: '.4em' }}>Round: {progress.round + 1}</Typography>
         {combat.map((card, index) => (
-          <div className={classes.card}>
+          <div key={card.id} className={classes.card}>
             <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
             {
               progress.turn === index &&

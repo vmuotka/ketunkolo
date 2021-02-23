@@ -62,7 +62,7 @@ const DiceRoller = (props) => {
     <form onSubmit={handleSubmit} style={props.style}>
       {
         dice.map(die =>
-          <div>
+          <div key={die.size}>
             <Checkbox checked={die.count} name={die.name} onChange={handleCheck} title='Count towards total' />
             <input onChange={handleCount} type='number' size={3} name={die.name} value={die.value} /> {die.name}
             {die.rolls.length > 0 &&

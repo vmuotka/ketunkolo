@@ -155,7 +155,7 @@ const Creator = (props) => {
   }
 
   const statblockSearchBody = (
-    <form onChange={handleSearch} onSubmit={(event) => event.preventDefault()} className={classes.root}>
+    <form onSubmit={handleSearch} className={classes.root}>
       <Typography component='h4'>Search Statblocks</Typography>
       <TextField
         autoFocus
