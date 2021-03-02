@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 
 // material-ui components
@@ -46,6 +46,10 @@ const CreatureCard = (props) => {
   const classes = useStyles()
 
   const [init, setInit] = useState(props.initiative)
+
+  useEffect(() => {
+    setInit(props.initiative)
+  }, [props.initiative])
 
   const [ac, setAc] = useState(props.ac)
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+import { io } from 'socket.io-client'
 
 // material-ui components
 import ButtonGroup from '@material-ui/core/ButtonGroup'
@@ -14,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 // project components
 import CreatureCard from '../../components/CreatureCard'
-import { addCard } from '../../reducers/initrackerReducer'
+import { addCard, updateInitiative } from '../../reducers/initrackerReducer'
 import { setup } from '../../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../../components/IniTrackerManager'
 import MonsterStatblock from '../../components/MonsterStatblock'
@@ -66,6 +67,8 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer'
   }
 }))
+
+const socket = io()
 
 const IniTracker = (props) => {
   const classes = useStyles()
@@ -143,6 +146,23 @@ const IniTracker = (props) => {
     </div>
   )
 
+  // handle socket io connections
+  useEffect(() => {
+    if (props.user) {
+      socket.on('connect', () => {
+        socket.emit('joinroom', { roomname: props.user.username })
+      })
+      socket.on('initiative', (data) => {
+        let creature = combat.find(c => c.name.toLowerCase() === data.character.toLowerCase())
+        if (creature) {
+          creature.initiative = +data.initiative
+          props.updateInitiative(creature)
+        }
+
+      })
+    }
+  }, [props.user, socket, combat])
+
   return (
     <>
       <div className={classes.buttonContainer}>
@@ -217,7 +237,8 @@ const IniTracker = (props) => {
 
 const mapDispatchToProps = {
   addCard,
-  setup
+  setup,
+  updateInitiative
 }
 
 const mapStateToProps = (state) => {

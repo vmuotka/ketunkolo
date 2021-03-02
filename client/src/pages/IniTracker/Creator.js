@@ -102,8 +102,6 @@ const Creator = (props) => {
       }))
   }
 
-  console.log(statblock)
-
   const handleSubmit = event => {
     event.preventDefault()
     let newCard = {}
