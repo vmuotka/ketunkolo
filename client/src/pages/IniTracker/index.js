@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { io } from 'socket.io-client'
 
@@ -9,7 +9,7 @@ import Modal from '@material-ui/core/Modal'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
-import { Typography } from '@material-ui/core'
+import { Switch, Typography, FormControlLabel } from '@material-ui/core'
 import CasinoIcon from '@material-ui/icons/Casino'
 import IconButton from '@material-ui/core/IconButton'
 
@@ -77,6 +77,7 @@ const IniTracker = (props) => {
   const [monsterModal, setMonsterModal] = useState(false)
   const [monsterManager, setMonsterManager] = useState(false)
   const [diceRoller, setDiceRoller] = useState(false)
+  const [shareMonsters, setShareMonsters] = useState(false)
 
   const [combat, setCombat] = useState([])
 
@@ -109,6 +110,25 @@ const IniTracker = (props) => {
     })
     setCombat(arr)
   }, [props.initracker.party, props.initracker.monsters])
+
+  useEffect(() => {
+    if (props.user)
+      socket.emit('host-update-combat', { combat: shareMonsters ? combat : combat.filter(item => !item.count), roomname: props.user.username })
+
+    if (socket.hasListeners('user-joined'))
+      socket.removeListener('user-joined')
+
+    socket.on('user-joined', () => {
+      socket.emit('host-update-combat', { combat: shareMonsters ? combat : combat.filter(item => !item.count), roomname: props.user.username })
+    })
+  }, [combat, shareMonsters, props.user])
+
+  useEffect(() => {
+    if (socket.hasListeners('initiative')) {
+      socket.removeListener('initiative')
+    }
+    socket.on('initiative', socketAddInitiative)
+  }, [combat, shareMonsters, props.user])
 
   const [statblockModalMonster, setStatblockModalMonster] = useState({})
 
@@ -152,16 +172,33 @@ const IniTracker = (props) => {
       socket.on('connect', () => {
         socket.emit('joinroom', { roomname: props.user.username })
       })
-      socket.on('initiative', (data) => {
-        let creature = combat.find(c => c.name.toLowerCase() === data.character.toLowerCase())
-        if (creature) {
-          creature.initiative = +data.initiative
-          props.updateInitiative(creature)
-        }
 
-      })
     }
-  }, [props.user, socket, combat])
+  }, [props.user])
+
+  const socketAddInitiative = (data) => {
+    let creature = combat.find(c => c.name.toLowerCase() === data.character.toLowerCase())
+    if (creature === undefined) {
+      const newCard = {
+        name: data.character,
+        initiative: Number(data.initiative),
+        id: data.id ? data.id : Math.floor(Math.random() * 1000000),
+        perception: undefined
+      }
+      props.addCard(newCard)
+
+    } else {
+      creature.initiative = +data.initiative
+      props.updateInitiative(creature)
+    }
+  }
+
+  useEffect(() => {
+    if (socket.hasListeners('initiative')) {
+      socket.removeListener('initiative')
+    }
+    socket.on('initiative', socketAddInitiative)
+  }, [combat])
 
   return (
     <>
@@ -214,6 +251,11 @@ const IniTracker = (props) => {
             Reset
         </Button>
         </ButtonGroup>
+        <FormControlLabel
+          control={<Switch checked={shareMonsters} onChange={() => setShareMonsters(!shareMonsters)} />}
+          label='Share monsters'
+        />
+
         <Typography component='p' style={{ padding: '.4em' }}>Round: {progress.round + 1}</Typography>
         {combat.map((card, index) => (
           <div key={card.id} className={classes.card}>
