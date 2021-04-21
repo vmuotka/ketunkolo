@@ -11,7 +11,11 @@ const path = require('path')
 
 const server = http.createServer(app)
 
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+})
 
 require('./io-config')(io)
 
