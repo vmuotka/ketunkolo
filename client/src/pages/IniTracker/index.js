@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { io } from 'socket.io-client'
 
 // material-ui components
-import ButtonGroup from '@material-ui/core/ButtonGroup'
-import Button from '@material-ui/core/Button'
+// import ButtonGroup from '@material-ui/core/ButtonGroup'
+// import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
@@ -21,6 +21,7 @@ import IniTrackerManager from '../../components/IniTrackerManager'
 import MonsterStatblock from '../../components/MonsterStatblock'
 import Creator from './Creator'
 import DiceRoller from '../../components/DiceRoller'
+import Button, { ButtonGroup } from '../../components/Button/'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -230,7 +231,7 @@ const IniTracker = (props) => {
       >
         {statblockModalBody}
       </Modal>
-      <Box className={classes.cardContainer} style={{ position: 'relative' }}>
+      <div className={classes.cardContainer} style={{ position: 'relative' }}>
         <div style={{
           position: 'absolute',
           top: 0,
@@ -271,7 +272,7 @@ const IniTracker = (props) => {
             }
           </div>
         ))}
-      </Box>
+      </div>
     </>
   )
 }
