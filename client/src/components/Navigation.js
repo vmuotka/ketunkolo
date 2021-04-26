@@ -1,18 +1,33 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { Link } from 'react-router-dom'
+import { NavLink as Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logout } from '../reducers/userReducer'
+
+import {
+  MenuIcon,
+  HomeIcon,
+  SearchIcon,
+  ClipboardList,
+  BookIcon,
+  UserIcon
+} from './icons/'
+
+const iconProps = {
+  className: 'inline h-6'
+}
 
 const mainNavs = [
   {
     name: 'Home',
-    route: '/'
+    route: '/',
+    icon: <HomeIcon {...iconProps} />
   },
   {
     name: 'INITracker',
-    route: '/initracker'
+    route: '/initracker',
+    icon: <ClipboardList {...iconProps} />
   },
   {
     name: 'Characters',
@@ -20,10 +35,12 @@ const mainNavs = [
   },
   {
     name: 'Spells',
+    icon: <BookIcon {...iconProps} />,
     subItems: [
       {
         name: 'Search',
-        route: '/spells/search'
+        route: '/spells/search',
+        icon: <SearchIcon {...iconProps} />
       },
       {
         name: 'Workshop',
@@ -36,7 +53,8 @@ const mainNavs = [
     subItems: [
       {
         name: 'Search',
-        route: '/monsters/search'
+        route: '/monsters/search',
+        icon: <SearchIcon {...iconProps} />
       },
       {
         name: 'Workshop',
@@ -65,10 +83,15 @@ const NavButton = ({ onClick, children }) => {
   )
 }
 
-const NavItem = ({ item }) => {
+const NavItem = ({ item, className }) => {
   return (
-    <li className='hover:bg-primary-600'>
-      <Link className='block w-full px-12 py-2' to={item.route}>{item.name}</Link>
+    <li className={`hover:bg-primary-600 ${className}`}>
+      <Link exact activeClassName='bg-primary-600' className='block w-full px-12 py-2' to={item.route}>
+        <div className='grid grid-cols-2 gap-2' style={{ gridTemplateColumns: '25% 75%' }}>
+          <span>{item.icon}</span>
+          <span>{item.name}</span>
+        </div>
+      </Link>
     </li>
   )
 }
@@ -80,13 +103,16 @@ const NavFolder = ({ item }) => {
       <NavButton
         onClick={() => setIsOpen(!isOpen)}
       >
-        {item.name}
+        <div className='grid grid-cols-2 gap-2' style={{ gridTemplateColumns: '25% 75%' }}>
+          <span>{item.icon}</span>
+          {item.name}
+        </div>
       </NavButton>
       <ul
-        className={`${isOpen ? 'max-h-24' : 'max-h-0'} overflow-hidden transition-all mx-6`}
+        className={`${isOpen ? 'max-h-24' : 'max-h-0'} overflow-hidden transition-all`}
       >
         {item.subItems.map(subItem =>
-          <NavItem key={subItem.name} item={subItem} />
+          <NavItem className='px-8' key={subItem.name} item={subItem} />
         )}
       </ul>
     </li>
@@ -95,10 +121,12 @@ const NavFolder = ({ item }) => {
 
 const Navigation = (props) => {
   const history = useHistory()
+  const [showNav, setShowNav] = useState(true)
   const userNavs = [
     {
       name: props.user === null ? null : props.user.username,
-      route: '/user_settings'
+      route: '/user_settings',
+      icon: <UserIcon {...iconProps} />
     }
   ]
 
@@ -109,36 +137,52 @@ const Navigation = (props) => {
   }
 
   return (
-    <div className='w-full relative flex'>
-      <nav className='sticky top-0 h-screen bg-primary-500 divide-y'>
-        <ul className='flex flex-col text-lg text-white border-white'>
-          {mainNavs.map(item =>
-            item.subItems ?
-              <NavFolder item={item} />
-              : <NavItem key={item.name} item={item} />
+    <>
+      <div className='w-full relative grid grid-cols-2' style={{ gridTemplateColumns: '1fr 8fr' }}>
+        <div className='bg-primary-500 flex justify-center items-center'>
+          <button
+            onClick={() => setShowNav(!showNav)}
+            className={`text-white rounded-full hover:shadow transition-shadow p-1 focus:outline-none`}
+          >
+            <MenuIcon className='h-8' />
+          </button>
+        </div>
+        <div className='bg-primary-500 text-2xl text-white font-bold px-4 py-4 shadow'>
+          Ketunkolo
+        </div>
+        <nav
+          className={`sticky top-0 h-screen bg-primary-500 divide-y shadow transition-transform transition-duration-300 ${showNav ? 'max-w-lg' : 'max-w-0 overflow-hidden'}`}
+          style={{ transitionProperty: 'max-width' }}
+        >
+          <ul className='flex flex-col text-lg text-white border-white'>
+            {mainNavs.map(item =>
+              item.subItems ?
+                <NavFolder key={item.name} item={item} />
+                : <NavItem key={item.name} item={item} />
 
-          )}
-        </ul>
-        <ul className='flex flex-col text-lg text-white mt-2 pt-2 border-white'>
-          {props.user ?
-            <>
-              {userNavs.map(item =>
-                <NavItem key={item.name} item={item} />
-              )
-              }
-              <li className='hover:bg-primary-600'>
-                <NavButton onClick={handleSignOut}>Sign Out</NavButton>
-              </li>
-            </>
-            : loggedOutNavs.map(item =>
-              <NavItem item={item} />
             )}
-        </ul>
-      </nav>
-      <div className='mt-8'>
-        {props.children}
+          </ul>
+          <ul className='flex flex-col text-lg text-white mt-2 pt-2 border-white'>
+            {props.user ?
+              <>
+                {userNavs.map(item =>
+                  <NavItem key={item.name} item={item} />
+                )
+                }
+                <li className='hover:bg-primary-600'>
+                  <NavButton onClick={handleSignOut}>Sign Out</NavButton>
+                </li>
+              </>
+              : loggedOutNavs.map(item =>
+                <NavItem key={item.name} item={item} />
+              )}
+          </ul>
+        </nav>
+        <div className='mt-6'>
+          {props.children}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
