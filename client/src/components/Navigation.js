@@ -149,11 +149,11 @@ const Navigation = (props) => {
             <MenuIcon className='h-8' />
           </button>
         </div>
-        <div className='bg-primary-500 text-2xl text-white font-bold px-4 py-4 shadow'>
+        <div className='bg-primary-500 text-2xl text-white font-bold px-4 py-4'>
           Ketunkolo
         </div>
         <nav
-          className={`sticky top-0 h-screen bg-primary-500 divide-y shadow transition-transform transition-duration-300 ${showNav ? 'max-w-lg' : 'max-w-0 overflow-hidden'}`}
+          className={`sticky top-0 h-screen bg-primary-500 divide-y transition-transform transition-duration-300 ${showNav ? 'max-w-lg' : 'max-w-0 overflow-hidden'}`}
           style={{ transitionProperty: 'max-width' }}
         >
           <ul className='flex flex-col text-lg text-white border-white'>

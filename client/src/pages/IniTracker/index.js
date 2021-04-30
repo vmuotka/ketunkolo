@@ -3,11 +3,8 @@ import { connect } from 'react-redux'
 import { io } from 'socket.io-client'
 
 import Popup from 'reactjs-popup'
-import 'reactjs-popup/dist/index.css'
 
 // material-ui components
-import Modal from '@material-ui/core/Modal'
-import { makeStyles } from '@material-ui/core/styles'
 import { Switch, FormControlLabel } from '@material-ui/core'
 import CasinoIcon from '@material-ui/icons/Casino'
 import IconButton from '@material-ui/core/IconButton'
@@ -17,7 +14,6 @@ import CreatureCard from '../../components/CreatureCard'
 import { addCard, updateInitiative } from '../../reducers/initrackerReducer'
 import { setup } from '../../reducers/initrackerGroupReducer'
 import IniTrackerManager from '../../components/IniTrackerManager'
-import MonsterStatblock from '../../components/MonsterStatblock'
 import Creator from './Creator'
 import DiceRoller from '../../components/DiceRoller'
 import Button, { ButtonGroup } from '../../components/Button/'
@@ -25,10 +21,6 @@ import Button, { ButtonGroup } from '../../components/Button/'
 const socket = io()
 
 const IniTracker = (props) => {
-  const [open, setOpen] = useState(false)
-  const [modalType, setModalType] = useState('creator')
-  const [monsterModal, setMonsterModal] = useState(false)
-  const [monsterManager, setMonsterManager] = useState(false)
   const [diceRoller, setDiceRoller] = useState(false)
   const [shareMonsters, setShareMonsters] = useState(false)
 
@@ -66,41 +58,6 @@ const IniTracker = (props) => {
     socket.on('initiative', socketAddInitiative)
   }, [combat, shareMonsters, props.user])
 
-  const [statblockModalMonster, setStatblockModalMonster] = useState({})
-
-  const [statblockModal, setStatblockModal] = useState(false)
-
-  const handleStatblockOpen = (statblock) => event => {
-    setStatblockModal(true)
-    setStatblockModalMonster(statblock)
-  }
-
-  const handleStatblockClose = () => {
-    setStatblockModal(false)
-  }
-
-
-  const handleOpen = (monster) => e => {
-    setOpen(true)
-    setModalType('creator')
-    setMonsterModal(monster)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
-
-
-  const handleManager = (monster) => e => {
-    setOpen(true)
-    setModalType('manager')
-    setMonsterManager(monster)
-  }
-
-  const statblockModalBody = (
-    <div>
-      <MonsterStatblock monster={statblockModalMonster} />
-    </div>
-  )
 
   // handle socket io connections
   useEffect(() => {
@@ -165,54 +122,50 @@ const IniTracker = (props) => {
         </ButtonGroup>
         {props.user === null ? null :
           <ButtonGroup>
-            <Button color='primary' variant='contained' onClick={handleManager(false)}>Save/Load Party</Button>
-            <Button color='secondary' variant='contained' onClick={handleManager(true)}>Save/Load Monsters</Button>
+            <Popup
+              trigger={<Button color='primary' variant='contained'>Save/Load Party</Button>}
+              modal={true}
+              position='top center'
+              lockScroll
+              repositionOnResize
+              nested
+            >
+              <IniTrackerManager monsterManager={false} />
+            </Popup>
+            <Popup
+              trigger={<Button color='secondary' variant='contained'>Save/Load Monsters</Button>}
+              modal={true}
+              position='top center'
+              lockScroll
+              repositionOnResize
+              nested
+            >
+              <IniTrackerManager monsterManager={true} />
+            </Popup>
           </ButtonGroup>
         }
       </div>
-      {/* <Popup
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-title'
+      <FormControlLabel
+        control={<Switch checked={shareMonsters} onChange={() => setShareMonsters(!shareMonsters)} />}
+        label='Share monsters'
+      />
+      <div
+        className='grid grid-cols-2 gap-4 relative'
+        style={{
+          gridTemplateColumns: '8fr 2fr'
+        }}
       >
-        {modalType === 'creator' ?
-          <Creator monsterModal={monsterModal} /> : <IniTrackerManager monsterManager={monsterManager} />
-        }
-      </Popup> */}
-      <Modal
-        open={statblockModal}
-        onClose={handleStatblockClose}
-        aria-labelledby='modal-title'
-      >
-        {statblockModalBody}
-      </Modal>
-      <Popup
-        trigger={<button>monster!!</button>}
-        modal={true}
-      >
-        <MonsterStatblock monster={statblockModalMonster} />
-      </Popup>
-      <div style={{ position: 'relative' }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          zIndex: 5,
-        }} >
+        <div className='flex flex-col items-center'>
+          {combat.map((card) => (
+            <CreatureCard {...card} key={card.id} />
+          ))}
+        </div>
+        <div>
           <IconButton style={{ width: '100%', justifyContent: 'end' }} onClick={() => setDiceRoller(!diceRoller)}>
             <CasinoIcon color={diceRoller ? 'secondary' : undefined} />
           </IconButton>
           <DiceRoller style={{ display: diceRoller ? 'block' : 'none' }} />
         </div>
-        <FormControlLabel
-          control={<Switch checked={shareMonsters} onChange={() => setShareMonsters(!shareMonsters)} />}
-          label='Share monsters'
-        />
-        {combat.map((card) => (
-          <div key={card.id}>
-            <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
-          </div>
-        ))}
       </div>
     </>
   )

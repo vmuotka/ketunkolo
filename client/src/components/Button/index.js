@@ -1,6 +1,6 @@
 import './button.css'
 
-const Button = ({ onClick, color, children, type }) => {
+const Button = ({ onClick, color, children, className }) => {
   let colorClassNames
   switch (color) {
     case 'secondary':
@@ -13,9 +13,8 @@ const Button = ({ onClick, color, children, type }) => {
   }
   return (
     <button
-      className={`${colorClassNames} px-2.5 py-1.5 rounded text-white text-lg`}
+      className={`${colorClassNames} px-2.5 py-1.5 rounded text-white text-lg ${className}`}
       onClick={onClick}
-      type={type}
     >
       {children}
     </button>

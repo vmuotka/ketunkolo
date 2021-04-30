@@ -14,8 +14,6 @@ import {
   TrashIcon
 } from './icons/'
 
-// import TextField from './TextField'
-
 
 const CreatureCard = (props) => {
   let color = '#00AD1D'
@@ -57,7 +55,7 @@ const CreatureCard = (props) => {
         <h5 className='flex justify-between flex-wrap text-lg'>
           {props.statblock !== undefined && props.statblock.name !== undefined ?
             <Popup
-              trigger={<button className='focus:outline-none' color='inherit' onClick={props.handleStatblockOpen(props.statblock)}>{props.name}</button>}
+              trigger={<button className='focus:outline-none' color='inherit'>{props.name}</button>}
               modal={true}
               position='top center'
               lockScroll
