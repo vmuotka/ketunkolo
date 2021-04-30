@@ -9,3 +9,7 @@ span.buttongroup > button:first-child {
 span.buttongroup > button:last-child {
   border-radius: 0 .25rem .25rem 0 !important;
 }
+
+span.buttongroup > button:only-child {
+  border-radius: .25rem !important;
+}

@@ -11,7 +11,8 @@ import {
   SearchIcon,
   ClipboardList,
   BookIcon,
-  UserIcon
+  UserIcon,
+  UserGroupIcon
 } from './icons/'
 
 const iconProps = {
@@ -31,7 +32,8 @@ const mainNavs = [
   },
   {
     name: 'Characters',
-    route: '/characters'
+    route: '/characters',
+    icon: <UserGroupIcon {...iconProps} />
   },
   {
     name: 'Spells',

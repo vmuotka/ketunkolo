@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+import Popup from 'reactjs-popup'
 
 // material-ui components
 import TextField from '@material-ui/core/TextField'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import IconButton from '@material-ui/core/IconButton'
-import DeleteIcon from '@material-ui/icons/Delete'
-import AddIcon from '@material-ui/icons/Add'
-import Link from '@material-ui/core/Link'
-import PetsIcon from '@material-ui/icons/Pets'
 
 // project components
 import { updateInitiative, deleteCard, incrementCount } from '../reducers/initrackerReducer'
 import HpCounter from './HpCounter'
+import MonsterStatblock from './MonsterStatblock'
+import {
+  PlusIcon,
+  TrashIcon
+} from './icons/'
 
+// import TextField from './TextField'
 
 
 const CreatureCard = (props) => {
@@ -23,27 +22,6 @@ const CreatureCard = (props) => {
 
   if (props.count !== undefined)
     color = '#C92A07'
-
-  const useStyles = makeStyles((theme) => ({
-    card: {
-      display: 'inline-block',
-      background: color,
-      padding: theme.spacing(1, 2),
-      minWidth: '300px',
-    },
-    cardTitle: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap'
-    },
-    link: {
-      cursor: 'pointer'
-    }
-  }
-  ))
-
-  const classes = useStyles()
 
   const [init, setInit] = useState(props.initiative)
 
@@ -75,15 +53,23 @@ const CreatureCard = (props) => {
 
   return (
     <>
-      <Box className={classes.card}>
-        <Typography component='h5' className={classes.cardTitle}>
+      <div className='inline-block p-3' style={{ backgroundColor: color }}>
+        <h5 className='flex justify-between flex-wrap text-lg'>
           {props.statblock !== undefined && props.statblock.name !== undefined ?
-            <Link className={classes.link} color='inherit' onClick={props.handleStatblockOpen(props.statblock)}>{props.name} <PetsIcon /></Link> :
+            <Popup
+              trigger={<button className='focus:outline-none' color='inherit' onClick={props.handleStatblockOpen(props.statblock)}>{props.name}</button>}
+              modal={true}
+              position='top center'
+              lockScroll
+            >
+              <MonsterStatblock monster={props.statblock} />
+            </Popup> :
             props.name
           }
-          <IconButton size='small' onClick={handleDelete} >
-            <DeleteIcon />
-          </IconButton></Typography>
+          <button className='focus:outline-none' onClick={handleDelete} >
+            <TrashIcon className='h-6' />
+          </button>
+        </h5>
         <TextField label='Initiative' value={init} onClick={(e) => e.target.focus()} onChange={onChange} onBlur={handleInitChange} type='number' />
         {props.perception && <TextField label='Perception' value={props.perception} disabled />}
 
@@ -94,12 +80,12 @@ const CreatureCard = (props) => {
               <TextField label='MaxHP' value={props.maxHp} disabled />
               <div>
                 {props.hp.map((hp, index) => (<HpCounter hp={hp} maxHp={props.maxHp} id={props.id} index={index} key={index} label={props.name + ' ' + (index + 1)} />))}
-                <IconButton size='small' title='Add HP Counter' onClick={handleIncrementCount}><AddIcon /></IconButton>
+                <button className='focus:outline-none' title='Add HP Counter' onClick={handleIncrementCount}><PlusIcon className='h-6' /></button>
               </div>
             </>
           )
         }
-      </Box>
+      </div>
     </>
   )
 }
@@ -118,4 +104,4 @@ const mapStateToProps = (state) => {
 
 const connectedCreatureCard = connect(mapStateToProps, mapDispatchToProps)(CreatureCard)
 
-export default connectedCreatureCard 
+export default connectedCreatureCard

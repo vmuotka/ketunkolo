@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 
 // materialui components
 import TextField from '@material-ui/core/TextField'
-import DeleteIcon from '@material-ui/icons/Delete'
+import {
+  TrashIcon
+} from './icons/'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -15,7 +17,7 @@ const HpCounter = (props) => {
   const label = props.label
   let hidden = 'block'
   if (props.hp < -2000)
-    hidden = 'none'
+    hidden = 'hidden'
 
   const useStyles = makeStyles((theme) => ({
     hpCounter: {
@@ -61,15 +63,18 @@ const HpCounter = (props) => {
   }
   return (
     <>
-      <div className={classes.hpCounter}>
+      <div className={hidden}>
         <TextField label='Creature' value={label} disabled />
         <TextField label='HP' value={hp} type='number' onChange={handleChange} />
         <form onSubmit={handleDamage} className={classes.inline}>
           <TextField label='Damage' value={damage} onChange={onDamageChange} type='number' />
         </form>
-        <IconButton aria-label="delete" onClick={hide}>
-          <DeleteIcon />
-        </IconButton>
+        <button
+          className='focus:outline-none'
+          onClick={hide}
+        >
+          <TrashIcon className='h-6' />
+        </button>
       </div>
     </>
 
