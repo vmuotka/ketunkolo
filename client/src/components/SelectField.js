@@ -19,14 +19,16 @@ const SelectField = (props) => {
   const classes = useStyles()
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel htmlFor={props.inputProps.id}>{props.label}</InputLabel>
+      <InputLabel error={props.error} htmlFor={props.inputProps.id}>{props.label}</InputLabel>
       <Select
+        error={props.error}
         autoWidth
         value={props.value}
         inputProps={props.inputProps}
         onChange={props.onChange}
+        multiple={props.multiple}
       >
-        <MenuItem value=''>{props.emptyValue}</MenuItem>
+        {/* <MenuItem value=''>{props.emptyValue}</MenuItem> */}
         {
           props.options.map(option =>
             <MenuItem key={option} value={option}>{option}</MenuItem>

@@ -70,5 +70,71 @@ spellRouter.post('/getbyuser', async (req, res) => {
   return res.status(200).json(returnArr)
 })
 
+spellRouter.post('/upload', async (req, res) => {
+  const form = req.body
+  let validation = {}
+  if (form.name === '')
+    validation.name = true
+  if (form.desc === '')
+    validation.desc = true
+  if (form.range === '')
+    validation.range = true
+  if (form.components.length === 0)
+    validation.components = true
+  if (form.components.includes('M') && form.material === '')
+    validation.material = true
+  if (form.duration === '')
+    validation.duration = true
+  if (form.casting_time === '')
+    validation.casting_time = true
+  if (form.level === '')
+    validation.level = true
+  if (form.school === '')
+    validation.school = true
+  if (form.class.length === 0)
+    validation.class = true
+
+  if (Object.getOwnPropertyNames(validation).length >= 1)
+    return res.status(400).json({ error: 'Missing required fields.' })
+
+
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+  if (!req.token || !decodedToken.id) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  let returnedObject = {}
+  if (form.user) {
+    const spell = await Spell.findById(form.id)
+    if (spell.user === decodedToken.id)
+      returnedObject = await Spell.findByIdAndUpdate(form.id, form, { new: true })
+  } else {
+    form.user = decodedToken.id
+    const spell = new Spell(form)
+    returnedObject = await spell.save()
+  }
+
+  return res.status(200).json(returnedObject)
+})
+
+spellRouter.delete('/delete', async (req, res) => {
+  let decodedToken = null
+  if (req.token) {
+    decodedToken = jwt.verify(req.token, process.env.SECRET)
+  } else
+    return res.status(400).json({ error: 'Token not provided' })
+
+  const document_id = req.body.id
+
+  const spell = await Spell.findById(document_id)
+  if (spell.user === decodedToken.id) {
+    await Spell.findByIdAndDelete(document_id)
+    return res.status(200).json({ message: 'deleted' })
+  } else {
+    return res.status(401)
+  }
+})
+
 
 module.exports = spellRouter

@@ -24,4 +24,22 @@ const getByUser = async () => {
   return res.data
 }
 
-export default { search, getSpellById, getByUser, setToken }
+const save = async (spell) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const res = await axios.post(`${baseUrl}/upload`, spell, config)
+  return res.data
+}
+
+const deleteSpell = async (data) => {
+  const config = {
+    headers: { Authorization: token },
+    data
+  }
+  const res = await axios.delete(`${baseUrl}/delete`, config)
+  return res.data
+}
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default { search, getSpellById, getByUser, setToken, save, deleteSpell }

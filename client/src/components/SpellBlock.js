@@ -58,7 +58,7 @@ const SpellBlock = (props) => {
           <Typography component='span' className={classes.property}>
             <i>
               {spell.level}&nbsp;
-            {spell.school}
+              {spell.school}
             </i>
           </Typography>
           <Typography component='span' className={classes.property}>
@@ -72,7 +72,7 @@ const SpellBlock = (props) => {
           <Typography component='span' className={classes.property}>
             <strong>Components:</strong>&nbsp;
             {spell.components.join(', ')}
-            {spell.material ? `\xa0(${spell.material})` : null}
+            {(spell.material && spell.components.includes('M')) ? `\xa0(${spell.material})` : null}
           </Typography>
           <Typography component='span' className={classes.property}>
             <strong>Duration:</strong>&nbsp;
@@ -84,20 +84,26 @@ const SpellBlock = (props) => {
             {spell.class.join(', ')}
           </Typography>
           <Divider className={classes.divider} />
-          <Markdown
-            source={spell.desc}
-            className={classes.markdown}
-            skipHtml={true}
-            allowedTypes={markdownTypes}
-          />
-          {spell.higher_level ?
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1em'
+          }}>
             <Markdown
-              source={spell.higher_level}
+              source={spell.desc}
               className={classes.markdown}
               skipHtml={true}
               allowedTypes={markdownTypes}
             />
-            : null}
+            {spell.higher_level ?
+              <Markdown
+                source={spell.higher_level}
+                className={classes.markdown}
+                skipHtml={true}
+                allowedTypes={markdownTypes}
+              />
+              : null}
+          </div>
           <Divider className={classes.divider} />
         </>
       ) : null}
