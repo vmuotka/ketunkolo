@@ -12,9 +12,9 @@ const path = require('path')
 const server = http.createServer(app)
 
 const io = require('socket.io')(server, {
-  cors: {
-    origin: '*',
-  }
+    cors: {
+        origin: '*',
+    }
 })
 
 require('./io-config')(io)
@@ -42,12 +42,12 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 app.use(cors())
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'build')));
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
-  })
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.get('/*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+    })
 }
 
 server.listen(config.PORT, () => {
-  logger.info(`Server running on port ${config.PORT}`)
+    logger.info(`Server running on port ${config.PORT}`)
 })
