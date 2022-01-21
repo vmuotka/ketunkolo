@@ -1,36 +1,5 @@
 const initialState = {
-    party: [
-        {
-            "name": "Umrik Holderhek",
-            "initiative": 10,
-            "id": 577255,
-            "perception": 15
-        },
-        {
-            "name": "Thorik Holderhek",
-            "initiative": 10,
-            "id": 900000,
-            "perception": 15
-        },
-        {
-            "name": "Alexandros",
-            "initiative": 10,
-            "id": 537299,
-            "perception": 15
-        },
-        {
-            "name": "Langdedrosa Cyanwrath",
-            "initiative": 10,
-            "id": 262587,
-            "perception": 15
-        },
-        {
-            "name": "Mercos",
-            "initiative": 10,
-            "id": 921453,
-            "perception": 13
-        }
-    ], monsters: []
+    party: [], monsters: []
 }
 
 export const addCard = (obj) => {

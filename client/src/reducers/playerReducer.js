@@ -1,4 +1,4 @@
-const initialState = { room: 'jakk3', units: ['Langdedrosa Cyanwrath'], party: [], monsters: [] }
+const initialState = { room: null, units: [], party: [], monsters: [] }
 
 export const setGroup = (obj) => {
     return {
