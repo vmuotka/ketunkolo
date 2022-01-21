@@ -9,21 +9,23 @@ import initrackerReducer from './reducers/initrackerReducer'
 import initrackerGroupReducer from './reducers/initrackerGroupReducer'
 import monsterCreatorReducer from './reducers/monsterCreatorReducer'
 import spellCreatorReducer from './reducers/spellCreatorReducer'
+import playerReducer from './reducers/playerReducer'
 
 const reducer = combineReducers({
-  user: userReducer,
-  theme: themeReducer,
-  initracker: initrackerReducer,
-  initrackerGroup: initrackerGroupReducer,
-  monsterCreator: monsterCreatorReducer,
-  spellCreator: spellCreatorReducer,
+    user: userReducer,
+    theme: themeReducer,
+    initracker: initrackerReducer,
+    initrackerGroup: initrackerGroupReducer,
+    monsterCreator: monsterCreatorReducer,
+    spellCreator: spellCreatorReducer,
+    player: playerReducer
 })
 
 const store = createStore(
-  reducer,
-  composeWithDevTools(
-    applyMiddleware(thunk)
-  )
+    reducer,
+    composeWithDevTools(
+        applyMiddleware(thunk)
+    )
 )
 
 export default store
