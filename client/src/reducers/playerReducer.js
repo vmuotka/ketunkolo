@@ -1,4 +1,21 @@
-const initialState = { room: null, units: [], party: [], monsters: [] }
+const initialState = {
+    room: 'jakk3', units: [], party: [], monsters: [], log: [], roll: {
+        die: 8,
+        count: 1,
+        bonus: {
+            atk: 5,
+            dmg: 3
+        },
+        name: null
+    }
+}
+
+export const updateRoll = (obj) => {
+    return {
+        type: 'UPDATE_ROLL',
+        data: obj
+    }
+}
 
 export const setGroup = (obj) => {
     return {
@@ -27,8 +44,20 @@ export const leaveRoom = () => {
     }
 }
 
+export const log = (obj) => {
+    return {
+        type: 'LOG',
+        data: obj
+    }
+}
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case 'LOG':
+            return {
+                ...state,
+                log: [...state.log, action.data]
+            }
         case 'JOIN_ROOM':
             return {
                 ...state,
@@ -39,8 +68,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 units: [...state.units, action.data]
             }
+        case 'UPDATE_ROLL':
+            return {
+                ...state,
+                roll: { ...state.roll, ...action.data }
+            }
         case 'LEAVE_ROOM':
-            return { room: null, party: [], monsters: [], units: [] }
+            return { ...initialState, room: null }
         case 'SET_GROUP':
             return action.data.type === 'party' ? { party: action.data.group, monsters: state.monsters } : { party: state.party, monsters: action.data.group }
         default: return state
