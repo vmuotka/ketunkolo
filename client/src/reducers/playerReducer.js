@@ -1,5 +1,5 @@
 const initialState = {
-    room: null, units: [], party: [], monsters: [], log: [], roll: {
+    room: 'jakk3', units: [], party: [], monsters: [], log: [], roll: {
         die: 8,
         count: 1,
         bonus: {
@@ -76,7 +76,15 @@ const reducer = (state = initialState, action) => {
         case 'LEAVE_ROOM':
             return { ...initialState, room: null }
         case 'SET_GROUP':
-            return action.data.type === 'party' ? { party: action.data.group, monsters: state.monsters } : { party: state.party, monsters: action.data.group }
+            return action.data.type === 'party' ? {
+                ...state,
+                party: action.data.group,
+                monsters: state.monsters
+            } : {
+                ...state,
+                party: state.party,
+                monsters: action.data.group
+            }
         default: return state
     }
 }

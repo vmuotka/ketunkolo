@@ -66,46 +66,6 @@ const CombatTracker = (props) => {
 
     return (
         <>
-            <div>
-                <FormControlLabel
-                    label='View PC Form'
-                    control={<Switch checked={characterForm.show} onChange={showForm} />}
-                />
-                <Collapse in={characterForm.show}>
-                    <form
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gridGap: '1em',
-                            backgroundColor: '#1b6dd1',
-                            padding: '1em',
-                            width: 'min-content',
-                            minWidth: '300px'
-                        }}
-                        onSubmit={addPc}>
-                        <TextField
-                            label='Name'
-                            id='name'
-                            value={characterForm.name}
-                            onChange={handleFormChange}
-                        />
-                        <TextField
-                            label='Initiative'
-                            id='initiative'
-                            value={characterForm.initiative}
-                            onChange={handleFormChange}
-                            type='number'
-                        />
-                        <Button
-                            variant='contained'
-                            color='secondary'
-                            type='submit'
-                        >
-                            Add PC
-                        </Button>
-                    </form>
-                </Collapse>
-            </div>
             <div
                 style={{
                     display: 'flex',
@@ -115,6 +75,46 @@ const CombatTracker = (props) => {
                     marginTop: '3em'
                 }}
             >
+                <div>
+                    <FormControlLabel
+                        label='View PC Form'
+                        control={<Switch checked={characterForm.show} onChange={showForm} />}
+                    />
+                    <Collapse in={characterForm.show}>
+                        <form
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gridGap: '1em',
+                                backgroundColor: '#1b6dd1',
+                                padding: '1em',
+                                width: 'min-content',
+                                minWidth: '300px'
+                            }}
+                            onSubmit={addPc}>
+                            <TextField
+                                label='Name'
+                                id='name'
+                                value={characterForm.name}
+                                onChange={handleFormChange}
+                            />
+                            <TextField
+                                label='Initiative'
+                                id='initiative'
+                                value={characterForm.initiative}
+                                onChange={handleFormChange}
+                                type='number'
+                            />
+                            <Button
+                                variant='contained'
+                                color='secondary'
+                                type='submit'
+                            >
+                                Add PC
+                            </Button>
+                        </form>
+                    </Collapse>
+                </div>
                 {combat.map(creature => (
                     <CreatureCard owner={props.player.units.includes(creature.name)} creature={creature} key={creature.id} />
                 ))}

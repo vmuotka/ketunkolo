@@ -44,8 +44,10 @@ const IniPlayer = (props) => {
                 <div
                     style={{
                         display: 'flex',
+                        flexWrap: 'wrap',
+                        // width: '100%',s
                         justifyContent: 'center',
-                        height: '100%'
+                        gridGap: '4em',
                     }}
                 >
                     <CombatTracker />

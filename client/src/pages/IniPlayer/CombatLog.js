@@ -117,6 +117,7 @@ const CombatLog = (props) => {
 
     const combatButton = type => {
         // if the roll is an attack roll, always use d20
+        console.log('this is running for some reason')
         const roll = {
             ...props.player.roll,
             die: type === 'atk' ? 20 : props.player.roll.die,
@@ -187,7 +188,10 @@ const CombatLog = (props) => {
                 flexFlow: 'column',
                 border: '2px groove black',
                 padding: '1em',
-                height: '100%'
+                height: '100%',
+                height: 'min-content',
+                position: 'sticky',
+                top: '5em'
             }}
         >
             <legend>Combat Log</legend>
