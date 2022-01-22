@@ -21,6 +21,7 @@ import IniTrackerManager from '../../components/IniTrackerManager'
 import MonsterStatblock from '../../components/MonsterStatblock'
 import Creator from './Creator'
 import DiceRoller from '../../components/DiceRoller'
+import CombatLog from '../IniPlayer/CombatLog'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -228,8 +229,15 @@ const IniTracker = (props) => {
             >
                 {statblockModalBody}
             </Modal>
-            <Box className={classes.cardContainer} style={{ position: 'relative' }}>
-                <div style={{
+            <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                // width: '100%',s
+                justifyContent: 'center',
+                gridGap: '4em',
+            }}>
+                <Box className={classes.cardContainer} style={{ position: 'relative' }}>
+                    {/* <div style={{
                     position: 'absolute',
                     top: 0,
                     right: 0,
@@ -239,37 +247,41 @@ const IniTracker = (props) => {
                         <CasinoIcon color={diceRoller ? 'secondary' : undefined} />
                     </IconButton>
                     <DiceRoller style={{ display: diceRoller ? 'block' : 'none' }} />
+                </div> */}
+                    <ButtonGroup>
+                        <Button onClick={handleProgress} >
+                            Next Turn
+                        </Button>
+                        <Button onClick={resetProgress} >
+                            Reset
+                        </Button>
+                    </ButtonGroup>
+                    <FormControlLabel
+                        control={<Switch checked={shareMonsters} onChange={() => setShareMonsters(!shareMonsters)} />}
+                        label='Share monsters'
+                    />
+
+                    <Typography component='p' style={{ padding: '.4em' }}>Round: {progress.round + 1}</Typography>
+                    {combat.map((card, index) => (
+                        <div key={card.id} className={classes.card}>
+                            <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
+                            {
+                                progress.turn === index &&
+                                <ArrowBackIosIcon style={{
+                                    margin: '0 1em',
+                                    position: 'absolute',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)'
+                                }} />
+                            }
+                        </div>
+                    ))}
+                </Box>
+                <div style={{
+                }}>
+                    <CombatLog />
                 </div>
-
-                <ButtonGroup>
-                    <Button onClick={handleProgress} >
-                        Next Turn
-                    </Button>
-                    <Button onClick={resetProgress} >
-                        Reset
-                    </Button>
-                </ButtonGroup>
-                <FormControlLabel
-                    control={<Switch checked={shareMonsters} onChange={() => setShareMonsters(!shareMonsters)} />}
-                    label='Share monsters'
-                />
-
-                <Typography component='p' style={{ padding: '.4em' }}>Round: {progress.round + 1}</Typography>
-                {combat.map((card, index) => (
-                    <div key={card.id} className={classes.card}>
-                        <CreatureCard {...card} key={card.id} handleStatblockOpen={handleStatblockOpen} />
-                        {
-                            progress.turn === index &&
-                            <ArrowBackIosIcon style={{
-                                margin: '0 1em',
-                                position: 'absolute',
-                                top: '50%',
-                                transform: 'translateY(-50%)'
-                            }} />
-                        }
-                    </div>
-                ))}
-            </Box>
+            </div>
         </>
     )
 }
