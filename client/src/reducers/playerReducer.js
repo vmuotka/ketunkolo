@@ -1,5 +1,5 @@
 const initialState = {
-    room: 'jakk3', units: [], party: [], monsters: [], log: [], roll: {
+    room: null, units: [], party: [], monsters: [], log: [], roll: {
         die: 8,
         count: 1,
         bonus: {
